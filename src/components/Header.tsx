@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, UserPlus, Compass, MessageSquare, Award, Calendar, MapPin, Phone } from 'lucide-react';
+import { Menu, UserPlus, Compass, MessageSquare, Award, Calendar, MapPin, Phone, MessageCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const Header = () => {
@@ -33,6 +33,7 @@ const Header = () => {
           <NavLink to="/mentorship">Mentorship</NavLink>
           <NavLink to="/mock-interviews">Mock Interviews</NavLink>
           <NavLink to="/hubs">Subject Hubs</NavLink>
+          <NavLink to="/forum">Forum</NavLink>
           <NavLink to="/events">Events</NavLink>
           <NavLink to="/resources">Resources</NavLink>
         </nav>
@@ -70,6 +71,7 @@ const Header = () => {
             <MobileNavLink to="/mentorship" icon={<UserPlus className="h-5 w-5 mr-2" />}>Mentorship</MobileNavLink>
             <MobileNavLink to="/mock-interviews" icon={<MessageSquare className="h-5 w-5 mr-2" />}>Mock Interviews</MobileNavLink>
             <MobileNavLink to="/hubs" icon={<Compass className="h-5 w-5 mr-2" />}>Subject Hubs</MobileNavLink>
+            <MobileNavLink to="/forum" icon={<MessageCircle className="h-5 w-5 mr-2" />}>Forum</MobileNavLink>
             <MobileNavLink to="/events" icon={<Calendar className="h-5 w-5 mr-2" />}>Events</MobileNavLink>
             <MobileNavLink to="/resources" icon={<Award className="h-5 w-5 mr-2" />}>Resources</MobileNavLink>
             
