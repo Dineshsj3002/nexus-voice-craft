@@ -25,7 +25,7 @@
     --input: 220 13% 91%;
     --ring: 142.1 76.2% 36.3%;
     --radius: 0.5rem;
-    --nexus-primary: #28a745;
+    --nexus-primary: #003876; /* Updated to a more blue color for the theme */
   }
 
   .dark {
@@ -124,4 +124,22 @@
   100% {
     box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
   }
+}
+
+/* Add navigation specific styles */
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown-content {
+  display: none;
+  position: absolute;
+  min-width: 200px;
+  background-color: white;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+.nav-dropdown:hover .nav-dropdown-content {
+  display: block;
 }

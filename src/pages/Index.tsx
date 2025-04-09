@@ -10,7 +10,6 @@ import ChatBot from '@/components/ChatBot';
 import RecentPosts from '@/components/RecentPosts';
 import Events from '@/components/Events';
 import { useToast } from '@/hooks/use-toast';
-import { Phone, Calendar, Users, MapPin } from 'lucide-react';
 
 // Import these to make sure they're available
 import { showSuccessToast, toastTypes } from '@/components/SuccessToast';
@@ -21,7 +20,7 @@ const Index = () => {
   useEffect(() => {
     // Show a welcome toast when the page loads
     toast({
-      title: "Welcome to alumNexus",
+      title: "Welcome to Knowledge Institute of Technology",
       description: "Connect with alumni mentors to boost your career journey.",
     });
   }, [toast]);
