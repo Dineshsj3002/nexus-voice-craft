@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Book, Code, Flask, Calculator, GraduationCap, Globe, ChevronRight, Users } from 'lucide-react';
+import { Book, Code, Beaker, Calculator, GraduationCap, Globe, ChevronRight, Users } from 'lucide-react';
 
 // Mock data for subject hubs
 const subjectHubs = [
@@ -49,7 +49,7 @@ const subjectHubs = [
       avatar: 'JW',
       role: 'Research Fellow'
     },
-    icon: <Flask className="h-8 w-8 text-purple-500" />,
+    icon: <Beaker className="h-8 w-8 text-purple-500" />,
     color: 'border-purple-200',
     topics: ['Research', 'Biology', 'Physics']
   },
