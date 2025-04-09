@@ -1,12 +1,46 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React, { useEffect } from 'react';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import Hero from '@/components/Hero';
+import Features from '@/components/Features';
+import Testimonials from '@/components/Testimonials';
+import CallToAction from '@/components/CallToAction';
+import ChatBot from '@/components/ChatBot';
+import RecentPosts from '@/components/RecentPosts';
+import Events from '@/components/Events';
+import { useToast } from '@/hooks/use-toast';
+import { Phone, Calendar, Users, MapPin } from 'lucide-react';
+
+// Import these to make sure they're available
+import { showSuccessToast, toastTypes } from '@/components/SuccessToast';
 
 const Index = () => {
+  const { toast } = useToast();
+
+  useEffect(() => {
+    // Show a welcome toast when the page loads
+    toast({
+      title: "Welcome to alumNexus",
+      description: "Connect with alumni mentors to boost your career journey.",
+    });
+  }, [toast]);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      
+      <main className="flex-grow">
+        <Hero />
+        <Features />
+        <Testimonials />
+        <RecentPosts />
+        <Events />
+        <CallToAction />
+      </main>
+      
+      <Footer />
+      <ChatBot />
     </div>
   );
 };

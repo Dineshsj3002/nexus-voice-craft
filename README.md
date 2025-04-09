@@ -1,73 +1,60 @@
-# Welcome to your Lovable project
 
-## Project info
+# alumNexus - Alumni-Student Networking Platform
 
-**URL**: https://lovable.dev/projects/606e55e8-2345-4c06-928a-e909c0a7ea2b
+## About alumNexus
 
-## How can I edit this code?
+alumNexus is a next-generation networking platform connecting students with alumni mentors. Our mission is to foster a strong and lasting bond between students and alumni, creating a network where knowledge, experience, and opportunities flow seamlessly.
 
-There are several ways of editing your application.
+## Key Features
 
-**Use Lovable**
+- **Mentorship Connections**: Book 1:1 sessions with alumni who are leaders in your field
+- **Mock Interviews**: Practice interviews with industry professionals and receive feedback
+- **Subject Hubs**: Join specialized communities for your major or area of interest
+- **Career Resources**: Access resume reviews, interview prep, and industry insights
+- **Networking Events**: Virtual and in-person events to expand your professional circle
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/606e55e8-2345-4c06-928a-e909c0a7ea2b) and start prompting.
+## Brand Voice & UX Guidelines
 
-Changes made via Lovable will be committed automatically to this repo.
+### Core Principles
 
-**Use your preferred IDE**
+1. **Clarity & Simplicity**: Direct language, clear steps, no jargon
+2. **Warmth & Community**: Friendly, conversational tone emphasizing shared success
+3. **Trust & Professionalism**: Highlight credentials and maintain consistent voice
+4. **Delight & Engagement**: Micro-interactions and subtle animations for positive feedback
+5. **Satisfaction & Feedback**: Clear next steps and positive reinforcement
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Brand Elements
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- **Primary Color**: #28a745 (green accent)
+- **Typography**: Clean, modern sans-serif (Inter, Montserrat)
+- **Iconography**: Simple line icons with accent highlights
 
-Follow these steps:
+### Microcopy Examples
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- "Your path to success, together."
+- "Join our community of 2,500+ alumni and 10,000+ students"
+- "Your data is yours—always encrypted and never shared."
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## Technologies Used
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
 - React
-- shadcn-ui
+- TypeScript
 - Tailwind CSS
+- shadcn-ui
+- Vite
+- React Router Dom
 
-## How can I deploy this project?
+## Animation & Interaction Patterns
 
-Simply open [Lovable](https://lovable.dev/projects/606e55e8-2345-4c06-928a-e909c0a7ea2b) and click on Share -> Publish.
+- Subtle fade-ins for content sections
+- Smooth transitions between onboarding steps
+- Success toasts with emoji reinforcement
+- Hover effects for interactive elements
 
-## Can I connect a custom domain to my Lovable project?
+## Getting Started
 
-Yes it is!
+To run this project locally:
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Start the development server: `npm run dev`

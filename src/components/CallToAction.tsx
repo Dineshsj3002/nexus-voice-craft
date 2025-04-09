@@ -1,0 +1,26 @@
+
+import React from 'react';
+import { Button } from '@/components/ui/button';
+
+const CallToAction = () => {
+  return (
+    <section className="py-16 px-4 md:px-8 bg-nexus-primary">
+      <div className="max-w-4xl mx-auto text-center">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to connect and grow?</h2>
+        <p className="text-lg text-white/90 mb-8">
+          Join our community of 2,500+ alumni and 10,000+ students already building meaningful relationships.
+        </p>
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <Button className="bg-white text-nexus-primary hover:bg-gray-100 text-lg px-8 py-6">
+            Join as a Student
+          </Button>
+          <Button variant="outline" className="border-white text-white hover:bg-white/10 text-lg px-8 py-6">
+            Join as an Alumni
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default CallToAction;
