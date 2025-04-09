@@ -2,8 +2,25 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Award, Users, MessageSquare } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { showSuccessToast, toastTypes } from '@/components/SuccessToast';
 
 const Hero = () => {
+  const navigate = useNavigate();
+
+  const handleJoinCommunity = () => {
+    showSuccessToast({
+      message: "Welcome to the community!",
+      emoji: "👋"
+    });
+    // For demo, show a toast and navigate to a page
+    setTimeout(() => navigate('/mentorship'), 1000);
+  };
+
+  const handleExploreMentorship = () => {
+    navigate('/mentorship');
+  };
+
   return (
     <section className="bg-gradient-to-b from-white to-gray-50 pt-16 pb-20 px-4 md:px-8">
       <div className="max-w-7xl mx-auto">
@@ -17,11 +34,18 @@ const Hero = () => {
               Connect with alumni mentors who've walked your path and are ready to guide your journey from classroom to career.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button className="bg-nexus-primary hover:bg-nexus-primary/90 text-white text-lg px-6 py-6 rounded-md flex items-center">
+              <Button 
+                className="bg-nexus-primary hover:bg-nexus-primary/90 text-white text-lg px-6 py-6 rounded-md flex items-center"
+                onClick={handleJoinCommunity}
+              >
                 Join our community
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-              <Button variant="outline" className="border-nexus-primary text-nexus-primary hover:bg-nexus-primary/10 text-lg px-6 py-6 rounded-md">
+              <Button 
+                variant="outline" 
+                className="border-nexus-primary text-nexus-primary hover:bg-nexus-primary/10 text-lg px-6 py-6 rounded-md"
+                onClick={handleExploreMentorship}
+              >
                 Explore mentorship
               </Button>
             </div>

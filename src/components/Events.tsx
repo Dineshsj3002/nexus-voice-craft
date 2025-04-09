@@ -2,6 +2,7 @@
 import React from 'react';
 import { Calendar, MapPin, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 type Event = {
   id: number;
@@ -43,6 +44,12 @@ const events: Event[] = [
 ];
 
 const Events = () => {
+  const navigate = useNavigate();
+
+  const handleLearnMore = (eventId: number) => {
+    navigate(`/events/${eventId}`);
+  };
+
   return (
     <section className="py-16 px-4 md:px-8 bg-gray-50">
       <div className="max-w-7xl mx-auto">
@@ -83,6 +90,7 @@ const Events = () => {
                   <Button 
                     variant="outline" 
                     className="border-nexus-primary text-nexus-primary hover:bg-nexus-primary/10"
+                    onClick={() => handleLearnMore(event.id)}
                   >
                     Learn more
                   </Button>

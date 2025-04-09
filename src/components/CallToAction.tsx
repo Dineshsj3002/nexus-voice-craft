@@ -1,8 +1,30 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+import { showSuccessToast } from '@/components/SuccessToast';
 
 const CallToAction = () => {
+  const navigate = useNavigate();
+
+  const handleStudentJoin = () => {
+    showSuccessToast({
+      message: "Welcome to alumNexus!",
+      emoji: "🎓"
+    });
+    // For now, just show a toast and navigate
+    setTimeout(() => navigate('/mentorship'), 1000);
+  };
+
+  const handleAlumniJoin = () => {
+    showSuccessToast({
+      message: "Welcome back!",
+      emoji: "🤝"
+    });
+    // For now, just show a toast and navigate
+    setTimeout(() => navigate('/mentorship'), 1000);
+  };
+
   return (
     <section className="py-16 px-4 md:px-8 bg-nexus-primary">
       <div className="max-w-4xl mx-auto text-center">
@@ -11,10 +33,17 @@ const CallToAction = () => {
           Join our community of 2,500+ alumni and 10,000+ students already building meaningful relationships.
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <Button className="bg-white text-nexus-primary hover:bg-gray-100 text-lg px-8 py-6">
+          <Button 
+            className="bg-white text-nexus-primary hover:bg-gray-100 text-lg px-8 py-6"
+            onClick={handleStudentJoin}
+          >
             Join as a Student
           </Button>
-          <Button variant="outline" className="border-white text-white hover:bg-white/10 text-lg px-8 py-6">
+          <Button 
+            variant="outline" 
+            className="border-white text-white hover:bg-white/10 text-lg px-8 py-6"
+            onClick={handleAlumniJoin}
+          >
             Join as an Alumni
           </Button>
         </div>

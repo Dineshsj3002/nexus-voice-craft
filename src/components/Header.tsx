@@ -1,12 +1,23 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Menu, UserPlus, Compass, MessageSquare, Award, Calendar, MapPin, Phone } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const navigate = useNavigate();
+  
+  const handleSignIn = () => {
+    // For now, just show an alert since sign-in functionality isn't implemented
+    alert("Sign in functionality will be coming soon!");
+  };
+  
+  const handleJoinNow = () => {
+    // For now, just show an alert since join functionality isn't implemented
+    alert("Join now functionality will be coming soon!");
+  };
   
   return (
     <header className="bg-white border-b border-gray-200 py-4 px-4 md:px-8">
@@ -28,10 +39,17 @@ const Header = () => {
         
         {/* Auth Buttons */}
         <div className="hidden md:flex items-center space-x-3">
-          <Button variant="outline" className="border-nexus-primary text-nexus-primary hover:bg-nexus-primary hover:text-white">
+          <Button 
+            variant="outline" 
+            className="border-nexus-primary text-nexus-primary hover:bg-nexus-primary hover:text-white"
+            onClick={handleSignIn}
+          >
             Sign in
           </Button>
-          <Button className="bg-nexus-primary hover:bg-nexus-primary/90 text-white">
+          <Button 
+            className="bg-nexus-primary hover:bg-nexus-primary/90 text-white"
+            onClick={handleJoinNow}
+          >
             Join now
           </Button>
         </div>
@@ -56,10 +74,17 @@ const Header = () => {
             <MobileNavLink to="/resources" icon={<Award className="h-5 w-5 mr-2" />}>Resources</MobileNavLink>
             
             <div className="pt-4 flex flex-col space-y-3">
-              <Button variant="outline" className="border-nexus-primary text-nexus-primary w-full">
+              <Button 
+                variant="outline" 
+                className="border-nexus-primary text-nexus-primary w-full"
+                onClick={handleSignIn}
+              >
                 Sign in
               </Button>
-              <Button className="bg-nexus-primary hover:bg-nexus-primary/90 text-white w-full">
+              <Button 
+                className="bg-nexus-primary hover:bg-nexus-primary/90 text-white w-full"
+                onClick={handleJoinNow}
+              >
                 Join now
               </Button>
             </div>

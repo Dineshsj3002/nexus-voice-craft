@@ -2,6 +2,7 @@
 import React from 'react';
 import { Calendar, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 type Post = {
   id: number;
@@ -29,6 +30,16 @@ const posts: Post[] = [
 ];
 
 const RecentPosts = () => {
+  const navigate = useNavigate();
+
+  const handleReadMore = (postId: number) => {
+    navigate(`/blog/${postId}`);
+  };
+
+  const handleViewAllArticles = () => {
+    navigate('/blog');
+  };
+
   return (
     <section className="py-16 px-4 md:px-8 bg-white">
       <div className="max-w-7xl mx-auto">
@@ -60,7 +71,11 @@ const RecentPosts = () => {
                     <Calendar className="h-4 w-4 mr-1" />
                     {post.date}
                   </div>
-                  <Button variant="ghost" className="text-nexus-primary hover:text-nexus-primary/90 p-0">
+                  <Button 
+                    variant="ghost" 
+                    className="text-nexus-primary hover:text-nexus-primary/90 p-0"
+                    onClick={() => handleReadMore(post.id)}
+                  >
                     Read more
                     <ArrowRight className="ml-1 h-4 w-4" />
                   </Button>
@@ -71,7 +86,11 @@ const RecentPosts = () => {
         </div>
         
         <div className="text-center mt-10">
-          <Button variant="outline" className="border-nexus-primary text-nexus-primary hover:bg-nexus-primary/10">
+          <Button 
+            variant="outline" 
+            className="border-nexus-primary text-nexus-primary hover:bg-nexus-primary/10"
+            onClick={handleViewAllArticles}
+          >
             View all articles
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
