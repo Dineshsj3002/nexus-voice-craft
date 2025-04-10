@@ -18,20 +18,20 @@ const Hero = () => {
 
   const heroImages = [
     {
-      src: "/lovable-uploads/fd080c60-30b6-4b82-b4c7-f182582f4d18.png",
-      alt: "Campus aerial view"
+      src: "/lovable-uploads/ab858792-d735-4fc0-a440-d2e156796358.png",
+      alt: "Modern classroom with students and lecturer"
     },
     {
-      src: "/lovable-uploads/87030a39-6fa7-425b-99f4-05b0abb9ded1.png",
-      alt: "Academic Buildings"
+      src: "/lovable-uploads/681b8611-5081-4d74-9a73-6c535d892f2f.png",
+      alt: "Campus building with landscaped gardens"
     },
     {
-      src: "/lovable-uploads/55f04ec5-8a46-435f-bfc6-06b4f7389672.png",
-      alt: "Research Centers"
+      src: "/lovable-uploads/181717b9-41b3-44d5-99a2-941c42a2b7d9.png",
+      alt: "Main entrance gate of Knowledge Institute of Technology"
     },
     {
-      src: "/lovable-uploads/4bededbc-dba6-4e4a-a676-75063a634759.png",
-      alt: "Student Amenities"
+      src: "/lovable-uploads/ec8f2a48-2d56-4532-82f0-ec1ecb10ea9d.png",
+      alt: "Aerial view of the campus complex"
     }
   ];
 
@@ -60,7 +60,7 @@ const Hero = () => {
                   <img 
                     src={image.src} 
                     alt={image.alt} 
-                    className="w-full h-[400px] object-cover"
+                    className="w-full h-[500px] object-cover"
                   />
                   <div className="absolute bottom-4 right-4 bg-white/80 px-3 py-1 rounded text-sm font-medium">
                     {index + 1}/{heroImages.length}
@@ -79,7 +79,7 @@ const Hero = () => {
         <h2 className="text-4xl font-bold text-gray-800 text-center mb-8">Our Mission</h2>
         
         <p className="text-xl text-gray-700 text-center max-w-4xl mx-auto leading-relaxed">
-          At alumNexus, we are dedicated to fostering a strong and lasting bond between 
+          At Knowledge Institute of Technology, we are dedicated to fostering a strong and lasting bond between 
           students and alumni, creating a network where knowledge, experience, and 
           opportunities flow seamlessly. Our mission is to empower students by providing 
           direct access to mentorship, career guidance, and professional development through 
