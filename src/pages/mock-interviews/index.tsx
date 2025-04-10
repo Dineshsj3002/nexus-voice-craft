@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -6,51 +5,40 @@ import ChatBot from '@/components/ChatBot';
 import { Button } from '@/components/ui/button';
 import { Calendar, Users, Clock, Video, Award, MessageSquare, Code, Briefcase } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-
 const MockInterviewsPage = () => {
-  const upcomingInterviews = [
-    {
-      id: 1,
-      title: "Software Engineering Interview",
-      mentor: "Sarah Johnson",
-      company: "Google",
-      date: "April 15, 2025",
-      time: "2:00 PM - 3:00 PM",
-      status: "confirmed",
-      image: "/lovable-uploads/55f04ec5-8a46-435f-bfc6-06b4f7389672.png"
-    },
-    {
-      id: 2,
-      title: "Product Management Interview",
-      mentor: "Michael Chen",
-      company: "Microsoft",
-      date: "April 18, 2025",
-      time: "11:00 AM - 12:00 PM",
-      status: "pending",
-      image: "/lovable-uploads/87030a39-6fa7-425b-99f4-05b0abb9ded1.png"
-    }
-  ];
-
-  const mockInterviewTypes = [
-    {
-      title: "Technical Interviews",
-      description: "Practice coding problems, system design, and technical questions with experienced engineers.",
-      icon: <Code className="h-10 w-10 text-nexus-primary" />
-    },
-    {
-      title: "Behavioral Interviews",
-      description: "Master the art of telling your story and showcasing your soft skills with HR professionals.",
-      icon: <Users className="h-10 w-10 text-nexus-primary" />
-    },
-    {
-      title: "Case Interviews",
-      description: "Tackle business problems and demonstrate analytical thinking with consultants and managers.",
-      icon: <Briefcase className="h-10 w-10 text-nexus-primary" />
-    }
-  ];
-
-  return (
-    <div className="min-h-screen flex flex-col">
+  const upcomingInterviews = [{
+    id: 1,
+    title: "Software Engineering Interview",
+    mentor: "Sarah Johnson",
+    company: "Google",
+    date: "April 15, 2025",
+    time: "2:00 PM - 3:00 PM",
+    status: "confirmed",
+    image: "/lovable-uploads/55f04ec5-8a46-435f-bfc6-06b4f7389672.png"
+  }, {
+    id: 2,
+    title: "Product Management Interview",
+    mentor: "Michael Chen",
+    company: "Microsoft",
+    date: "April 18, 2025",
+    time: "11:00 AM - 12:00 PM",
+    status: "pending",
+    image: "/lovable-uploads/87030a39-6fa7-425b-99f4-05b0abb9ded1.png"
+  }];
+  const mockInterviewTypes = [{
+    title: "Technical Interviews",
+    description: "Practice coding problems, system design, and technical questions with experienced engineers.",
+    icon: <Code className="h-10 w-10 text-nexus-primary" />
+  }, {
+    title: "Behavioral Interviews",
+    description: "Master the art of telling your story and showcasing your soft skills with HR professionals.",
+    icon: <Users className="h-10 w-10 text-nexus-primary" />
+  }, {
+    title: "Case Interviews",
+    description: "Tackle business problems and demonstrate analytical thinking with consultants and managers.",
+    icon: <Briefcase className="h-10 w-10 text-nexus-primary" />
+  }];
+  return <div className="min-h-screen flex flex-col">
       <Header />
       
       <main className="flex-grow py-12 px-4 md:px-8 bg-gray-50">
@@ -91,11 +79,7 @@ const MockInterviewsPage = () => {
               
               <div className="relative">
                 <div className="rounded-lg overflow-hidden shadow-xl">
-                  <img 
-                    src="/lovable-uploads/24f2d64b-472c-43e4-b881-f772a1d0e057.png" 
-                    alt="Students in mock interview" 
-                    className="w-full h-auto object-cover"
-                  />
+                  <img alt="Students in mock interview" className="w-full h-auto object-fill" src="/lovable-uploads/d4764814-25a7-4fe4-aa26-ef395ab96aea.jpg" />
                 </div>
                 
                 {/* Floating card */}
@@ -118,21 +102,15 @@ const MockInterviewsPage = () => {
           <div className="mb-10">
             <h2 className="text-2xl font-bold font-display mb-6">Your Upcoming Interviews</h2>
             
-            {upcomingInterviews.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {upcomingInterviews.map((interview) => (
-                  <Card key={interview.id} className="hover-scale">
+            {upcomingInterviews.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {upcomingInterviews.map(interview => <Card key={interview.id} className="hover-scale">
                     <CardHeader className="pb-2">
                       <div className="flex justify-between items-start">
                         <div>
                           <CardTitle className="text-xl">{interview.title}</CardTitle>
                           <CardDescription>with {interview.mentor} ({interview.company})</CardDescription>
                         </div>
-                        <div className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          interview.status === 'confirmed' 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
+                        <div className={`px-2 py-1 rounded-full text-xs font-medium ${interview.status === 'confirmed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
                           {interview.status === 'confirmed' ? 'Confirmed' : 'Pending'}
                         </div>
                       </div>
@@ -157,8 +135,7 @@ const MockInterviewsPage = () => {
                         Join Call
                       </Button>
                     </CardFooter>
-                  </Card>
-                ))}
+                  </Card>)}
                 
                 {/* Add Card */}
                 <Card className="border-dashed border-2 hover:bg-gray-50 transition-colors cursor-pointer flex items-center justify-center min-h-[220px]">
@@ -170,9 +147,7 @@ const MockInterviewsPage = () => {
                     <p className="text-sm text-gray-500">Choose from 100+ mock interview types with alumni experts.</p>
                   </CardContent>
                 </Card>
-              </div>
-            ) : (
-              <Card className="border-dashed border-2 p-8 text-center">
+              </div> : <Card className="border-dashed border-2 p-8 text-center">
                 <CardContent className="flex flex-col items-center justify-center p-6">
                   <div className="rounded-full bg-gray-100 p-3 mb-4">
                     <Calendar className="h-8 w-8 text-nexus-primary" />
@@ -183,16 +158,14 @@ const MockInterviewsPage = () => {
                     Schedule Your First Interview
                   </Button>
                 </CardContent>
-              </Card>
-            )}
+              </Card>}
           </div>
           
           {/* Interview Types */}
           <div className="mb-10">
             <h2 className="text-2xl font-bold font-display mb-6">Mock Interview Types</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {mockInterviewTypes.map((type, index) => (
-                <Card key={index} className="hover-scale">
+              {mockInterviewTypes.map((type, index) => <Card key={index} className="hover-scale">
                   <CardHeader>
                     <div className="mb-2">
                       {type.icon}
@@ -207,8 +180,7 @@ const MockInterviewsPage = () => {
                       Learn More
                     </Button>
                   </CardFooter>
-                </Card>
-              ))}
+                </Card>)}
             </div>
           </div>
           
@@ -248,11 +220,7 @@ const MockInterviewsPage = () => {
             <div className="bg-gray-100 rounded-lg p-6">
               <div className="flex flex-col md:flex-row items-center gap-6">
                 <div className="w-full md:w-1/3 flex-shrink-0">
-                  <img 
-                    src="/lovable-uploads/4bededbc-dba6-4e4a-a676-75063a634759.png"
-                    alt="Student testimonial" 
-                    className="rounded-lg w-full h-auto object-cover shadow-md"
-                  />
+                  <img src="/lovable-uploads/4bededbc-dba6-4e4a-a676-75063a634759.png" alt="Student testimonial" className="rounded-lg w-full h-auto object-cover shadow-md" />
                 </div>
                 <div>
                   <p className="text-lg italic mb-4">
@@ -283,8 +251,6 @@ const MockInterviewsPage = () => {
       
       <Footer />
       <ChatBot />
-    </div>
-  );
+    </div>;
 };
-
 export default MockInterviewsPage;
