@@ -1,0 +1,87 @@
+
+import React, { useState } from 'react';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import ChatBot from '@/components/ChatBot';
+import { Alumni, alumniData } from '@/data/alumni';
+import AlumniCard from '@/components/AlumniCard';
+import AlumniFilters from '@/components/AlumniFilters';
+import { Input } from '@/components/ui/input';
+import { Search } from 'lucide-react';
+
+const AlumniPage = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState({
+    graduationYear: '',
+    industry: '',
+    location: '',
+  });
+
+  // Filter alumni based on search query and filters
+  const filteredAlumni = alumniData.filter((alumni) => {
+    const matchesSearch = 
+      alumni.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      alumni.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      alumni.role.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesYear = !filters.graduationYear || alumni.graduationYear === filters.graduationYear;
+    const matchesIndustry = !filters.industry || alumni.industry === filters.industry;
+    const matchesLocation = !filters.location || alumni.location.toLowerCase().includes(filters.location.toLowerCase());
+    
+    return matchesSearch && matchesYear && matchesIndustry && matchesLocation;
+  });
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      
+      <main className="flex-grow py-16 px-4 md:px-8">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-4xl font-bold font-display mb-4">Alumni Directory</h1>
+          <p className="text-lg text-gray-600 mb-8">
+            Connect with our diverse network of successful alumni from various industries around the world.
+          </p>
+          
+          {/* Search and Filter Section */}
+          <div className="bg-white shadow-md rounded-lg p-6 mb-8">
+            <div className="flex flex-col md:flex-row gap-4 mb-6">
+              <div className="relative flex-grow">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  placeholder="Search alumni by name, company, or role"
+                  className="pl-9"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              <AlumniFilters filters={filters} setFilters={setFilters} />
+            </div>
+            
+            <div className="text-sm text-gray-500">
+              Showing {filteredAlumni.length} of {alumniData.length} alumni
+            </div>
+          </div>
+          
+          {/* Alumni Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredAlumni.map((alumni) => (
+              <AlumniCard key={alumni.id} alumni={alumni} />
+            ))}
+          </div>
+          
+          {filteredAlumni.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-lg">No alumni match your search criteria.</p>
+              <p className="text-gray-400">Try adjusting your filters or search query.</p>
+            </div>
+          )}
+        </div>
+      </main>
+      
+      <Footer />
+      <ChatBot />
+    </div>
+  );
+};
+
+export default AlumniPage;
