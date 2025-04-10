@@ -49,7 +49,7 @@ const Hero = () => {
             className="bg-nexus-primary hover:bg-nexus-primary/90 text-white text-lg px-6 py-6 rounded-md flex items-center"
             onClick={handleJoinCommunity}
           >
-            Join our community
+            Join our community today
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         </div>
