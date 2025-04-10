@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Send, Search, User, Users } from 'lucide-react';
+import { Send, Search, User, Users, MessageSquare } from 'lucide-react';
 
 const ChatPage = () => {
   const [message, setMessage] = useState('');
