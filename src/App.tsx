@@ -19,6 +19,16 @@ import ForumPage from "./pages/forum";
 import ForumPostPage from "./pages/forum/post/[id]";
 import ForumCategoryPage from "./pages/forum/category/[id]";
 
+// Import the new pages
+import CampusTourPage from "./pages/campus/tour";
+import CampusFacilitiesPage from "./pages/campus/facilities";
+import CampusHistoryPage from "./pages/campus/history";
+import IntegratingOpportunitiesPage from "./pages/integrating/opportunities";
+import MentoringPage from "./pages/integrating/mentoring";
+import LocalNetworkingPage from "./pages/integrating/networking";
+import OfficeBarriersPage from "./pages/office-barriers";
+import ChatPage from "./pages/chat";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -37,6 +47,22 @@ const App = () => (
           <Route path="/about" element={<AboutPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          
+          {/* Campus Routes */}
+          <Route path="/campus/tour" element={<CampusTourPage />} />
+          <Route path="/campus/facilities" element={<CampusFacilitiesPage />} />
+          <Route path="/campus/history" element={<CampusHistoryPage />} />
+          
+          {/* Integrating Routes */}
+          <Route path="/integrating/opportunities" element={<IntegratingOpportunitiesPage />} />
+          <Route path="/integrating/mentoring" element={<MentoringPage />} />
+          <Route path="/integrating/networking" element={<LocalNetworkingPage />} />
+          
+          {/* Office Barriers Route */}
+          <Route path="/office-barriers" element={<OfficeBarriersPage />} />
+          
+          {/* Chat Route */}
+          <Route path="/chat" element={<ChatPage />} />
           
           {/* Forum Routes */}
           <Route path="/forum" element={<ForumPage />} />
