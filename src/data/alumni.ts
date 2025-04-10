@@ -1,4 +1,3 @@
-
 export interface Alumni {
   id: string;
   name: string;
@@ -14,9 +13,27 @@ export interface Alumni {
   bio: string;
   achievements: string[];
   willingToMentor: boolean;
+  previousRoles?: {
+    company: string;
+    role: string;
+    startYear: string;
+    endYear: string;
+  }[];
+  expertiseTags?: string[];
+  availabilityPreferences?: {
+    weekdayPreference: string[];
+    timeOfDayPreference: string[];
+    sessionLength: number;
+    maxSessionsPerMonth: number;
+  };
+  privacySettings?: {
+    mentorshipVisibility: 'all' | 'request' | 'unavailable';
+    profileDetailLevel: 'full' | 'current' | 'industry';
+    contactMethods: ('platform' | 'email' | 'video')[];
+    allowSpotlight: boolean;
+  };
 }
 
-// Sample alumni data
 export const alumniData: Alumni[] = [
   {
     id: "1",
@@ -32,7 +49,24 @@ export const alumniData: Alumni[] = [
     linkedin: "linkedin.com/in/sarahjohnson",
     bio: "Building scalable cloud solutions at Google. Passionate about mentoring junior developers and promoting diversity in tech.",
     achievements: ["Google Developer Expert", "Speaker at Google I/O 2023", "Lead engineer for Google Cloud Platform"],
-    willingToMentor: true
+    willingToMentor: true,
+    previousRoles: [
+      { company: "Microsoft", role: "Software Engineer", startYear: "2015", endYear: "2018" },
+      { company: "Twitter", role: "Frontend Developer", startYear: "2018", endYear: "2020" }
+    ],
+    expertiseTags: ["React", "Cloud Architecture", "System Design", "Technical Leadership"],
+    availabilityPreferences: {
+      weekdayPreference: ["Monday", "Wednesday"],
+      timeOfDayPreference: ["Evening"],
+      sessionLength: 30,
+      maxSessionsPerMonth: 4
+    },
+    privacySettings: {
+      mentorshipVisibility: 'all',
+      profileDetailLevel: 'full',
+      contactMethods: ['platform', 'email', 'video'],
+      allowSpotlight: true
+    }
   },
   {
     id: "2",
@@ -162,7 +196,6 @@ export const alumniData: Alumni[] = [
   }
 ];
 
-// Get unique values for filters
 export const getUniqueIndustries = () => {
   return [...new Set(alumniData.map(alumni => alumni.industry))].sort();
 };
@@ -173,4 +206,67 @@ export const getUniqueGraduationYears = () => {
 
 export const getUniqueLocations = () => {
   return [...new Set(alumniData.map(alumni => alumni.location))].sort();
+};
+
+export interface Student {
+  id: string;
+  name: string;
+  graduationYear: string;
+  major: string;
+  interests: string[];
+  careerGoals: string[];
+  preferredIndustries: string[];
+}
+
+export const sampleStudent: Student = {
+  id: "s1",
+  name: "Alex Lee",
+  graduationYear: "2024",
+  major: "Computer Science",
+  interests: ["Web Development", "Machine Learning", "Cloud Computing"],
+  careerGoals: ["Software Engineer", "Data Scientist"],
+  preferredIndustries: ["Technology", "Finance"]
+};
+
+export const getRecommendedAlumni = (student: Student, count: number = 3): Alumni[] => {
+  const scoredAlumni = alumniData.map(alumni => {
+    let score = 0;
+    
+    if (student.preferredIndustries.includes(alumni.industry)) {
+      score += 3;
+    }
+    
+    if (student.careerGoals.some(goal => 
+      alumni.role.toLowerCase().includes(goal.toLowerCase()))) {
+      score += 2;
+    }
+    
+    if (alumni.expertiseTags) {
+      const matchingTags = student.interests.filter(interest => 
+        alumni.expertiseTags?.some(tag => 
+          tag.toLowerCase().includes(interest.toLowerCase()) || 
+          interest.toLowerCase().includes(tag.toLowerCase())
+        )
+      );
+      score += matchingTags.length;
+    }
+    
+    if (alumni.willingToMentor) {
+      score += 2;
+    }
+    
+    return { alumni, score };
+  });
+  
+  return scoredAlumni
+    .sort((a, b) => b.score - a.score)
+    .slice(0, count)
+    .map(item => item.alumni);
+};
+
+export const getSpotlightAlumni = (): Alumni[] => {
+  return alumniData
+    .filter(alumni => alumni.privacySettings?.allowSpotlight)
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 1);
 };

@@ -10,6 +10,8 @@ import ChatBot from '@/components/ChatBot';
 import RecentPosts from '@/components/RecentPosts';
 import Events from '@/components/Events';
 import { useToast } from '@/hooks/use-toast';
+import RecommendedAlumni from '@/components/RecommendedAlumni';
+import AlumniSpotlight from '@/components/AlumniSpotlight';
 
 // Import these to make sure they're available
 import { showSuccessToast, toastTypes } from '@/components/SuccessToast';
@@ -31,6 +33,10 @@ const Index = () => {
       
       <main className="flex-grow">
         <Hero />
+        <div className="container mx-auto px-4">
+          <AlumniSpotlight />
+          <RecommendedAlumni />
+        </div>
         <Features />
         <Testimonials />
         <RecentPosts />

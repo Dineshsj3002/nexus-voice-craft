@@ -29,6 +29,7 @@ import LocalNetworkingPage from "./pages/integrating/networking";
 import OfficeBarriersPage from "./pages/office-barriers";
 import ChatPage from "./pages/chat";
 import AlumniPage from "./pages/alumni";
+import AlumniPrivacySettingsPage from "./pages/alumni/privacy-settings";
 
 const App = () => {
   // Create a new QueryClient instance inside the component
@@ -51,6 +52,7 @@ const App = () => {
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/alumni" element={<AlumniPage />} />
+            <Route path="/alumni/privacy-settings" element={<AlumniPrivacySettingsPage />} />
             
             {/* Campus Routes */}
             <Route path="/campus/tour" element={<CampusTourPage />} />

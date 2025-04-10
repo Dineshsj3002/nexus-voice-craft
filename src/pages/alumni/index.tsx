@@ -7,9 +7,12 @@ import { Alumni, alumniData } from '@/data/alumni';
 import AlumniCard from '@/components/AlumniCard';
 import AlumniFilters from '@/components/AlumniFilters';
 import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
+import { Search, UserPlus2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 const AlumniPage = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
     graduationYear: '',
@@ -70,9 +73,33 @@ const AlumniPage = () => {
           </div>
           
           {filteredAlumni.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">No alumni match your search criteria.</p>
-              <p className="text-gray-400">Try adjusting your filters or search query.</p>
+            <div className="text-center py-16 px-4 bg-gray-50 rounded-lg border border-gray-200">
+              <UserPlus2 className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">We couldn't find alumni matching your current filters</h3>
+              <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                Try broadening your search criteria or check out our 'Suggested Mentors' section for personalized recommendations.
+              </p>
+              <div className="space-x-4">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setSearchQuery('');
+                    setFilters({
+                      graduationYear: '',
+                      industry: '',
+                      location: '',
+                    });
+                  }}
+                >
+                  Clear all filters
+                </Button>
+                <Button
+                  onClick={() => navigate('/')}
+                  className="bg-nexus-primary hover:bg-nexus-primary/90"
+                >
+                  View recommended alumni
+                </Button>
+              </div>
             </div>
           )}
         </div>

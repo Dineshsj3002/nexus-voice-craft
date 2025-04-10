@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -9,16 +9,20 @@ import {
   MapPin, 
   GraduationCap, 
   Mail, 
-  Linkedin, 
-  MessageSquare 
+  MessageSquare,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { showSuccessToast } from './SuccessToast';
+import CareerJourney from './CareerJourney';
 
 interface AlumniCardProps {
   alumni: Alumni;
 }
 
 const AlumniCard = ({ alumni }: AlumniCardProps) => {
+  const [expanded, setExpanded] = useState(false);
+  
   const handleContactClick = () => {
     showSuccessToast({ 
       message: `Contact request sent to ${alumni.name}!`, 
@@ -31,6 +35,10 @@ const AlumniCard = ({ alumni }: AlumniCardProps) => {
       message: `Mentorship request sent to ${alumni.name}!`, 
       emoji: '🎓' 
     });
+  };
+  
+  const toggleExpanded = () => {
+    setExpanded(!expanded);
   };
 
   return (
@@ -79,7 +87,39 @@ const AlumniCard = ({ alumni }: AlumniCardProps) => {
               Available to mentor
             </Badge>
           )}
+          {alumni.expertiseTags && alumni.expertiseTags.slice(0, 2).map((tag, index) => (
+            <Badge key={index} variant="outline" className="bg-gray-100 text-gray-700 border-gray-200">
+              {tag}
+            </Badge>
+          ))}
         </div>
+        
+        {expanded && alumni.previousRoles && alumni.previousRoles.length > 0 && (
+          <div className="mt-4 pt-4 border-t border-gray-100">
+            <CareerJourney alumni={alumni} />
+          </div>
+        )}
+        
+        {alumni.previousRoles && alumni.previousRoles.length > 0 && (
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="mt-3 text-gray-500 hover:text-gray-700 p-0 h-auto"
+            onClick={toggleExpanded}
+          >
+            {expanded ? (
+              <>
+                <ChevronUp className="h-4 w-4 mr-1" />
+                Hide career journey
+              </>
+            ) : (
+              <>
+                <ChevronDown className="h-4 w-4 mr-1" />
+                View career journey
+              </>
+            )}
+          </Button>
+        )}
       </CardContent>
 
       <CardFooter className="border-t pt-4 flex justify-between">
