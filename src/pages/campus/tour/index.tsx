@@ -1,12 +1,49 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ChatBot from '@/components/ChatBot';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+import { Slider } from '@/components/ui/slider';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const CampusTourPage = () => {
+  const [currentImage, setCurrentImage] = useState(0);
+  
+  const tourImages = [
+    {
+      src: "/lovable-uploads/fd080c60-30b6-4b82-b4c7-f182582f4d18.png",
+      alt: "Campus aerial view",
+      title: "Main Campus"
+    },
+    {
+      src: "/lovable-uploads/87030a39-6fa7-425b-99f4-05b0abb9ded1.png",
+      alt: "Academic Buildings",
+      title: "Academic Buildings"
+    },
+    {
+      src: "/lovable-uploads/55f04ec5-8a46-435f-bfc6-06b4f7389672.png",
+      alt: "Research Centers",
+      title: "Research Centers"
+    },
+    {
+      src: "/lovable-uploads/4bededbc-dba6-4e4a-a676-75063a634759.png",
+      alt: "Student Amenities",
+      title: "Student Amenities"
+    }
+  ];
+
+  const handleSliderChange = (value: number[]) => {
+    setCurrentImage(value[0]);
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -32,11 +69,39 @@ const CampusTourPage = () => {
             </div>
             
             <div className="rounded-lg overflow-hidden shadow-md">
-              <img 
-                src="/lovable-uploads/fd080c60-30b6-4b82-b4c7-f182582f4d18.png" 
-                alt="Campus aerial view" 
-                className="w-full h-auto"
-              />
+              <Carousel className="w-full">
+                <CarouselContent>
+                  {tourImages.map((image, index) => (
+                    <CarouselItem key={index}>
+                      <div className="relative">
+                        <img 
+                          src={image.src} 
+                          alt={image.alt} 
+                          className="w-full h-auto object-cover"
+                        />
+                        <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white p-3">
+                          <h3 className="font-semibold">{image.title}</h3>
+                        </div>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="left-2" />
+                <CarouselNext className="right-2" />
+              </Carousel>
+              
+              <div className="mt-4 px-2">
+                <Slider 
+                  defaultValue={[0]} 
+                  max={tourImages.length - 1} 
+                  step={1} 
+                  value={[currentImage]}
+                  onValueChange={handleSliderChange}
+                />
+                <div className="text-center mt-2 text-sm text-gray-500">
+                  Slide to navigate through images ({currentImage + 1}/{tourImages.length})
+                </div>
+              </div>
             </div>
           </div>
           

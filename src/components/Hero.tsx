@@ -1,12 +1,39 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ArrowLeft, ArrowRight as NextIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { showSuccessToast } from '@/components/SuccessToast';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const Hero = () => {
   const navigate = useNavigate();
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const heroImages = [
+    {
+      src: "/lovable-uploads/fd080c60-30b6-4b82-b4c7-f182582f4d18.png",
+      alt: "Campus aerial view"
+    },
+    {
+      src: "/lovable-uploads/87030a39-6fa7-425b-99f4-05b0abb9ded1.png",
+      alt: "Academic Buildings"
+    },
+    {
+      src: "/lovable-uploads/55f04ec5-8a46-435f-bfc6-06b4f7389672.png",
+      alt: "Research Centers"
+    },
+    {
+      src: "/lovable-uploads/4bededbc-dba6-4e4a-a676-75063a634759.png",
+      alt: "Student Amenities"
+    }
+  ];
 
   const handleJoinCommunity = () => {
     showSuccessToast({
@@ -23,13 +50,28 @@ const Hero = () => {
 
   return (
     <section className="bg-white">
-      {/* Main hero image */}
+      {/* Hero carousel */}
       <div className="w-full border-t border-b border-gray-200">
-        <img 
-          src="/lovable-uploads/fd080c60-30b6-4b82-b4c7-f182582f4d18.png" 
-          alt="Campus aerial view" 
-          className="w-full h-[400px] object-cover"
-        />
+        <Carousel className="w-full relative">
+          <CarouselContent>
+            {heroImages.map((image, index) => (
+              <CarouselItem key={index}>
+                <div className="relative">
+                  <img 
+                    src={image.src} 
+                    alt={image.alt} 
+                    className="w-full h-[400px] object-cover"
+                  />
+                  <div className="absolute bottom-4 right-4 bg-white/80 px-3 py-1 rounded text-sm font-medium">
+                    {index + 1}/{heroImages.length}
+                  </div>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="left-4 bg-white/80 hover:bg-white" />
+          <CarouselNext className="right-4 bg-white/80 hover:bg-white" />
+        </Carousel>
       </div>
       
       {/* Mission statement */}
