@@ -3,9 +3,9 @@ import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ChatBot from '@/components/ChatBot';
-import { ForumCategories } from '@/components/forum/ForumCategories';
-import { ForumPosts } from '@/components/forum/ForumPosts';
-import { ForumNewPostButton } from '@/components/forum/ForumNewPostButton';
+import ForumCategories from '@/components/forum/ForumCategories';
+import ForumPosts from '@/components/forum/ForumPosts';
+import ForumNewPostButton from '@/components/forum/ForumNewPostButton';
 
 const ForumPage = () => {
   return (

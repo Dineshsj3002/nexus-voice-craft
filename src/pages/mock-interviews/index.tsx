@@ -1,8 +1,9 @@
+
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ChatBot from '@/components/ChatBot';
-import { MockInterviewCard } from '@/components/MockInterviewCard';
+import MockInterviewCard from '@/components/MockInterviewCard';
 import { Button } from '@/components/ui/button';
 import { Calendar, Users, Video, FileText, Code } from 'lucide-react';
 
