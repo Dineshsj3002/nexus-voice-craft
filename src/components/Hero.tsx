@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, ArrowLeft, ArrowRight as NextIcon } from 'lucide-react';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { showSuccessToast } from '@/components/SuccessToast';
 import {
@@ -69,8 +69,8 @@ const Hero = () => {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="left-4 bg-white/80 hover:bg-white" />
-          <CarouselNext className="right-4 bg-white/80 hover:bg-white" />
+          <CarouselPrevious className="absolute left-4 bg-white/80 hover:bg-white" />
+          <CarouselNext className="absolute right-4 bg-white/80 hover:bg-white" />
         </Carousel>
       </div>
       

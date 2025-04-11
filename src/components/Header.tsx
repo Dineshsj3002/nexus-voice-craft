@@ -4,17 +4,25 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Menu, UserPlus, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
   
   const handleSignIn = () => {
-    alert("Sign in functionality will be coming soon!");
+    toast({
+      title: "Login Feature",
+      description: "Login functionality will be coming soon!",
+    });
   };
   
   const handleJoinNow = () => {
-    alert("Join now functionality will be coming soon!");
+    toast({
+      title: "Registration Feature",
+      description: "Registration functionality will be coming soon!",
+    });
   };
   
   return (
@@ -89,8 +97,12 @@ const Header = () => {
                 <MobileNavLink to="/">HOME</MobileNavLink>
                 <MobileNavLink to="/about">ABOUT US</MobileNavLink>
                 <MobileNavLink to="/events">EVENTS</MobileNavLink>
-                <MobileNavLink to="/campus">CAMPUS</MobileNavLink>
-                <MobileNavLink to="/integrating">INTEGRATING</MobileNavLink>
+                <MobileNavLink to="/campus/tour">CAMPUS TOUR</MobileNavLink>
+                <MobileNavLink to="/campus/facilities">FACILITIES</MobileNavLink>
+                <MobileNavLink to="/campus/history">HISTORY</MobileNavLink>
+                <MobileNavLink to="/integrating/opportunities">OPPORTUNITIES</MobileNavLink>
+                <MobileNavLink to="/integrating/mentoring">MENTORING</MobileNavLink>
+                <MobileNavLink to="/integrating/networking">LOCAL NETWORKING</MobileNavLink>
                 <MobileNavLink to="/office-barriers">OFFICE BARRIERS</MobileNavLink>
                 <MobileNavLink to="/mock-interviews">MOCK INTERVIEW</MobileNavLink>
                 <MobileNavLink to="/forum">DISCUSSION FORUM</MobileNavLink>
