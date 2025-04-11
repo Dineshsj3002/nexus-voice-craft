@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -26,7 +27,54 @@ const categories = [
     postCount: 98,
     icon: <Users className="h-6 w-6 text-purple-500" />
   },
-  // Other categories...
+  {
+    id: '3',
+    name: 'Career Advice',
+    description: 'Seek and share career guidance and job opportunities',
+    memberCount: 385,
+    postCount: 124,
+    icon: <Users className="h-6 w-6 text-green-500" />
+  },
+  {
+    id: '4',
+    name: 'Industry Insights',
+    description: 'Discussions about trends and developments in various industries',
+    memberCount: 312,
+    postCount: 87,
+    icon: <Users className="h-6 w-6 text-orange-500" />
+  },
+  {
+    id: '5',
+    name: 'Academic Resources',
+    description: 'Share and discover academic resources and study materials',
+    memberCount: 278,
+    postCount: 73,
+    icon: <Users className="h-6 w-6 text-red-500" />
+  },
+  {
+    id: '6',
+    name: 'Technology',
+    description: 'Discuss the latest in technology, coding, and digital innovation',
+    memberCount: 401,
+    postCount: 109,
+    icon: <Users className="h-6 w-6 text-indigo-500" />
+  },
+  {
+    id: '7',
+    name: 'Global Opportunities',
+    description: 'Explore global study, work, and volunteer opportunities',
+    memberCount: 246,
+    postCount: 62,
+    icon: <Users className="h-6 w-6 text-cyan-500" />
+  },
+  {
+    id: '8',
+    name: 'Innovation & Entrepreneurship',
+    description: 'Discuss startups, innovation, and entrepreneurial ventures',
+    memberCount: 352,
+    postCount: 95,
+    icon: <Users className="h-6 w-6 text-amber-500" />
+  },
 ];
 
 const ForumCategoryPage = () => {
@@ -34,7 +82,30 @@ const ForumCategoryPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   
   // Find the current category based on the ID parameter
-  const category = categories.find(cat => cat.id === id) || categories[0];
+  const category = categories.find(cat => cat.id === id);
+
+  // If category not found, show a default or fallback
+  if (!category) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-grow py-8 px-4 md:px-8 bg-gray-50">
+          <div className="max-w-7xl mx-auto">
+            <Link to="/forum" className="inline-flex items-center text-gray-600 hover:text-nexus-primary mb-6">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to all categories
+            </Link>
+            <div className="text-center py-12">
+              <h1 className="text-2xl font-bold text-gray-800 mb-4">Category Not Found</h1>
+              <p className="text-gray-600">The category you're looking for doesn't exist or may have been moved.</p>
+            </div>
+          </div>
+        </main>
+        <Footer />
+        <ChatBot />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -83,7 +154,7 @@ const ForumCategoryPage = () => {
             </div>
           </div>
           
-          <ForumPosts filter="recent" searchQuery={searchQuery} />
+          <ForumPosts filter="recent" searchQuery={searchQuery} categoryId={id} />
         </div>
       </main>
       

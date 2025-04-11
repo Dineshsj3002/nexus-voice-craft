@@ -6,7 +6,7 @@ import { ChevronRight, MessageSquare, Users, BarChart, BookOpen, Code, Globe, Br
 
 const categories = [
   {
-    id: 1,
+    id: '1',
     name: 'General Discussion',
     description: 'Open discussions for all members of alumNexus community',
     icon: <MessageSquare className="h-6 w-6 text-blue-500" />,
@@ -14,7 +14,7 @@ const categories = [
     color: 'bg-blue-50 border-blue-200'
   },
   {
-    id: 2,
+    id: '2',
     name: 'Networking',
     description: 'Connect with fellow alumni and students for professional networking',
     icon: <Users className="h-6 w-6 text-purple-500" />,
@@ -22,7 +22,7 @@ const categories = [
     color: 'bg-purple-50 border-purple-200'
   },
   {
-    id: 3,
+    id: '3',
     name: 'Career Advice',
     description: 'Seek and share career guidance and job opportunities',
     icon: <Briefcase className="h-6 w-6 text-green-500" />,
@@ -30,7 +30,7 @@ const categories = [
     color: 'bg-green-50 border-green-200'
   },
   {
-    id: 4,
+    id: '4',
     name: 'Industry Insights',
     description: 'Discussions about trends and developments in various industries',
     icon: <BarChart className="h-6 w-6 text-orange-500" />,
@@ -38,7 +38,7 @@ const categories = [
     color: 'bg-orange-50 border-orange-200'
   },
   {
-    id: 5,
+    id: '5',
     name: 'Academic Resources',
     description: 'Share and discover academic resources and study materials',
     icon: <BookOpen className="h-6 w-6 text-red-500" />,
@@ -46,7 +46,7 @@ const categories = [
     color: 'bg-red-50 border-red-200'
   },
   {
-    id: 6,
+    id: '6',
     name: 'Technology',
     description: 'Discuss the latest in technology, coding, and digital innovation',
     icon: <Code className="h-6 w-6 text-indigo-500" />,
@@ -54,7 +54,7 @@ const categories = [
     color: 'bg-indigo-50 border-indigo-200'
   },
   {
-    id: 7,
+    id: '7',
     name: 'Global Opportunities',
     description: 'Explore global study, work, and volunteer opportunities',
     icon: <Globe className="h-6 w-6 text-cyan-500" />,
@@ -62,7 +62,7 @@ const categories = [
     color: 'bg-cyan-50 border-cyan-200'
   },
   {
-    id: 8,
+    id: '8',
     name: 'Innovation & Entrepreneurship',
     description: 'Discuss startups, innovation, and entrepreneurial ventures',
     icon: <Lightbulb className="h-6 w-6 text-amber-500" />,
@@ -73,26 +73,29 @@ const categories = [
 
 const ForumCategories = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {categories.map((category) => (
-        <Link to={`/forum/category/${category.id}`} key={category.id} className="hover:shadow-md transition-shadow">
-          <Card className={`h-full border ${category.color}`}>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <div className="flex items-center gap-3">
-                {category.icon}
-                <CardTitle className="text-lg">{category.name}</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <CardDescription className="text-gray-600">{category.description}</CardDescription>
-            </CardContent>
-            <CardFooter className="flex justify-between pt-2">
-              <span className="text-sm text-gray-500">{category.count} discussions</span>
-              <ChevronRight className="h-5 w-5 text-gray-400" />
-            </CardFooter>
-          </Card>
-        </Link>
-      ))}
+    <div className="space-y-4">
+      <h2 className="text-xl font-semibold mb-2">Categories</h2>
+      <div className="grid grid-cols-1 gap-4">
+        {categories.map((category) => (
+          <Link to={`/forum/category/${category.id}`} key={category.id} className="hover:shadow-md transition-shadow">
+            <Card className={`h-full border ${category.color}`}>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <div className="flex items-center gap-3">
+                  {category.icon}
+                  <CardTitle className="text-lg">{category.name}</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-gray-600">{category.description}</CardDescription>
+              </CardContent>
+              <CardFooter className="flex justify-between pt-2">
+                <span className="text-sm text-gray-500">{category.count} discussions</span>
+                <ChevronRight className="h-5 w-5 text-gray-400" />
+              </CardFooter>
+            </Card>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 };

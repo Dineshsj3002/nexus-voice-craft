@@ -9,6 +9,7 @@ import { MessageSquare, Heart, Eye, Clock } from 'lucide-react';
 interface ForumPostsProps {
   filter: 'recent' | 'popular' | 'my-discussions';
   searchQuery?: string;
+  categoryId?: string;
 }
 
 // Mock data for forum posts
@@ -23,6 +24,7 @@ const mockPosts = [
       department: 'Computer Science'
     },
     category: 'Networking',
+    categoryId: '2',
     replies: 24,
     likes: 47,
     views: 312,
@@ -42,6 +44,7 @@ const mockPosts = [
       department: 'Business Administration'
     },
     category: 'Career Advice',
+    categoryId: '3',
     replies: 18,
     likes: 32,
     views: 205,
@@ -61,6 +64,7 @@ const mockPosts = [
       department: 'Engineering'
     },
     category: 'Career Advice',
+    categoryId: '3',
     replies: 35,
     likes: 62,
     views: 428,
@@ -80,6 +84,7 @@ const mockPosts = [
       department: 'Business Administration'
     },
     category: 'Academic Resources',
+    categoryId: '5',
     replies: 12,
     likes: 19,
     views: 164,
@@ -99,6 +104,7 @@ const mockPosts = [
       department: 'Psychology'
     },
     category: 'General Discussion',
+    categoryId: '1',
     replies: 28,
     likes: 36,
     views: 250,
@@ -118,6 +124,7 @@ const mockPosts = [
       department: 'International Studies'
     },
     category: 'Global Opportunities',
+    categoryId: '7',
     replies: 30,
     likes: 55,
     views: 342,
@@ -129,10 +136,16 @@ const mockPosts = [
   }
 ];
 
-const ForumPosts = ({ filter, searchQuery = '' }: ForumPostsProps) => {
+const ForumPosts = ({ filter, searchQuery = '', categoryId }: ForumPostsProps) => {
   // Filter posts based on the selected tab
   let filteredPosts = [...mockPosts];
   
+  // Apply category filter if provided
+  if (categoryId) {
+    filteredPosts = filteredPosts.filter(post => post.categoryId === categoryId);
+  }
+  
+  // Apply tab filter
   if (filter === 'recent') {
     filteredPosts = filteredPosts.filter(post => post.isRecent);
   } else if (filter === 'popular') {
@@ -160,7 +173,9 @@ const ForumPosts = ({ filter, searchQuery = '' }: ForumPostsProps) => {
           <p className="text-gray-500 mt-2">
             {searchQuery 
               ? 'Try adjusting your search terms or start a new discussion.' 
-              : 'Be the first to start a discussion in this category.'}
+              : categoryId 
+                ? 'Be the first to start a discussion in this category.'
+                : 'No discussions match your current filters.'}
           </p>
         </div>
       ) : (
