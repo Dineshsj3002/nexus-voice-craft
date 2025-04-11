@@ -6,50 +6,50 @@ import ChatBot from '@/components/ChatBot';
 import MockInterviewCard from '@/components/MockInterviewCard';
 import { Button } from '@/components/ui/button';
 import { Calendar, Users, Video, FileText, Code } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { showSuccessToast } from '@/components/SuccessToast';
 
 const MockInterviewsPage = () => {
+  const navigate = useNavigate();
+  
   const mockInterviewTypes = [
     {
       title: "Technical Interview",
       description: "Practice technical questions related to your field of study with alumni working in the industry.",
-      icon: <Code className="h-8 w-8 text-nexus-primary" />,
-      benefits: [
-        "Get feedback on technical problem-solving",
-        "Learn industry-standard approaches",
-        "Build confidence for technical assessments"
-      ]
+      image: "/lovable-uploads/4bededbc-dba6-4e4a-a676-75063a634759.png",
+      duration: "45-60 minutes",
+      category: "Technical",
     },
     {
       title: "Behavioral Interview",
       description: "Prepare for behavioral questions and learn how to showcase your soft skills effectively.",
-      icon: <Users className="h-8 w-8 text-nexus-primary" />,
-      benefits: [
-        "Practice the STAR method for responses",
-        "Get feedback on communication style",
-        "Learn how to highlight leadership skills"
-      ]
+      image: "/lovable-uploads/533e4b15-f9ff-4642-b285-c0d2f8088578.jpg",
+      duration: "30-45 minutes",
+      category: "Behavioral",
     },
     {
       title: "Case Study Interview",
       description: "Practice answering case study questions common in consulting, business, and technical roles.",
-      icon: <FileText className="h-8 w-8 text-nexus-primary" />,
-      benefits: [
-        "Learn structured problem-solving approaches",
-        "Practice quantitative analysis under pressure",
-        "Develop clear presentation skills"
-      ]
+      image: "/lovable-uploads/d4764814-25a7-4fe4-aa26-ef395ab96aea.jpg",
+      duration: "60-90 minutes",
+      category: "Case Study",
     },
     {
       title: "Virtual Interview Prep",
       description: "Get comfortable with online interview formats through guided practice sessions.",
-      icon: <Video className="h-8 w-8 text-nexus-primary" />,
-      benefits: [
-        "Master virtual interviewing etiquette",
-        "Test your technical setup",
-        "Practice screen sharing and online presentations"
-      ]
+      image: "/lovable-uploads/0b7ef1b4-903b-465d-bc9c-410dde9d9ea6.jpg",
+      duration: "30-60 minutes",
+      category: "Virtual",
     }
   ];
+
+  const handleBookInterview = () => {
+    showSuccessToast({
+      message: "Your mock interview has been scheduled!",
+      emoji: "🎯"
+    });
+    // For demo purposes, we'd navigate to a confirmation page in a real app
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -69,8 +69,9 @@ const MockInterviewsPage = () => {
                 key={index}
                 title={type.title}
                 description={type.description}
-                icon={type.icon}
-                benefits={type.benefits}
+                image={type.image}
+                duration={type.duration}
+                category={type.category}
               />
             ))}
           </div>
@@ -97,7 +98,10 @@ const MockInterviewsPage = () => {
           </div>
           
           <div className="text-center">
-            <Button className="bg-nexus-primary hover:bg-nexus-primary/90 text-white text-lg px-8 py-6">
+            <Button 
+              className="bg-nexus-primary hover:bg-nexus-primary/90 text-white text-lg px-8 py-6"
+              onClick={handleBookInterview}
+            >
               Book a Mock Interview
             </Button>
           </div>
