@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { showSuccessToast } from '@/components/SuccessToast';
 import {
@@ -17,8 +18,8 @@ const Hero = () => {
 
   const heroImages = [
     {
-      src: "/lovable-uploads/ec8f2a48-2d56-4532-82f0-ec1ecb10ea9d.png",
-      alt: "Aerial view of the campus complex"
+      src: "/lovable-uploads/ab858792-d735-4fc0-a440-d2e156796358.png",
+      alt: "Modern classroom with students and lecturer"
     },
     {
       src: "/lovable-uploads/681b8611-5081-4d74-9a73-6c535d892f2f.png",
@@ -29,8 +30,8 @@ const Hero = () => {
       alt: "Main entrance gate of Knowledge Institute of Technology"
     },
     {
-      src: "/lovable-uploads/ab858792-d735-4fc0-a440-d2e156796358.png",
-      alt: "Modern classroom with students and lecturer"
+      src: "/lovable-uploads/ec8f2a48-2d56-4532-82f0-ec1ecb10ea9d.png",
+      alt: "Aerial view of the campus complex"
     }
   ];
 
