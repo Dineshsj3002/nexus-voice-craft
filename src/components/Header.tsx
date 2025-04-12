@@ -2,15 +2,33 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, UserPlus, ChevronDown, Phone, BookOpen, Award } from 'lucide-react';
+import { Menu, UserPlus, ChevronDown, Phone, BookOpen, Award, User, LogOut, Settings, UserCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import AuthDialog from '@/components/auth/AuthDialog';
+import AuthDialog, { useAuth } from '@/components/auth/AuthDialog';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user, isAuthenticated, logout } = useAuth();
+  
+  const handleLogout = () => {
+    logout();
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out.",
+    });
+  };
   
   return (
     <header className="bg-white border-b border-gray-200">
@@ -46,18 +64,62 @@ const Header = () => {
           </div>
         </Link>
         
-        {/* Auth Buttons */}
+        {/* Auth Buttons or User Profile */}
         <div className="hidden md:flex items-center space-x-3">
-          <AuthDialog 
-            triggerText="LOGIN" 
-            triggerClassName="border-nexus-primary text-nexus-primary hover:bg-nexus-primary hover:text-white"
-            defaultTab="login"
-          />
-          <AuthDialog 
-            triggerText="REGISTER" 
-            triggerClassName="bg-nexus-primary hover:bg-nexus-primary/90 text-white"
-            defaultTab="register"
-          />
+          {isAuthenticated && user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                  <Avatar className="h-10 w-10">
+                    {user.avatar ? (
+                      <AvatarImage src={user.avatar} alt={user.name} />
+                    ) : (
+                      <AvatarFallback className="bg-nexus-primary text-white">
+                        {user.name.substring(0, 2).toUpperCase()}
+                      </AvatarFallback>
+                    )}
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{user.name}</p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {user.email}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate('/alumni')}>
+                  <UserCircle className="mr-2 h-4 w-4" />
+                  <span>My Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/alumni/privacy-settings')}>
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Settings</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <>
+              <AuthDialog 
+                triggerText="LOGIN" 
+                triggerClassName="border-nexus-primary text-nexus-primary hover:bg-nexus-primary hover:text-white"
+                defaultTab="login"
+              />
+              <AuthDialog 
+                triggerText="REGISTER" 
+                triggerClassName="bg-nexus-primary hover:bg-nexus-primary/90 text-white"
+                defaultTab="register"
+              />
+            </>
+          )}
         </div>
         
         {/* Mobile Menu Button */}
@@ -114,16 +176,62 @@ const Header = () => {
                 <MobileNavLink to="/blog">BLOGS</MobileNavLink>
                 
                 <div className="pt-4 flex flex-col space-y-3">
-                  <AuthDialog 
-                    triggerText="LOGIN" 
-                    triggerClassName="border-white text-white w-full"
-                    defaultTab="login"
-                  />
-                  <AuthDialog 
-                    triggerText="REGISTER" 
-                    triggerClassName="bg-white text-nexus-primary hover:bg-gray-100 w-full"
-                    defaultTab="register"
-                  />
+                  {isAuthenticated && user ? (
+                    <>
+                      <div className="flex items-center space-x-3 mb-2">
+                        <Avatar className="h-8 w-8">
+                          {user.avatar ? (
+                            <AvatarImage src={user.avatar} alt={user.name} />
+                          ) : (
+                            <AvatarFallback className="bg-nexus-primary text-white text-xs">
+                              {user.name.substring(0, 2).toUpperCase()}
+                            </AvatarFallback>
+                          )}
+                        </Avatar>
+                        <div>
+                          <p className="text-white text-sm font-medium">{user.name}</p>
+                          <p className="text-white/70 text-xs">{user.email}</p>
+                        </div>
+                      </div>
+                      <Button
+                        onClick={() => navigate('/alumni')}
+                        variant="outline"
+                        className="border-white text-white w-full justify-start"
+                      >
+                        <UserCircle className="mr-2 h-4 w-4" />
+                        My Profile
+                      </Button>
+                      <Button
+                        onClick={() => navigate('/alumni/privacy-settings')}
+                        variant="outline"
+                        className="border-white text-white w-full justify-start"
+                      >
+                        <Settings className="mr-2 h-4 w-4" />
+                        Settings
+                      </Button>
+                      <Button
+                        onClick={handleLogout}
+                        variant="outline"
+                        className="border-white text-white w-full justify-start"
+                      >
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Log out
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <AuthDialog 
+                        triggerText="LOGIN" 
+                        triggerClassName="border-white text-white w-full"
+                        defaultTab="login"
+                      />
+                      <AuthDialog 
+                        triggerText="REGISTER" 
+                        triggerClassName="bg-white text-nexus-primary hover:bg-gray-100 w-full"
+                        defaultTab="register"
+                      />
+                    </>
+                  )}
                 </div>
               </nav>
             </div>
