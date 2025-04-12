@@ -1,28 +1,16 @@
+
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Menu, UserPlus, ChevronDown, Phone, BookOpen, Award } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import AuthDialog from '@/components/auth/AuthDialog';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
-  
-  const handleSignIn = () => {
-    toast({
-      title: "Login Feature",
-      description: "Login functionality will be coming soon!",
-    });
-  };
-  
-  const handleJoinNow = () => {
-    toast({
-      title: "Registration Feature",
-      description: "Registration functionality will be coming soon!",
-    });
-  };
   
   return (
     <header className="bg-white border-b border-gray-200">
@@ -60,19 +48,16 @@ const Header = () => {
         
         {/* Auth Buttons */}
         <div className="hidden md:flex items-center space-x-3">
-          <Button 
-            variant="outline" 
-            className="border-nexus-primary text-nexus-primary hover:bg-nexus-primary hover:text-white"
-            onClick={handleSignIn}
-          >
-            LOGIN
-          </Button>
-          <Button 
-            className="bg-nexus-primary hover:bg-nexus-primary/90 text-white"
-            onClick={handleJoinNow}
-          >
-            REGISTER
-          </Button>
+          <AuthDialog 
+            triggerText="LOGIN" 
+            triggerClassName="border-nexus-primary text-nexus-primary hover:bg-nexus-primary hover:text-white"
+            defaultTab="login"
+          />
+          <AuthDialog 
+            triggerText="REGISTER" 
+            triggerClassName="bg-nexus-primary hover:bg-nexus-primary/90 text-white"
+            defaultTab="register"
+          />
         </div>
         
         {/* Mobile Menu Button */}
@@ -129,19 +114,16 @@ const Header = () => {
                 <MobileNavLink to="/blog">BLOGS</MobileNavLink>
                 
                 <div className="pt-4 flex flex-col space-y-3">
-                  <Button 
-                    variant="outline" 
-                    className="border-white text-white w-full"
-                    onClick={handleSignIn}
-                  >
-                    LOGIN
-                  </Button>
-                  <Button 
-                    className="bg-white text-nexus-primary hover:bg-gray-100 w-full"
-                    onClick={handleJoinNow}
-                  >
-                    REGISTER
-                  </Button>
+                  <AuthDialog 
+                    triggerText="LOGIN" 
+                    triggerClassName="border-white text-white w-full"
+                    defaultTab="login"
+                  />
+                  <AuthDialog 
+                    triggerText="REGISTER" 
+                    triggerClassName="bg-white text-nexus-primary hover:bg-gray-100 w-full"
+                    defaultTab="register"
+                  />
                 </div>
               </nav>
             </div>
