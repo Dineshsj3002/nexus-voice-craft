@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, UserPlus, ChevronDown } from 'lucide-react';
+import { Menu, UserPlus, ChevronDown, Phone, BookOpen, Award } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 
@@ -27,15 +26,35 @@ const Header = () => {
   
   return (
     <header className="bg-white border-b border-gray-200">
+      {/* Contact info bar */}
+      <div className="bg-yellow-400 py-2 px-4 text-xs md:text-sm text-blue-900 font-medium">
+        <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center">
+          <div className="flex flex-wrap gap-x-4 gap-y-1">
+            <span className="flex items-center"><Phone className="h-3 w-3 mr-1" /> CONTACT: 9600541414</span>
+            <span className="flex items-center"><BookOpen className="h-3 w-3 mr-1" /> ADMISSION: +91 98947 01234</span>
+            <span className="flex items-center"><Award className="h-3 w-3 mr-1" /> PLACEMENT: +91 98947 90284</span>
+          </div>
+          <div>
+            <span>Email: info@kiot.ac.in</span>
+          </div>
+        </div>
+      </div>
+      
       {/* Top header with logo and auth buttons */}
       <div className="max-w-7xl mx-auto flex items-center justify-between py-4 px-4 md:px-8">
         {/* Logo */}
-        <Link to="/" className="flex items-center space-x-2">
-          <div className="h-14 w-14 rounded-full bg-nexus-primary text-white flex items-center justify-center font-display text-xl">a</div>
-          <div className="flex flex-col">
-            <span className="text-xl font-display font-semibold text-nexus-primary">Knowledge</span>
-            <span className="text-lg font-display">Institute of Technology</span>
-            <span className="text-green-600 font-medium">Alumni Association</span>
+        <Link to="/" className="flex items-center">
+          <div className="flex items-center">
+            <img 
+              src="/lovable-uploads/2f632a9a-d04b-476f-ad3d-4ad3ca35b5e5.png" 
+              alt="Knowledge Institute of Technology" 
+              className="h-16 md:h-20 w-auto object-contain mr-3"
+            />
+            <div className="hidden md:flex flex-col">
+              <span className="text-xl font-display font-semibold text-nexus-primary">Knowledge</span>
+              <span className="text-lg font-display">Institute of Technology</span>
+              <span className="text-green-600 text-sm font-medium">Alumni Association</span>
+            </div>
           </div>
         </Link>
         
