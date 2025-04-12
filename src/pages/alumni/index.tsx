@@ -15,9 +15,9 @@ const AlumniPage = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
-    graduationYear: '',
-    industry: '',
-    location: '',
+    graduationYear: 'all_years',
+    industry: 'all_industries',
+    location: 'all_locations',
   });
 
   // Filter alumni based on search query and filters
@@ -27,9 +27,9 @@ const AlumniPage = () => {
       alumni.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
       alumni.role.toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesYear = !filters.graduationYear || alumni.graduationYear === filters.graduationYear;
-    const matchesIndustry = !filters.industry || alumni.industry === filters.industry;
-    const matchesLocation = !filters.location || alumni.location.toLowerCase().includes(filters.location.toLowerCase());
+    const matchesYear = filters.graduationYear === 'all_years' || alumni.graduationYear === filters.graduationYear;
+    const matchesIndustry = filters.industry === 'all_industries' || alumni.industry === filters.industry;
+    const matchesLocation = filters.location === 'all_locations' || alumni.location.toLowerCase().includes(filters.location.toLowerCase());
     
     return matchesSearch && matchesYear && matchesIndustry && matchesLocation;
   });
@@ -85,9 +85,9 @@ const AlumniPage = () => {
                   onClick={() => {
                     setSearchQuery('');
                     setFilters({
-                      graduationYear: '',
-                      industry: '',
-                      location: '',
+                      graduationYear: 'all_years',
+                      industry: 'all_industries',
+                      location: 'all_locations',
                     });
                   }}
                 >

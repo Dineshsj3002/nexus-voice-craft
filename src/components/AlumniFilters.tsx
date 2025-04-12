@@ -46,7 +46,7 @@ const AlumniFilters = ({ filters, setFilters }: AlumniFiltersProps) => {
           <SelectValue placeholder="Graduation Year" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">All Years</SelectItem>
+          <SelectItem value="all_years">All Years</SelectItem>
           {years.map(year => (
             <SelectItem key={year} value={year}>
               {year}
@@ -63,7 +63,7 @@ const AlumniFilters = ({ filters, setFilters }: AlumniFiltersProps) => {
           <SelectValue placeholder="Industry" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">All Industries</SelectItem>
+          <SelectItem value="all_industries">All Industries</SelectItem>
           {industries.map(industry => (
             <SelectItem key={industry} value={industry}>
               {industry}
@@ -80,7 +80,7 @@ const AlumniFilters = ({ filters, setFilters }: AlumniFiltersProps) => {
           <SelectValue placeholder="Location" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">All Locations</SelectItem>
+          <SelectItem value="all_locations">All Locations</SelectItem>
           {locations.map(location => (
             <SelectItem key={location} value={location}>
               {location}
