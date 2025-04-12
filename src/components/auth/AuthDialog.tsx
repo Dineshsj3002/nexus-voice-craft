@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Google, Linkedin, Mail } from 'lucide-react';
+import { Mail, Linkedin, Globe } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
@@ -83,7 +83,7 @@ const AuthDialog = ({
                       onClick={() => handleSocialLogin('Google')}
                       className="w-full flex items-center justify-center gap-2 transition-all hover:bg-gray-50"
                     >
-                      <Google className="h-4 w-4" />
+                      <Globe className="h-4 w-4" />
                       Google
                     </Button>
                     <Button 
@@ -121,7 +121,7 @@ const AuthDialog = ({
                       onClick={() => handleSocialLogin('Google')}
                       className="w-full flex items-center justify-center gap-2 transition-all hover:bg-gray-50"
                     >
-                      <Google className="h-4 w-4" />
+                      <Globe className="h-4 w-4" />
                       Google
                     </Button>
                     <Button 
