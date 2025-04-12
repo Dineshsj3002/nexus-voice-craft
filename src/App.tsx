@@ -18,8 +18,9 @@ import ContactPage from "./pages/contact";
 import ForumPage from "./pages/forum";
 import ForumPostPage from "./pages/forum/post/[id]";
 import ForumCategoryPage from "./pages/forum/category/[id]";
+import Dashboard from "./pages/dashboard";
 
-// Import the new pages
+// Import the campus and integrating pages
 import CampusTourPage from "./pages/campus/tour";
 import CampusFacilitiesPage from "./pages/campus/facilities";
 import CampusHistoryPage from "./pages/campus/history";
@@ -43,6 +44,7 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/mentorship" element={<MentorshipPage />} />
             <Route path="/mock-interviews" element={<MockInterviewsPage />} />
             <Route path="/hubs" element={<HubsPage />} />
