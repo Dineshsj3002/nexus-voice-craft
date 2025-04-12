@@ -110,12 +110,12 @@ const Header = () => {
             <>
               <AuthDialog 
                 triggerText="LOGIN" 
-                triggerClassName="border-nexus-primary text-nexus-primary hover:bg-nexus-primary hover:text-white"
+                triggerClassName="border border-nexus-primary text-nexus-primary hover:bg-nexus-primary hover:text-white transition-colors"
                 defaultTab="login"
               />
               <AuthDialog 
                 triggerText="REGISTER" 
-                triggerClassName="bg-nexus-primary hover:bg-nexus-primary/90 text-white"
+                triggerClassName="bg-nexus-primary hover:bg-nexus-primary/90 text-white transition-colors"
                 defaultTab="register"
               />
             </>
