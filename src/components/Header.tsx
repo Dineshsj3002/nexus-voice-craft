@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -53,19 +52,16 @@ const Header = () => {
     navigate('/');
   };
 
-  // Check if the current route is active
   const isActive = (path: string) => {
     return location.pathname === path;
   };
   
   React.useEffect(() => {
-    // Close mobile menu when route changes
     setIsMenuOpen(false);
   }, [location.pathname]);
   
   return (
     <header className="bg-white border-b border-gray-200">
-      {/* Contact info bar */}
       <div className="bg-yellow-400 py-2 px-4 text-xs md:text-sm text-blue-900 font-medium">
         <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center">
           <div className="flex flex-wrap gap-x-4 gap-y-1">
@@ -79,9 +75,7 @@ const Header = () => {
         </div>
       </div>
       
-      {/* Top header with logo and auth buttons */}
       <div className="max-w-7xl mx-auto flex items-center justify-between py-4 px-4 md:px-8">
-        {/* Logo */}
         <Link to="/" className="flex items-center">
           <div className="flex items-center">
             <img 
@@ -97,11 +91,9 @@ const Header = () => {
           </div>
         </Link>
         
-        {/* Auth Buttons or User Profile */}
         <div className="hidden md:flex items-center space-x-3">
           {isAuthenticated && user ? (
             <div className="flex items-center gap-2">
-              {/* Notifications */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="relative">
@@ -153,7 +145,6 @@ const Header = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
               
-              {/* User Profile Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-10 rounded-full flex items-center gap-2 pl-2 pr-3">
@@ -206,20 +197,24 @@ const Header = () => {
           ) : (
             <>
               <AuthDialog 
-                triggerText="LOGIN" 
-                triggerClassName="border border-nexus-primary text-nexus-primary hover:bg-nexus-primary hover:text-white transition-colors"
-                defaultTab="login"
+                triggerText="JOIN AS STUDENT" 
+                triggerClassName="bg-nexus-primary hover:bg-nexus-primary/90 text-white transition-colors"
+                defaultTab="register"
               />
               <AuthDialog 
                 triggerText="JOIN AS ALUMNI" 
-                triggerClassName="bg-nexus-primary hover:bg-nexus-primary/90 text-white transition-colors"
+                triggerClassName="bg-yellow-400 hover:bg-yellow-500 text-blue-900 transition-colors"
                 defaultTab="register"
+              />
+              <AuthDialog 
+                triggerText="LOGIN" 
+                triggerClassName="border border-nexus-primary text-nexus-primary hover:bg-nexus-primary hover:text-white transition-colors"
+                defaultTab="login"
               />
             </>
           )}
         </div>
         
-        {/* Mobile Menu Button */}
         <button 
           className="md:hidden text-gray-500 hover:text-nexus-primary"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -228,10 +223,8 @@ const Header = () => {
         </button>
       </div>
       
-      {/* Navigation bar */}
       <div className="bg-nexus-primary text-white">
         <div className="max-w-7xl mx-auto">
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex">
             <NavLink to="/" isActive={isActive('/')}>HOME</NavLink>
             <NavLink to="/about" isActive={isActive('/about')}>ABOUT US</NavLink>
@@ -253,7 +246,6 @@ const Header = () => {
             <NavLink to="/blog" isActive={isActive('/blog')}>BLOGS</NavLink>
           </nav>
           
-          {/* Mobile Menu */}
           {isMenuOpen && (
             <div className="md:hidden py-4 px-4 animate-fade-in">
               <nav className="flex flex-col space-y-2">
@@ -323,14 +315,19 @@ const Header = () => {
                   ) : (
                     <>
                       <AuthDialog 
-                        triggerText="LOGIN" 
-                        triggerClassName="border-white text-white w-full hover:bg-white hover:text-nexus-primary"
-                        defaultTab="login"
+                        triggerText="JOIN AS STUDENT" 
+                        triggerClassName="bg-nexus-primary text-white w-full hover:bg-nexus-primary/90"
+                        defaultTab="register"
                       />
                       <AuthDialog 
                         triggerText="JOIN AS ALUMNI" 
-                        triggerClassName="bg-white text-nexus-primary hover:bg-gray-100 w-full"
+                        triggerClassName="bg-yellow-400 text-blue-900 w-full hover:bg-yellow-500"
                         defaultTab="register"
+                      />
+                      <AuthDialog 
+                        triggerText="LOGIN" 
+                        triggerClassName="border-white text-white w-full hover:bg-white hover:text-nexus-primary"
+                        defaultTab="login"
                       />
                     </>
                   )}
