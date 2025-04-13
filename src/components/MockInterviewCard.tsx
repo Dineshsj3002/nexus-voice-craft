@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Clock, CalendarPlus, Video, Star, Award, Briefcase, Phone } from 'lucide-react';
@@ -40,6 +39,23 @@ const MockInterviewCard = ({
     
     return () => clearInterval(interval);
   }, []);
+
+  const handleSelect = () => {
+    if (featured) {
+      showSuccessToast({ message: `Starting featured ${category} interview`, emoji: '🌟' });
+    } else {
+      showSuccessToast({ message: `Starting ${category} interview`, emoji: '✅' });
+    }
+    
+    // Navigate directly to the call page with interview details
+    navigate('/mock-interviews/call', { 
+      state: { 
+        interviewTitle: title,
+        interviewCategory: category,
+        callType: 'video' // Default to video call
+      } 
+    });
+  };
 
   const handleBookSchedule = () => {
     showSuccessToast({ message: 'Interview scheduled!', emoji: '🎯' });
@@ -294,7 +310,7 @@ const MockInterviewCard = ({
           <CardFooter className="flex flex-col sm:flex-row gap-3 px-0 pb-0 pt-4">
             {!isScheduled ? (
               <Button
-                onClick={handleBookSchedule}
+                onClick={handleSelect}
                 className="bg-nexus-primary hover:bg-nexus-primary/90 w-full sm:w-auto shadow-md hover:shadow-lg transform transition hover:-translate-y-1"
               >
                 <CalendarPlus className="mr-2 h-4 w-4" />

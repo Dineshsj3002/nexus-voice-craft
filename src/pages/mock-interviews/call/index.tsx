@@ -33,6 +33,7 @@ const CallPage = () => {
   const [newMessage, setNewMessage] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [isAISpeaking, setIsAISpeaking] = useState(false);
+  const [conversationContext, setConversationContext] = useState<string[]>([]);
   
   const userVideoRef = useRef<HTMLVideoElement>(null);
   const interviewerVideoRef = useRef<HTMLVideoElement>(null);
@@ -61,12 +62,12 @@ const CallPage = () => {
     
     if (SpeechRecognition) {
       const recognition = new SpeechRecognition();
-      recognition.continuous = false;
+      recognition.continuous = true;
       recognition.interimResults = false;
       recognition.lang = 'en-US';
       
       recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
+        const transcript = event.results[event.resultIndex][0].transcript;
         console.log('Speech recognized:', transcript);
         
         // Add user message to chat
@@ -80,13 +81,29 @@ const CallPage = () => {
       recognition.onend = () => {
         if (isListening) {
           // If still in listening mode, restart recognition
-          recognition.start();
+          try {
+            recognition.start();
+          } catch (error) {
+            console.error('Error restarting speech recognition:', error);
+          }
         }
       };
       
       recognition.onerror = (event) => {
         console.error('Speech recognition error:', event.error);
-        setIsListening(false);
+        if (isListening) {
+          setIsListening(false);
+          // Try to restart if there was an error
+          setTimeout(() => {
+            if (isListening) {
+              try {
+                recognition.start();
+              } catch (error) {
+                console.error('Error restarting speech recognition after error:', error);
+              }
+            }
+          }, 1000);
+        }
       };
       
       speechRecognitionRef.current = recognition;
@@ -128,9 +145,17 @@ const CallPage = () => {
       speechRecognitionRef.current.stop();
       setIsListening(false);
     } else {
-      speechRecognitionRef.current.start();
-      setIsListening(true);
-      showSuccessToast({ message: 'Listening...', emoji: '🎤' });
+      try {
+        speechRecognitionRef.current.start();
+        setIsListening(true);
+        showSuccessToast({ message: 'Listening...', emoji: '🎤' });
+      } catch (error) {
+        console.error('Error starting speech recognition:', error);
+        showSuccessToast({ 
+          message: 'Could not start listening. Please try again.', 
+          emoji: '⚠️' 
+        });
+      }
     }
   };
   
@@ -150,13 +175,17 @@ const CallPage = () => {
   
   // Handle AI response based on user input
   const handleAIResponse = (userInput: string) => {
-    // Simple AI response logic
-    let aiResponse = '';
+    // Add to conversation context to maintain continuity
+    setConversationContext(prev => [...prev, `User: ${userInput}`]);
     
-    // Check for common interview questions or greetings
+    // Generate a more contextual response based on conversation history
+    let aiResponse = '';
     const input = userInput.toLowerCase();
     
-    if (input.includes('hello') || input.includes('hi') || input.includes('hey')) {
+    // Update the context with past interactions to maintain continuity
+    const recentContext = conversationContext.slice(-5); // Keep last 5 interactions for context
+    
+    if (recentContext.length === 0 && (input.includes('hello') || input.includes('hi') || input.includes('hey'))) {
       aiResponse = "Hello there! I'm your AI interviewer. How are you feeling about today's interview?";
     } else if (input.includes('background') || input.includes('experience') || input.includes('about me')) {
       aiResponse = `Thank you for sharing your background. Could you elaborate more on your experience in ${interviewCategory}?`;
@@ -165,7 +194,7 @@ const CallPage = () => {
     } else if (input.includes('weakness') || input.includes('improve')) {
       aiResponse = "It's good that you're self-aware about areas to improve. How are you working on addressing this?";
     } else if (input.includes('thank') || input.includes('bye') || input.includes('goodbye')) {
-      aiResponse = "You're welcome! Thank you for participating in this mock interview. I hope it was helpful.";
+      aiResponse = "You're welcome! Thank you for participating in this mock interview. I hope it was helpful. Would you like to practice another type of interview question?";
     } else {
       // Use a set of generic followup questions if we don't have a specific response
       const genericResponses = [
@@ -175,11 +204,22 @@ const CallPage = () => {
         "Could you provide a specific example of when you've done that?",
         "How did that experience shape your professional development?",
         "What lessons did you learn from that situation?",
-        "That's valuable insight. How do you think that would help in this role?"
+        "That's valuable insight. How do you think that would help in this role?",
+        "If you faced a similar challenge in the future, would you approach it differently?",
+        "How would you explain this concept to someone with no technical background?",
+        "What metrics would you use to measure success in this scenario?"
       ];
       
-      aiResponse = genericResponses[Math.floor(Math.random() * genericResponses.length)];
+      // If we have context, try to make the response more contextual
+      if (recentContext.length > 2) {
+        aiResponse = "Based on what you've shared so far, " + genericResponses[Math.floor(Math.random() * genericResponses.length)].toLowerCase();
+      } else {
+        aiResponse = genericResponses[Math.floor(Math.random() * genericResponses.length)];
+      }
     }
+    
+    // Add AI response to conversation context
+    setConversationContext(prev => [...prev, `AI: ${aiResponse}`]);
     
     // Add AI response to chat with delay to simulate thinking
     setTimeout(() => {
@@ -216,39 +256,48 @@ const CallPage = () => {
           });
       }
       
-      // Simulate interviewer first message
-      setTimeout(() => {
-        const greeting = 'Hello there! Thank you for joining this mock interview session.';
-        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        addMessage('Interviewer', greeting, time);
-        
-        // Speak the greeting
-        if (!isSpeakerMuted) {
-          speakText(greeting);
-        }
-        
+      // Simulate interviewer first message only if there are no messages yet
+      if (messages.length === 0) {
         setTimeout(() => {
-          const introduction = "Before we begin, I want to let you know that this is a safe space to practice. I'll be asking you standard interview questions for your field.";
-          const newTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          addMessage('Interviewer', introduction, newTime);
+          const greeting = 'Hello there! Thank you for joining this mock interview session.';
+          const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          addMessage('Interviewer', greeting, time);
           
-          // Speak the introduction
+          // Speak the greeting
           if (!isSpeakerMuted) {
-            speakText(introduction);
+            speakText(greeting);
           }
           
           setTimeout(() => {
-            const firstQuestion = `First question: Can you tell me about your background and why you're interested in ${interviewCategory}?`;
-            const questionTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            addMessage('Interviewer', firstQuestion, questionTime);
+            const introduction = "Before we begin, I want to let you know that this is a safe space to practice. I'll be asking you standard interview questions for your field.";
+            const newTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            addMessage('Interviewer', introduction, newTime);
             
-            // Speak the first question
+            // Speak the introduction
             if (!isSpeakerMuted) {
-              speakText(firstQuestion);
+              speakText(introduction);
             }
+            
+            setTimeout(() => {
+              const firstQuestion = `First question: Can you tell me about your background and why you're interested in ${interviewCategory}?`;
+              const questionTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              addMessage('Interviewer', firstQuestion, questionTime);
+              
+              // Add to conversation context
+              setConversationContext([
+                `AI: ${greeting}`,
+                `AI: ${introduction}`,
+                `AI: ${firstQuestion}`
+              ]);
+              
+              // Speak the first question
+              if (!isSpeakerMuted) {
+                speakText(firstQuestion);
+              }
+            }, 5000);
           }, 5000);
-        }, 5000);
-      }, 2000);
+        }, 2000);
+      }
     }, 2000);
     
     // Set up timer for call duration
@@ -266,7 +315,7 @@ const CallPage = () => {
         stream.getTracks().forEach(track => track.stop());
       }
     };
-  }, [callType, interviewCategory, isSpeakerMuted]);
+  }, [callType, interviewCategory, isSpeakerMuted, messages.length]);
   
   const addMessage = (sender: string, text: string, time: string) => {
     setMessages(prev => [...prev, { sender, text, time }]);
@@ -301,6 +350,22 @@ const CallPage = () => {
     navigate('/mock-interviews', { state: { callEnded: true } });
   };
   
+  const navigateToMoreInterviews = () => {
+    // Stop speech recognition and synthesis
+    if (speechRecognitionRef.current) {
+      speechRecognitionRef.current.abort();
+    }
+    window.speechSynthesis.cancel();
+    
+    // Clean up any streams
+    if (userVideoRef.current && userVideoRef.current.srcObject) {
+      const stream = userVideoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach(track => track.stop());
+    }
+    
+    navigate('/mock-interviews');
+  };
+  
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -312,7 +377,7 @@ const CallPage = () => {
               variant="outline" 
               size="icon" 
               className="mr-2"
-              onClick={() => navigate('/mock-interviews')}
+              onClick={navigateToMoreInterviews}
             >
               <ChevronLeft className="h-5 w-5" />
             </Button>
@@ -518,9 +583,9 @@ const CallPage = () => {
                   <Share2 className="h-4 w-4 mr-2" />
                   Share
                 </Button>
-                <Button variant="outline" className="flex-1" onClick={() => showSuccessToast({ message: 'Settings updated!', emoji: '⚙️' })}>
+                <Button variant="outline" className="flex-1" onClick={navigateToMoreInterviews}>
                   <Settings className="h-4 w-4 mr-2" />
-                  Settings
+                  More Interviews
                 </Button>
               </div>
             </div>
@@ -534,4 +599,3 @@ const CallPage = () => {
 };
 
 export default CallPage;
-
