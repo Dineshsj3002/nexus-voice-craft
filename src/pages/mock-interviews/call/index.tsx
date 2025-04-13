@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -36,29 +35,24 @@ const CallPage = () => {
   const interviewerVideoRef = useRef<HTMLVideoElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   
-  // Format time in MM:SS format
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
   
-  // Auto-scroll chat to bottom when new messages come in
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
   
-  // Simulate connection and video streams
   useEffect(() => {
-    // Show connecting state
     const timer = setTimeout(() => {
       setIsLoading(false);
       setIsConnected(true);
       showSuccessToast({ message: 'Connected to interview call!', emoji: '🎯' });
       
-      // Set up local video if we're doing a video call
       if (callType === 'video' && userVideoRef.current && navigator.mediaDevices) {
         navigator.mediaDevices.getUserMedia({ video: true, audio: true })
           .then(stream => {
@@ -73,12 +67,11 @@ const CallPage = () => {
           });
       }
       
-      // Simulate interviewer messages
       setTimeout(() => {
         addMessage('Interviewer', 'Hello there! Thank you for joining this mock interview session.', new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
         
         setTimeout(() => {
-          addMessage('Interviewer', 'Before we begin, I want to let you know that this is a safe space to practice. I'll be asking you standard interview questions for your field.', new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+          addMessage('Interviewer', 'Before we begin, I want to let you know that this is a safe space to practice. I\'ll be asking you standard interview questions for your field.', new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
           
           setTimeout(() => {
             addMessage('Interviewer', `First question: Can you tell me about your background and why you're interested in ${interviewCategory}?`, new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
@@ -87,7 +80,6 @@ const CallPage = () => {
       }, 2000);
     }, 2000);
     
-    // Set up timer for call duration
     const intervalTimer = setInterval(() => {
       setElapsedTime(prev => prev + 1);
     }, 1000);
@@ -96,7 +88,6 @@ const CallPage = () => {
       clearTimeout(timer);
       clearInterval(intervalTimer);
       
-      // Clean up video streams
       if (userVideoRef.current && userVideoRef.current.srcObject) {
         const stream = userVideoRef.current.srcObject as MediaStream;
         stream.getTracks().forEach(track => track.stop());
@@ -115,7 +106,6 @@ const CallPage = () => {
     addMessage('You', newMessage, time);
     setNewMessage('');
     
-    // Simulate interviewer response after a delay
     setTimeout(() => {
       const responses = [
         "That's a good point. Could you elaborate more on that?",
@@ -132,7 +122,6 @@ const CallPage = () => {
   
   const handleEndCall = () => {
     showSuccessToast({ message: 'Interview call ended', emoji: '👋' });
-    // Clean up any streams
     if (userVideoRef.current && userVideoRef.current.srcObject) {
       const stream = userVideoRef.current.srcObject as MediaStream;
       stream.getTracks().forEach(track => track.stop());
@@ -168,7 +157,6 @@ const CallPage = () => {
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Main video area - takes up 2/3 on desktop */}
             <div className="lg:col-span-2">
               <Card className="overflow-hidden h-[500px] bg-gray-900 flex items-center justify-center relative">
                 {isLoading ? (
@@ -178,7 +166,6 @@ const CallPage = () => {
                   </div>
                 ) : (
                   <>
-                    {/* Interviewer video (or placeholder) */}
                     {callType === 'video' ? (
                       <div className="w-full h-full flex items-center justify-center">
                         <div className="text-center text-white">
@@ -198,7 +185,6 @@ const CallPage = () => {
                       </div>
                     )}
                     
-                    {/* User video (picture-in-picture) */}
                     {callType === 'video' && !isVideoOff && (
                       <div className="absolute bottom-4 right-4 w-40 h-30 rounded-lg overflow-hidden border-2 border-white shadow-lg">
                         <video 
@@ -214,7 +200,6 @@ const CallPage = () => {
                 )}
               </Card>
               
-              {/* Call controls */}
               <div className="flex justify-center mt-4 bg-white p-4 rounded-lg shadow-sm">
                 <Button
                   variant={isMuted ? "destructive" : "outline"}
@@ -265,7 +250,6 @@ const CallPage = () => {
               </div>
             </div>
             
-            {/* Chat/Interview questions area - takes up 1/3 on desktop */}
             <div className="lg:col-span-1">
               <Card className="h-[500px] flex flex-col">
                 <div className="p-4 border-b flex items-center">
@@ -329,7 +313,7 @@ const CallPage = () => {
                   <Share2 className="h-4 w-4 mr-2" />
                   Share
                 </Button>
-                <Button variant="outline" className="flex-1" onClick={() => showSuccessToast({ message: 'Settings updated!', emoji: '⚙️' })}>
+                <Button variant="outline" className="flex-1" onClick={() => showSuccessToast({ message: 'Settings updated!', emoji: '⚙��' })}>
                   <Settings className="h-4 w-4 mr-2" />
                   Settings
                 </Button>
