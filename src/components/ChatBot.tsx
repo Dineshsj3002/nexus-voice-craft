@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Bot, X, Send, ChevronRight } from 'lucide-react';
@@ -15,11 +15,38 @@ const ChatBot = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'Hi there! 👋 I\'m the alumNexus assistant. How can I help you today?',
+      text: 'Hello, I am River Bot! 👋 How can I help you today?',
       sender: 'bot',
     },
   ]);
   const [inputValue, setInputValue] = useState('');
+
+  // Scroll to bottom whenever messages change
+  const messagesEndRef = React.useRef<HTMLDivElement>(null);
+  
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+  
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  // When chat is opened, show typing indicator and add a welcome message
+  useEffect(() => {
+    if (isOpen && messages.length === 1) {
+      setTimeout(() => {
+        setMessages(prevMessages => [
+          ...prevMessages,
+          {
+            id: Date.now().toString(),
+            text: "I'm here to assist with any questions about the alumNexus platform, mentorship opportunities, or upcoming events. What can I help you with?",
+            sender: 'bot',
+          }
+        ]);
+      }, 1000);
+    }
+  }, [isOpen, messages.length]);
 
   const handleSendMessage = () => {
     if (!inputValue.trim()) return;
@@ -73,7 +100,7 @@ const ChatBot = () => {
           <div className="p-4 bg-nexus-primary text-white rounded-t-lg flex justify-between items-center">
             <div className="flex items-center">
               <Bot className="h-5 w-5 mr-2" />
-              <span className="font-medium">alumNexus Assistant</span>
+              <span className="font-medium">River Bot</span>
             </div>
             <button 
               onClick={() => setIsOpen(false)}
@@ -101,6 +128,7 @@ const ChatBot = () => {
                 </div>
               </div>
             ))}
+            <div ref={messagesEndRef} />
           </div>
           
           {/* Input area */}

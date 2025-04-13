@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -6,7 +7,7 @@ import {
   UserPlus, 
   ChevronDown, 
   Phone, 
-  BookOpen, 
+  Landmark, 
   Award, 
   User, 
   LogOut, 
@@ -66,8 +67,7 @@ const Header = () => {
         <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center">
           <div className="flex flex-wrap gap-x-4 gap-y-1">
             <span className="flex items-center"><Phone className="h-3 w-3 mr-1" /> CONTACT: 9600541414</span>
-            <span className="flex items-center"><BookOpen className="h-3 w-3 mr-1" /> ADMISSION: +91 98947 01234</span>
-            <span className="flex items-center"><Award className="h-3 w-3 mr-1" /> PLACEMENT: +91 98947 90284</span>
+            <span className="flex items-center"><Landmark className="h-3 w-3 mr-1" /> ALUMNI ADMIN: +91 98947 01234</span>
           </div>
           <div>
             <span>Email: info@kiot.ac.in</span>

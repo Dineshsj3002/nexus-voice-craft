@@ -34,7 +34,24 @@ const Index = () => {
       
       <main className="flex-grow">
         <Hero />
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 py-12">
+          {/* Knowledge Institute logo section */}
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8 mb-16 bg-gray-50 p-8 rounded-lg">
+            <img 
+              src="/lovable-uploads/55a35922-2575-4117-8ce8-42400a57c572.png" 
+              alt="Knowledge Institute of Technology" 
+              className="h-32 object-contain"
+            />
+            <div className="text-center md:text-left">
+              <h2 className="text-3xl font-bold text-nexus-primary mb-4">Excellence in Education</h2>
+              <p className="text-lg text-gray-700 max-w-2xl">
+                Knowledge Institute of Technology is committed to providing world-class education and 
+                developing future leaders. Our alumni network brings together generations of talent 
+                to inspire, mentor, and create opportunities for our students.
+              </p>
+            </div>
+          </div>
+          
           {/* Wrap components that use Tooltip with TooltipProvider */}
           <TooltipProvider>
             <AlumniSpotlight />
