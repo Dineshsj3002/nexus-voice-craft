@@ -15,6 +15,7 @@ import AlumniSpotlight from '@/components/AlumniSpotlight';
 
 // Import these to make sure they're available
 import { showSuccessToast, toastTypes } from '@/components/SuccessToast';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 const Index = () => {
   const { toast } = useToast();
@@ -34,8 +35,11 @@ const Index = () => {
       <main className="flex-grow">
         <Hero />
         <div className="container mx-auto px-4">
-          <AlumniSpotlight />
-          <RecommendedAlumni />
+          {/* Wrap components that use Tooltip with TooltipProvider */}
+          <TooltipProvider>
+            <AlumniSpotlight />
+            <RecommendedAlumni />
+          </TooltipProvider>
         </div>
         <Features />
         <Testimonials />

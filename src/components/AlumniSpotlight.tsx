@@ -43,6 +43,7 @@ const AlumniSpotlight = () => {
                   alt={alumni.name} 
                   className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-2 border-yellow-300"
                 />
+                {/* Each TooltipProvider must be self-contained */}
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
