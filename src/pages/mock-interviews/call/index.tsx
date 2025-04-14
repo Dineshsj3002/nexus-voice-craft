@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -8,10 +7,10 @@ import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { 
   Mic, MicOff, Video, VideoOff, Phone, PhoneOff, 
-  MessageSquare, Users, ScreenShare, Settings, 
-  ChevronLeft, Volume2, VolumeX, Share2, Brain
+  MessageSquare, Users, Brain, Share2, Settings
 } from 'lucide-react';
 import { showSuccessToast } from '@/components/SuccessToast';
+import { useSpeechInteraction } from '@/hooks/useSpeechInteraction';
 
 const CallPage = () => {
   const location = useLocation();
@@ -31,15 +30,12 @@ const CallPage = () => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [messages, setMessages] = useState<{ sender: string; text: string; time: string }[]>([]);
   const [newMessage, setNewMessage] = useState('');
-  const [isListening, setIsListening] = useState(false);
   const [isAISpeaking, setIsAISpeaking] = useState(false);
   const [conversationContext, setConversationContext] = useState<string[]>([]);
   
   const userVideoRef = useRef<HTMLVideoElement>(null);
   const interviewerVideoRef = useRef<HTMLVideoElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const speechRecognitionRef = useRef<SpeechRecognition | null>(null);
-  const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
   
   // Format time in MM:SS format
   const formatTime = (seconds: number) => {
@@ -54,183 +50,99 @@ const CallPage = () => {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
-  
-  // Setup speech recognition
-  useEffect(() => {
-    // Check if browser supports SpeechRecognition
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    
-    if (SpeechRecognition) {
-      const recognition = new SpeechRecognition();
-      recognition.continuous = true;
-      recognition.interimResults = false;
-      recognition.lang = 'en-US';
+
+  const { isListening, isSpeaking, startListening, stopListening, speak } = useSpeechInteraction({
+    onSpeechResult: (transcript) => {
+      console.log('Speech recognized:', transcript);
       
-      recognition.onresult = (event) => {
-        const transcript = event.results[event.resultIndex][0].transcript;
-        console.log('Speech recognized:', transcript);
-        
-        // Add user message to chat
-        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        addMessage('You', transcript, time);
-        
-        // Process the voice input and generate AI response
-        handleAIResponse(transcript);
-      };
+      // Add user message to chat
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      addMessage('You', transcript, time);
       
-      recognition.onend = () => {
-        if (isListening) {
-          // If still in listening mode, restart recognition
-          try {
-            recognition.start();
-          } catch (error) {
-            console.error('Error restarting speech recognition:', error);
-          }
-        }
-      };
-      
-      recognition.onerror = (event) => {
-        console.error('Speech recognition error:', event.error);
-        if (isListening) {
-          setIsListening(false);
-          // Try to restart if there was an error
-          setTimeout(() => {
-            if (isListening) {
-              try {
-                recognition.start();
-              } catch (error) {
-                console.error('Error restarting speech recognition after error:', error);
-              }
-            }
-          }, 1000);
-        }
-      };
-      
-      speechRecognitionRef.current = recognition;
+      // Process the voice input and generate AI response
+      handleAIResponse(transcript);
+    },
+    onSpeakingStatusChange: (speaking) => setIsAISpeaking(speaking)
+  });
+
+  // Add message to chat and update context
+  const addMessage = (sender: string, text: string, time: string) => {
+    setMessages(prev => [...prev, { sender, text, time }]);
+    if (sender === 'You') {
+      setConversationContext(prev => [...prev, `User: ${text}`]);
     } else {
-      console.error('Speech recognition not supported in this browser');
-      showSuccessToast({ 
-        message: 'Speech recognition not supported in your browser. Try Chrome or Edge.', 
-        emoji: '⚠️' 
-      });
-    }
-    
-    // Setup speech synthesis
-    speechSynthesisRef.current = new SpeechSynthesisUtterance();
-    speechSynthesisRef.current.lang = 'en-US';
-    speechSynthesisRef.current.rate = 1;
-    speechSynthesisRef.current.pitch = 1;
-    
-    speechSynthesisRef.current.onstart = () => {
-      setIsAISpeaking(true);
-    };
-    
-    speechSynthesisRef.current.onend = () => {
-      setIsAISpeaking(false);
-    };
-    
-    return () => {
-      if (speechRecognitionRef.current) {
-        speechRecognitionRef.current.abort();
-      }
-      window.speechSynthesis.cancel();
-    };
-  }, []);
-  
-  // Toggle speech recognition on/off
-  const toggleListening = () => {
-    if (!speechRecognitionRef.current) return;
-    
-    if (isListening) {
-      speechRecognitionRef.current.stop();
-      setIsListening(false);
-    } else {
-      try {
-        speechRecognitionRef.current.start();
-        setIsListening(true);
-        showSuccessToast({ message: 'Listening...', emoji: '🎤' });
-      } catch (error) {
-        console.error('Error starting speech recognition:', error);
-        showSuccessToast({ 
-          message: 'Could not start listening. Please try again.', 
-          emoji: '⚠️' 
-        });
-      }
+      setConversationContext(prev => [...prev, `AI: ${text}`]);
     }
   };
-  
-  // Speak text using speech synthesis
-  const speakText = (text: string) => {
-    if (!speechSynthesisRef.current) return;
-    
-    // Cancel any ongoing speech
-    window.speechSynthesis.cancel();
-    
-    // Set the text to be spoken
-    speechSynthesisRef.current.text = text;
-    
-    // Speak the text
-    window.speechSynthesis.speak(speechSynthesisRef.current);
-  };
-  
-  // Handle AI response based on user input
-  const handleAIResponse = (userInput: string) => {
-    // Add to conversation context to maintain continuity
-    setConversationContext(prev => [...prev, `User: ${userInput}`]);
-    
+
+  // Handle AI response with improved context awareness
+  const handleAIResponse = async (userInput: string) => {
     // Generate a more contextual response based on conversation history
+    const recentContext = conversationContext.slice(-5); // Keep last 5 interactions
+    
     let aiResponse = '';
-    const input = userInput.toLowerCase();
-    
-    // Update the context with past interactions to maintain continuity
-    const recentContext = conversationContext.slice(-5); // Keep last 5 interactions for context
-    
-    if (recentContext.length === 0 && (input.includes('hello') || input.includes('hi') || input.includes('hey'))) {
-      aiResponse = "Hello there! I'm your AI interviewer. How are you feeling about today's interview?";
-    } else if (input.includes('background') || input.includes('experience') || input.includes('about me')) {
-      aiResponse = `Thank you for sharing your background. Could you elaborate more on your experience in ${interviewCategory}?`;
-    } else if (input.includes('strength') || input.includes('good at')) {
-      aiResponse = "That's a great strength to have. Can you provide a specific example where you demonstrated this skill?";
-    } else if (input.includes('weakness') || input.includes('improve')) {
-      aiResponse = "It's good that you're self-aware about areas to improve. How are you working on addressing this?";
-    } else if (input.includes('thank') || input.includes('bye') || input.includes('goodbye')) {
-      aiResponse = "You're welcome! Thank you for participating in this mock interview. I hope it was helpful. Would you like to practice another type of interview question?";
+    if (recentContext.length === 0 && userInput.toLowerCase().includes('hello')) {
+      aiResponse = "Hello! I'm your AI interviewer for today. How are you feeling about the interview?";
     } else {
-      // Use a set of generic followup questions if we don't have a specific response
-      const genericResponses = [
-        "That's interesting. Could you tell me more about that?",
-        "Great point. How does that relate to your previous work experience?",
-        "I see. And how would you apply that approach in a real-world scenario?",
-        "Could you provide a specific example of when you've done that?",
-        "How did that experience shape your professional development?",
-        "What lessons did you learn from that situation?",
-        "That's valuable insight. How do you think that would help in this role?",
-        "If you faced a similar challenge in the future, would you approach it differently?",
-        "How would you explain this concept to someone with no technical background?",
-        "What metrics would you use to measure success in this scenario?"
-      ];
+      // Use conversation context to generate more relevant responses
+      const contextualResponses = {
+        experience: [
+          "Could you elaborate on your experience with specific examples?",
+          "What technologies or methodologies did you use in that role?",
+          "How did that experience prepare you for this position?",
+        ],
+        challenge: [
+          "That's interesting. How did you overcome that challenge?",
+          "What were the key lessons learned from that situation?",
+          "How would you apply those learnings in future scenarios?",
+        ],
+        skill: [
+          "Could you demonstrate that skill with a specific example?",
+          "How do you stay current with developments in that area?",
+          "How would you apply that skill in our context?",
+        ],
+        default: [
+          "That's interesting. Could you elaborate more on that?",
+          "How does that align with your career goals?",
+          "Could you provide a specific example of that?",
+        ],
+      };
+
+      // Determine response category based on user input
+      const input = userInput.toLowerCase();
+      let category = 'default';
       
-      // If we have context, try to make the response more contextual
-      if (recentContext.length > 2) {
-        aiResponse = "Based on what you've shared so far, " + genericResponses[Math.floor(Math.random() * genericResponses.length)].toLowerCase();
-      } else {
-        aiResponse = genericResponses[Math.floor(Math.random() * genericResponses.length)];
+      if (input.includes('experience') || input.includes('worked') || input.includes('job')) {
+        category = 'experience';
+      } else if (input.includes('challenge') || input.includes('difficult') || input.includes('problem')) {
+        category = 'challenge';
+      } else if (input.includes('skill') || input.includes('ability') || input.includes('can')) {
+        category = 'skill';
       }
+
+      const responses = contextualResponses[category as keyof typeof contextualResponses];
+      aiResponse = responses[Math.floor(Math.random() * responses.length)];
     }
-    
-    // Add AI response to conversation context
-    setConversationContext(prev => [...prev, `AI: ${aiResponse}`]);
-    
-    // Add AI response to chat with delay to simulate thinking
-    setTimeout(() => {
+
+    // Add AI response with delay
+    setTimeout(async () => {
       const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       addMessage('Interviewer', aiResponse, time);
       
-      // Speak the AI response
+      // Speak the AI response if speaker is not muted
       if (!isSpeakerMuted) {
-        speakText(aiResponse);
+        await speak(aiResponse);
       }
-    }, 1500);
+    }, 1000);
+  };
+
+  // Update the toggleListening function
+  const toggleListening = () => {
+    if (isListening) {
+      stopListening();
+    } else {
+      startListening();
+    }
   };
   
   // Simulate connection and video streams
@@ -265,7 +177,7 @@ const CallPage = () => {
           
           // Speak the greeting
           if (!isSpeakerMuted) {
-            speakText(greeting);
+            speak(greeting);
           }
           
           setTimeout(() => {
@@ -275,7 +187,7 @@ const CallPage = () => {
             
             // Speak the introduction
             if (!isSpeakerMuted) {
-              speakText(introduction);
+              speak(introduction);
             }
             
             setTimeout(() => {
@@ -292,7 +204,7 @@ const CallPage = () => {
               
               // Speak the first question
               if (!isSpeakerMuted) {
-                speakText(firstQuestion);
+                speak(firstQuestion);
               }
             }, 5000);
           }, 5000);
@@ -315,11 +227,7 @@ const CallPage = () => {
         stream.getTracks().forEach(track => track.stop());
       }
     };
-  }, [callType, interviewCategory, isSpeakerMuted, messages.length]);
-  
-  const addMessage = (sender: string, text: string, time: string) => {
-    setMessages(prev => [...prev, { sender, text, time }]);
-  };
+  }, [callType, interviewCategory, isSpeakerMuted, messages.length, speak]);
   
   const handleSendMessage = () => {
     if (!newMessage.trim()) return;
@@ -335,10 +243,7 @@ const CallPage = () => {
   
   const handleEndCall = () => {
     showSuccessToast({ message: 'Interview call ended', emoji: '👋' });
-    // Stop speech recognition and synthesis
-    if (speechRecognitionRef.current) {
-      speechRecognitionRef.current.abort();
-    }
+    stopListening();
     window.speechSynthesis.cancel();
     
     // Clean up any streams
@@ -351,10 +256,7 @@ const CallPage = () => {
   };
   
   const navigateToMoreInterviews = () => {
-    // Stop speech recognition and synthesis
-    if (speechRecognitionRef.current) {
-      speechRecognitionRef.current.abort();
-    }
+    stopListening();
     window.speechSynthesis.cancel();
     
     // Clean up any streams
@@ -365,7 +267,7 @@ const CallPage = () => {
     
     navigate('/mock-interviews');
   };
-  
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
