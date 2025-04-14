@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -7,7 +8,8 @@ import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { 
   Mic, MicOff, Video, VideoOff, Phone, PhoneOff, 
-  MessageSquare, Users, Brain, Share2, Settings
+  MessageSquare, Users, Brain, Share2, Settings,
+  ChevronLeft, VolumeX, Volume2
 } from 'lucide-react';
 import { showSuccessToast } from '@/components/SuccessToast';
 import { useSpeechInteraction } from '@/hooks/useSpeechInteraction';
