@@ -22,7 +22,7 @@ export const blogPosts: BlogPost[] = [
     title: "From Campus to Career: Alumni Success Stories",
     excerpt: "Discover how our alumni have successfully transitioned from academic life to thriving professional careers across diverse industries.",
     category: "Career",
-    image: "/lovable-uploads/87030a39-6fa7-425b-99f4-05b0abb9ded1.png",
+    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=800&h=500&q=80",
     date: "April 10, 2025",
     readTime: "8 min read",
     author: {
@@ -39,7 +39,7 @@ export const blogPosts: BlogPost[] = [
     title: "The Impact of Alumni Mentorship on Student Success",
     excerpt: "Research shows that students who connect with alumni mentors are more likely to succeed academically and professionally. Learn about our mentorship program.",
     category: "Mentorship",
-    image: "/lovable-uploads/55f04ec5-8a46-435f-bfc6-06b4f7389672.png",
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&h=500&q=80",
     date: "April 5, 2025",
     readTime: "6 min read",
     author: {
@@ -55,7 +55,7 @@ export const blogPosts: BlogPost[] = [
     title: "Networking in the Digital Age: Building Meaningful Connections",
     excerpt: "How technology has transformed professional networking and tips for building authentic relationships in virtual environments.",
     category: "Networking",
-    image: "/lovable-uploads/1cf21656-76ea-4e9e-8f14-fb51ef8a84f7.png",
+    image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&w=800&h=500&q=80",
     date: "March 28, 2025",
     readTime: "5 min read",
     author: {
