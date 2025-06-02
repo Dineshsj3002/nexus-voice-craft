@@ -9,7 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { 
   Mic, MicOff, Video, VideoOff, Phone, PhoneOff, 
   MessageSquare, Users, Brain, Share2, Settings,
-  ChevronLeft, VolumeX, Volume2
+  ChevronLeft, VolumeX, Volume2, AlertCircle, CheckCircle, Clock
 } from 'lucide-react';
 import { showSuccessToast } from '@/components/SuccessToast';
 import { useSpeechInteraction } from '@/hooks/useSpeechInteraction';
@@ -27,16 +27,15 @@ const CallPage = () => {
   const [isVideoOff, setIsVideoOff] = useState(callType !== 'video');
   const [isSpeakerMuted, setIsSpeakerMuted] = useState(false);
   const [isScreenSharing, setIsScreenSharing] = useState(false);
-  const [isConnected, setIsConnected] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [connectionState, setConnectionState] = useState<'connecting' | 'connected' | 'failed'>('connecting');
   const [elapsedTime, setElapsedTime] = useState(0);
   const [messages, setMessages] = useState<{ sender: string; text: string; time: string }[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [isAISpeaking, setIsAISpeaking] = useState(false);
   const [conversationContext, setConversationContext] = useState<string[]>([]);
+  const [hasStartedConversation, setHasStartedConversation] = useState(false);
   
   const userVideoRef = useRef<HTMLVideoElement>(null);
-  const interviewerVideoRef = useRef<HTMLVideoElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   
   // Format time in MM:SS format
@@ -53,7 +52,18 @@ const CallPage = () => {
     }
   }, [messages]);
 
-  const { isListening, isSpeaking, startListening, stopListening, speak } = useSpeechInteraction({
+  const { 
+    isListening, 
+    isSpeaking, 
+    isInitialized, 
+    error: speechError, 
+    permissionStatus, 
+    isSupported,
+    startListening, 
+    stopListening, 
+    speak,
+    retryInitialization
+  } = useSpeechInteraction({
     onSpeechResult: (transcript) => {
       console.log('Speech recognized:', transcript);
       
@@ -147,89 +157,91 @@ const CallPage = () => {
     }
   };
   
-  // Simulate connection and video streams
+  // Simulate connection with proper state management
   useEffect(() => {
-    // Show connecting state
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-      setIsConnected(true);
-      showSuccessToast({ message: 'Connected to interview call!', emoji: '🎯' });
-      
-      // Set up local video if we're doing a video call
-      if (callType === 'video' && userVideoRef.current && navigator.mediaDevices) {
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-          .then(stream => {
-            if (userVideoRef.current) {
-              userVideoRef.current.srcObject = stream;
-            }
-          })
-          .catch(err => {
-            console.error('Error accessing media devices', err);
-            showSuccessToast({ message: 'Could not access camera/microphone', emoji: '⚠️' });
-            setIsVideoOff(true);
-          });
-      }
-      
-      // Simulate interviewer first message only if there are no messages yet
-      if (messages.length === 0) {
-        setTimeout(() => {
-          const greeting = 'Hello there! Thank you for joining this mock interview session.';
-          const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          addMessage('Interviewer', greeting, time);
-          
-          // Speak the greeting
-          if (!isSpeakerMuted) {
-            speak(greeting);
-          }
-          
-          setTimeout(() => {
-            const introduction = "Before we begin, I want to let you know that this is a safe space to practice. I'll be asking you standard interview questions for your field.";
-            const newTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            addMessage('Interviewer', introduction, newTime);
-            
-            // Speak the introduction
-            if (!isSpeakerMuted) {
-              speak(introduction);
-            }
-            
-            setTimeout(() => {
-              const firstQuestion = `First question: Can you tell me about your background and why you're interested in ${interviewCategory}?`;
-              const questionTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-              addMessage('Interviewer', firstQuestion, questionTime);
-              
-              // Add to conversation context
-              setConversationContext([
-                `AI: ${greeting}`,
-                `AI: ${introduction}`,
-                `AI: ${firstQuestion}`
-              ]);
-              
-              // Speak the first question
-              if (!isSpeakerMuted) {
-                speak(firstQuestion);
+    const connectionTimer = setTimeout(() => {
+      if (isSupported && isInitialized) {
+        setConnectionState('connected');
+        showSuccessToast({ message: 'Connected to interview call!', emoji: '🎯' });
+        
+        // Set up local video if we're doing a video call
+        if (callType === 'video' && userVideoRef.current && navigator.mediaDevices) {
+          navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+            .then(stream => {
+              if (userVideoRef.current) {
+                userVideoRef.current.srcObject = stream;
               }
-            }, 5000);
-          }, 5000);
-        }, 2000);
+            })
+            .catch(err => {
+              console.error('Error accessing media devices', err);
+              showSuccessToast({ message: 'Could not access camera/microphone', emoji: '⚠️' });
+              setIsVideoOff(true);
+            });
+        }
+      } else {
+        setConnectionState('failed');
+        showSuccessToast({ message: 'Connection failed. Speech not supported.', emoji: '⚠️' });
       }
     }, 2000);
     
-    // Set up timer for call duration
+    return () => clearTimeout(connectionTimer);
+  }, [callType, isSupported, isInitialized]);
+
+  // Start conversation when connected
+  useEffect(() => {
+    if (connectionState === 'connected' && !hasStartedConversation) {
+      setHasStartedConversation(true);
+      
+      setTimeout(() => {
+        const greeting = 'Hello there! Thank you for joining this mock interview session.';
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        addMessage('Interviewer', greeting, time);
+        
+        // Speak the greeting
+        if (!isSpeakerMuted) {
+          speak(greeting);
+        }
+        
+        setTimeout(() => {
+          const introduction = "Before we begin, I want to let you know that this is a safe space to practice. I'll be asking you standard interview questions for your field.";
+          const newTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          addMessage('Interviewer', introduction, newTime);
+          
+          // Speak the introduction
+          if (!isSpeakerMuted) {
+            speak(introduction);
+          }
+          
+          setTimeout(() => {
+            const firstQuestion = `First question: Can you tell me about your background and why you're interested in ${interviewCategory}?`;
+            const questionTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            addMessage('Interviewer', firstQuestion, questionTime);
+            
+            // Add to conversation context
+            setConversationContext([
+              `AI: ${greeting}`,
+              `AI: ${introduction}`,
+              `AI: ${firstQuestion}`
+            ]);
+            
+            // Speak the first question
+            if (!isSpeakerMuted) {
+              speak(firstQuestion);
+            }
+          }, 5000);
+        }, 5000);
+      }, 2000);
+    }
+  }, [connectionState, hasStartedConversation, interviewCategory, isSpeakerMuted, speak]);
+  
+  // Set up timer for call duration
+  useEffect(() => {
     const intervalTimer = setInterval(() => {
       setElapsedTime(prev => prev + 1);
     }, 1000);
     
-    return () => {
-      clearTimeout(timer);
-      clearInterval(intervalTimer);
-      
-      // Clean up video streams
-      if (userVideoRef.current && userVideoRef.current.srcObject) {
-        const stream = userVideoRef.current.srcObject as MediaStream;
-        stream.getTracks().forEach(track => track.stop());
-      }
-    };
-  }, [callType, interviewCategory, isSpeakerMuted, messages.length, speak]);
+    return () => clearInterval(intervalTimer);
+  }, []);
   
   const handleSendMessage = () => {
     if (!newMessage.trim()) return;
@@ -270,6 +282,71 @@ const CallPage = () => {
     navigate('/mock-interviews');
   };
 
+  // Connection status component
+  const ConnectionStatus = () => {
+    const getStatusIcon = () => {
+      switch (connectionState) {
+        case 'connecting':
+          return <Clock className="h-4 w-4 animate-spin" />;
+        case 'connected':
+          return <CheckCircle className="h-4 w-4" />;
+        case 'failed':
+          return <AlertCircle className="h-4 w-4" />;
+      }
+    };
+
+    const getStatusColor = () => {
+      switch (connectionState) {
+        case 'connecting':
+          return 'bg-yellow-100 text-yellow-800';
+        case 'connected':
+          return 'bg-green-100 text-green-800';
+        case 'failed':
+          return 'bg-red-100 text-red-800';
+      }
+    };
+
+    return (
+      <div className={`px-3 py-1 rounded-full flex items-center ${getStatusColor()}`}>
+        {getStatusIcon()}
+        <span className="ml-2 capitalize">{connectionState}</span>
+        {connectionState === 'connected' && <span className="ml-2">{formatTime(elapsedTime)}</span>}
+      </div>
+    );
+  };
+
+  // Microphone status component
+  const MicrophoneStatus = () => {
+    if (!isSupported) {
+      return (
+        <div className="bg-red-100 text-red-800 px-3 py-1 rounded-full flex items-center text-sm">
+          <AlertCircle className="h-4 w-4 mr-1" />
+          Speech not supported
+        </div>
+      );
+    }
+
+    if (permissionStatus === 'denied') {
+      return (
+        <div className="bg-red-100 text-red-800 px-3 py-1 rounded-full flex items-center text-sm">
+          <AlertCircle className="h-4 w-4 mr-1" />
+          Microphone denied
+        </div>
+      );
+    }
+
+    if (speechError) {
+      return (
+        <div className="bg-red-100 text-red-800 px-3 py-1 rounded-full flex items-center text-sm">
+          <AlertCircle className="h-4 w-4 mr-1" />
+          Speech error
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -289,21 +366,54 @@ const CallPage = () => {
               <h1 className="text-2xl font-bold">{interviewTitle}</h1>
               <p className="text-gray-500">{interviewCategory} Interview</p>
             </div>
-            <div className="ml-auto bg-green-100 text-green-800 px-3 py-1 rounded-full flex items-center">
-              <span className="h-2 w-2 bg-green-500 rounded-full mr-2"></span>
-              <span>{isConnected ? 'Connected' : 'Connecting...'}</span>
-              <span className="ml-2">{formatTime(elapsedTime)}</span>
+            <div className="ml-auto flex items-center space-x-2">
+              <ConnectionStatus />
+              <MicrophoneStatus />
             </div>
           </div>
+          
+          {/* Speech error handling */}
+          {speechError && (
+            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <AlertCircle className="h-5 w-5 text-red-500 mr-2" />
+                  <span className="text-red-700">{speechError}</span>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={retryInitialization}
+                  className="text-red-600 border-red-300"
+                >
+                  Retry
+                </Button>
+              </div>
+            </div>
+          )}
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Main video area - takes up 2/3 on desktop */}
             <div className="lg:col-span-2">
               <Card className="overflow-hidden h-[500px] bg-gray-900 flex items-center justify-center relative">
-                {isLoading ? (
+                {connectionState === 'connecting' ? (
                   <div className="text-center text-white">
                     <div className="animate-spin h-10 w-10 border-4 border-nexus-primary border-opacity-50 border-t-white rounded-full mx-auto mb-4"></div>
                     <p>Connecting to interview...</p>
+                    <p className="text-sm text-gray-400 mt-2">Setting up speech recognition...</p>
+                  </div>
+                ) : connectionState === 'failed' ? (
+                  <div className="text-center text-white">
+                    <AlertCircle className="h-16 w-16 mx-auto mb-4 text-red-500" />
+                    <p className="text-xl mb-2">Connection Failed</p>
+                    <p className="text-sm text-gray-400">Speech features may not be available</p>
+                    <Button 
+                      variant="outline" 
+                      className="mt-4 text-white border-white"
+                      onClick={() => window.location.reload()}
+                    >
+                      Retry Connection
+                    </Button>
                   </div>
                 ) : (
                   <>
@@ -314,13 +424,13 @@ const CallPage = () => {
                           <div className="relative h-24 w-24 bg-gray-700 rounded-full mx-auto mb-4 flex items-center justify-center">
                             <Users className="h-12 w-12" />
                             {isAISpeaking && (
-                              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-white text-black text-xs px-2 py-1 rounded-full">
+                              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-white text-black text-xs px-2 py-1 rounded-full animate-pulse">
                                 Speaking...
                               </div>
                             )}
                           </div>
                           <p className="text-xl">AI Interviewer</p>
-                          <p className="text-sm text-gray-400 mt-1">Powered by LLM</p>
+                          <p className="text-sm text-gray-400 mt-1">Powered by Speech AI</p>
                         </div>
                       </div>
                     ) : (
@@ -328,7 +438,7 @@ const CallPage = () => {
                         <div className="relative h-32 w-32 bg-gray-700 rounded-full flex items-center justify-center mb-4">
                           <Brain className="h-16 w-16" />
                           {isAISpeaking && (
-                            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-white text-black text-xs px-2 py-1 rounded-full">
+                            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-white text-black text-xs px-2 py-1 rounded-full animate-pulse">
                               Speaking...
                             </div>
                           )}
@@ -403,10 +513,11 @@ const CallPage = () => {
                   size="lg"
                   className="mx-2 h-12 w-12 rounded-full relative"
                   onClick={toggleListening}
+                  disabled={connectionState !== 'connected' || !isSupported || !!speechError}
                 >
                   <Mic />
                   {isListening && (
-                    <span className="absolute -top-1 -right-1 h-3 w-3 bg-green-500 rounded-full"></span>
+                    <span className="absolute -top-1 -right-1 h-3 w-3 bg-green-500 rounded-full animate-pulse"></span>
                   )}
                 </Button>
                 
@@ -453,10 +564,10 @@ const CallPage = () => {
                     </div>
                   ))}
                   
-                  {messages.length === 0 && !isLoading && (
+                  {messages.length === 0 && connectionState === 'connected' && (
                     <div className="text-center text-gray-500 py-6">
                       <MessageSquare className="h-10 w-10 mx-auto mb-2 opacity-20" />
-                      <p>No messages yet</p>
+                      <p>Waiting for conversation to start...</p>
                       <p className="text-sm">
                         Chat with your AI interviewer using voice or text
                       </p>
@@ -472,10 +583,12 @@ const CallPage = () => {
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                    disabled={connectionState !== 'connected'}
                   />
                   <Button 
                     className="rounded-l-none"
                     onClick={handleSendMessage}
+                    disabled={connectionState !== 'connected'}
                   >
                     Send
                   </Button>
