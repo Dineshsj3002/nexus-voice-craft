@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -20,6 +19,8 @@ import ForumPage from "./pages/forum";
 import ForumPostPage from "./pages/forum/post/[id]";
 import ForumCategoryPage from "./pages/forum/category/[id]";
 import Dashboard from "./pages/dashboard";
+import AuthPage from "./pages/auth";
+import { AuthProvider } from './hooks/useAuth';
 
 // Import the campus and integrating pages
 import CampusTourPage from "./pages/campus/tour";
@@ -41,50 +42,53 @@ const App = () => {
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
       <QueryClientProvider client={queryClient}>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/mentorship" element={<MentorshipPage />} />
-            <Route path="/mock-interviews" element={<MockInterviewsPage />} />
-            <Route path="/mock-interviews/call" element={<CallPage />} />
-            <Route path="/hubs" element={<HubsPage />} />
-            <Route path="/events" element={<EventsPage />} />
-            <Route path="/resources" element={<ResourcesPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/blog" element={<BlogPage />} />
-            <Route path="/blog/:id" element={<BlogPostPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/alumni" element={<AlumniPage />} />
-            <Route path="/alumni/privacy-settings" element={<AlumniPrivacySettingsPage />} />
-            
-            {/* Campus Routes */}
-            <Route path="/campus/tour" element={<CampusTourPage />} />
-            <Route path="/campus/facilities" element={<CampusFacilitiesPage />} />
-            <Route path="/campus/history" element={<CampusHistoryPage />} />
-            
-            {/* Integrating Routes */}
-            <Route path="/integrating/opportunities" element={<IntegratingOpportunitiesPage />} />
-            <Route path="/integrating/mentoring" element={<MentoringPage />} />
-            <Route path="/integrating/networking" element={<LocalNetworkingPage />} />
-            
-            {/* Office Barriers Route */}
-            <Route path="/office-barriers" element={<OfficeBarriersPage />} />
-            
-            {/* Chat Route */}
-            <Route path="/chat" element={<ChatPage />} />
-            
-            {/* Forum Routes */}
-            <Route path="/forum" element={<ForumPage />} />
-            <Route path="/forum/post/:id" element={<ForumPostPage />} />
-            <Route path="/forum/category/:id" element={<ForumCategoryPage />} />
-            
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+        <AuthProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<AuthPage />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/mentorship" element={<MentorshipPage />} />
+              <Route path="/mock-interviews" element={<MockInterviewsPage />} />
+              <Route path="/mock-interviews/call" element={<CallPage />} />
+              <Route path="/hubs" element={<HubsPage />} />
+              <Route path="/events" element={<EventsPage />} />
+              <Route path="/resources" element={<ResourcesPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blog/:id" element={<BlogPostPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/alumni" element={<AlumniPage />} />
+              <Route path="/alumni/privacy-settings" element={<AlumniPrivacySettingsPage />} />
+              
+              {/* Campus Routes */}
+              <Route path="/campus/tour" element={<CampusTourPage />} />
+              <Route path="/campus/facilities" element={<CampusFacilitiesPage />} />
+              <Route path="/campus/history" element={<CampusHistoryPage />} />
+              
+              {/* Integrating Routes */}
+              <Route path="/integrating/opportunities" element={<IntegratingOpportunitiesPage />} />
+              <Route path="/integrating/mentoring" element={<MentoringPage />} />
+              <Route path="/integrating/networking" element={<LocalNetworkingPage />} />
+              
+              {/* Office Barriers Route */}
+              <Route path="/office-barriers" element={<OfficeBarriersPage />} />
+              
+              {/* Chat Route */}
+              <Route path="/chat" element={<ChatPage />} />
+              
+              {/* Forum Routes */}
+              <Route path="/forum" element={<ForumPage />} />
+              <Route path="/forum/post/:id" element={<ForumPostPage />} />
+              <Route path="/forum/category/:id" element={<ForumCategoryPage />} />
+              
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );
