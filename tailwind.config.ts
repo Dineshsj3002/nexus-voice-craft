@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -67,31 +68,16 @@ export default {
 					secondary: '#8E9196',
 					light: '#F1F1F1',
 					dark: '#333333',
-				},
-				whatsapp: {
-					primary: '#25D366',
-					dark: '#128C7E',
-					teal: '#34B7F1',
-					light: '#DCF8C6',
-					incoming: '#FFFFFF',
-					background: '#E5DDD5',
-					panel: '#F0F0F0',
-					border: '#D1D7DB',
-					text: '#111B21',
-					textSecondary: '#667781',
-					online: '#00D924'
 				}
 			},
 			fontFamily: {
 				sans: ['Inter', 'system-ui', 'sans-serif'],
 				display: ['Montserrat', 'sans-serif'],
-				whatsapp: ['Segoe UI', 'Helvetica Neue', 'Helvetica', 'Lucida Grande', 'Arial', 'Ubuntu', 'Cantarell', 'Fira Sans', 'sans-serif']
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)',
-				'whatsapp': '7.5px'
+				sm: 'calc(var(--radius) - 4px)'
 			},
 			keyframes: {
 				'accordion-down': {
@@ -144,10 +130,6 @@ export default {
 					'0%': { transform: 'translateX(100%)' },
 					'100%': { transform: 'translateX(0)' }
 				},
-				'typing': {
-					'0%, 60%': { opacity: '0' },
-					'30%': { opacity: '1' }
-				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
@@ -157,10 +139,6 @@ export default {
 				'scale-in': 'scale-in 0.2s ease-out',
 				'pulse-green': 'pulse-green 2s infinite',
 				'slide-in-right': 'slide-in-right 0.3s ease-out',
-				'typing': 'typing 1.4s infinite'
-			},
-			backgroundImage: {
-				'whatsapp-pattern': `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='m36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
 			}
 		}
 	},

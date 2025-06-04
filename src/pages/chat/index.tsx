@@ -1,279 +1,490 @@
 
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Search, MoreVertical, Plus, LogOut, Settings } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import ContactListItem from '@/components/chat/ContactListItem';
-import MessageBubble from '@/components/chat/MessageBubble';
-import ChatInput from '@/components/chat/ChatInput';
-import { useAuth } from '@/hooks/useAuth';
-import { useConversations } from '@/hooks/useConversations';
-import { useMessages } from '@/hooks/useMessages';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Send, Search, User, Users, MessageSquare, Clock, ChevronLeft, Plus, Phone, Video, Info } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { TooltipProvider } from '@/components/ui/tooltip';
+
+// Message type interface
+interface Message {
+  id: string;
+  text: string;
+  sender: 'user' | 'other';
+  timestamp: Date;
+  status: 'sending' | 'sent' | 'delivered' | 'read';
+}
+
+// Contact interface
+interface Contact {
+  id: string;
+  name: string;
+  status: 'online' | 'offline' | 'away';
+  avatar: string;
+  unread: number;
+  lastMessage: string;
+  typing?: boolean;
+}
+
+// Group interface
+interface Group {
+  id: string;
+  name: string;
+  members: number;
+  lastActivity: string;
+}
 
 const ChatPage = () => {
-  const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [replyingTo, setReplyingTo] = useState<any>(null);
-  const [inputValue, setInputValue] = useState('');
+  const [message, setMessage] = useState('');
+  const [activeChat, setActiveChat] = useState<string | null>(null);
+  const [messages, setMessages] = useState<Record<string, Message[]>>({});
+  const [contacts, setContacts] = useState<Contact[]>([
+    { id: '1', name: 'John Smith', status: 'online', avatar: '👨‍💼', unread: 2, lastMessage: 'Let me know if you need any help with that project.' },
+    { id: '2', name: 'Emily Johnson', status: 'offline', avatar: '👩‍🎓', unread: 0, lastMessage: 'The alumni event is next Friday at 7 PM.' },
+    { id: '3', name: 'Michael Chen', status: 'online', avatar: '👨‍💻', unread: 0, lastMessage: 'I can introduce you to my team lead if you\'re interested.', typing: true },
+    { id: '4', name: 'Sarah Williams', status: 'away', avatar: '👩‍⚕️', unread: 5, lastMessage: 'Would you be available for a mentoring session next week?' }
+  ]);
   
-  const { user, signOut } = useAuth();
-  const navigate = useNavigate();
-  const { conversations, loading: conversationsLoading } = useConversations();
-  const { messages, loading: messagesLoading, sendMessage, uploadFile } = useMessages(selectedConversation);
-
+  const [groups, setGroups] = useState<Group[]>([
+    { id: 'g1', name: 'Software Development', members: 24, lastActivity: '10 minutes ago' },
+    { id: 'g2', name: 'Business Network', members: 42, lastActivity: '1 hour ago' },
+    { id: 'g3', name: 'Class of 2020', members: 68, lastActivity: 'Yesterday' },
+    { id: 'g4', name: 'Career Transitions', members: 31, lastActivity: '2 days ago' }
+  ]);
+  
+  const { toast } = useToast();
+  const messageEndRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
+  
+  // Initialize chat data
   useEffect(() => {
-    if (!user) {
-      navigate('/auth');
-    }
-  }, [user, navigate]);
-
-  const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
-    
-    await sendMessage(inputValue);
-    setInputValue('');
-    setReplyingTo(null);
-  };
-
-  const handleFileAttach = async (files: FileList) => {
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      const fileData = await uploadFile(file);
-      if (fileData) {
-        const messageType = file.type.startsWith('image/') ? 'image' : 
-                          file.type.startsWith('video/') ? 'video' : 'file';
-        await sendMessage('', messageType, fileData);
+    // Sample messages for John Smith chat
+    const johnMessages: Message[] = [
+      {
+        id: '1',
+        text: 'Hi there! How can I help you with your career questions?',
+        sender: 'other',
+        timestamp: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
+        status: 'read'
+      },
+      {
+        id: '2',
+        text: 'I\'m looking for advice on transitioning to a new industry. Do you have any resources?',
+        sender: 'user',
+        timestamp: new Date(Date.now() - 1000 * 60 * 3), // 3 minutes ago
+        status: 'read'
+      },
+      {
+        id: '3',
+        text: 'Absolutely! I\'d be happy to share some resources. Let\'s schedule a call to discuss your specific situation in more detail.',
+        sender: 'other',
+        timestamp: new Date(Date.now() - 1000 * 60), // 1 minute ago
+        status: 'read'
       }
-    }
-  };
-
-  const handleVoiceMessage = async (audioBlob: Blob) => {
-    const file = new File([audioBlob], 'voice-message.wav', { type: 'audio/wav' });
-    const fileData = await uploadFile(file);
-    if (fileData) {
-      await sendMessage('', 'voice', fileData);
-    }
-  };
-
-  const handleSignOut = async () => {
-    await signOut();
-    navigate('/auth');
-  };
-
-  const getConversationName = (conversation: any) => {
-    if (conversation.is_group) {
-      return conversation.name || 'Group Chat';
-    }
+    ];
     
-    const otherParticipant = conversation.participants.find((p: any) => p.id !== user?.id);
-    return otherParticipant?.full_name || otherParticipant?.username || 'Unknown User';
-  };
-
-  const getConversationAvatar = (conversation: any) => {
-    if (conversation.is_group) {
-      return conversation.avatar_url;
-    }
+    // Initialize with sample data
+    setMessages({
+      '1': johnMessages
+    });
     
-    const otherParticipant = conversation.participants.find((p: any) => p.id !== user?.id);
-    return otherParticipant?.avatar_url;
+    // Simulate receiving a new message
+    const messageTimer = setTimeout(() => {
+      if (activeChat === '1') {
+        const contact = contacts.find(c => c.id === '1');
+        if (contact) {
+          // Show typing indicator
+          setContacts(prev => prev.map(c => c.id === '1' ? { ...c, typing: true } : c));
+          
+          // Then send message after delay
+          setTimeout(() => {
+            const newMessage: Message = {
+              id: Date.now().toString(),
+              text: 'I just remembered that we have an industry transition workshop next month. Would you be interested in attending?',
+              sender: 'other',
+              timestamp: new Date(),
+              status: 'delivered'
+            };
+            
+            setMessages(prev => ({
+              ...prev,
+              '1': [...(prev['1'] || []), newMessage]
+            }));
+            
+            // Remove typing indicator
+            setContacts(prev => prev.map(c => c.id === '1' ? { ...c, typing: false } : c));
+            
+            // Show toast notification
+            toast({
+              title: "New message",
+              description: `${contact.name}: ${newMessage.text.substring(0, 50)}${newMessage.text.length > 50 ? '...' : ''}`,
+            });
+          }, 3000);
+        }
+      }
+    }, 10000);
+    
+    return () => clearTimeout(messageTimer);
+  }, [activeChat, toast]);
+  
+  // Scroll to bottom of messages
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, activeChat]);
+  
+  const formatMessageTime = (date: Date) => {
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
-
-  const selectedConversationData = conversations.find(c => c.id === selectedConversation);
-
-  const filteredConversations = conversations.filter(conversation =>
-    getConversationName(conversation).toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  if (!user) {
-    return null;
-  }
+  
+  const handleSendMessage = () => {
+    if (!message.trim() || !activeChat) return;
+    
+    // Create new message
+    const newMessage: Message = {
+      id: Date.now().toString(),
+      text: message,
+      sender: 'user',
+      timestamp: new Date(),
+      status: 'sending'
+    };
+    
+    // Add to messages state
+    setMessages(prev => ({
+      ...prev,
+      [activeChat]: [...(prev[activeChat] || []), newMessage]
+    }));
+    
+    // Clear input
+    setMessage('');
+    
+    // Simulate message being sent and delivered
+    setTimeout(() => {
+      setMessages(prev => ({
+        ...prev,
+        [activeChat]: prev[activeChat].map(msg => 
+          msg.id === newMessage.id ? { ...msg, status: 'sent' } : msg
+        )
+      }));
+      
+      // Then delivered
+      setTimeout(() => {
+        setMessages(prev => ({
+          ...prev,
+          [activeChat]: prev[activeChat].map(msg => 
+            msg.id === newMessage.id ? { ...msg, status: 'delivered' } : msg
+          )
+        }));
+        
+        // Mark as read after some time
+        setTimeout(() => {
+          setMessages(prev => ({
+            ...prev,
+            [activeChat]: prev[activeChat].map(msg => 
+              msg.id === newMessage.id ? { ...msg, status: 'read' } : msg
+            )
+          }));
+        }, 2000);
+      }, 1000);
+    }, 500);
+    
+    // Simulate reply for demo purposes
+    if (activeChat === '1') {
+      // Show typing indicator
+      setTimeout(() => {
+        setContacts(prev => prev.map(c => c.id === activeChat ? { ...c, typing: true } : c));
+        
+        // Send reply after a delay
+        setTimeout(() => {
+          const replyMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            text: 'Thanks for your message! I\'ll get back to you shortly.',
+            sender: 'other',
+            timestamp: new Date(),
+            status: 'delivered'
+          };
+          
+          setMessages(prev => ({
+            ...prev,
+            [activeChat]: [...prev[activeChat], replyMessage]
+          }));
+          
+          // Remove typing indicator
+          setContacts(prev => prev.map(c => c.id === activeChat ? { ...c, typing: false } : c));
+          
+          // Update last message in contact list
+          setContacts(prev => prev.map(c => 
+            c.id === activeChat 
+              ? { ...c, lastMessage: replyMessage.text, typing: false } 
+              : c
+          ));
+        }, 3000);
+      }, 1500);
+    }
+  };
+  
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault(); // Prevent form submission
+      handleSendMessage();
+    }
+  };
+  
+  const getMessageStatusIcon = (status: Message['status']) => {
+    switch (status) {
+      case 'sending':
+        return <Clock className="h-3 w-3 text-gray-400" />;
+      case 'sent':
+        return <div className="h-3 w-3 text-gray-400">✓</div>;
+      case 'delivered':
+        return <div className="h-3 w-3 text-gray-400">✓✓</div>;
+      case 'read':
+        return <div className="h-3 w-3 text-blue-500">✓✓</div>;
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div className="flex h-screen bg-whatsapp-panel">
-      {/* Sidebar */}
-      <div className="w-1/3 bg-white border-r border-whatsapp-border flex flex-col">
-        {/* Header */}
-        <div className="bg-whatsapp-panel p-4 border-b border-whatsapp-border">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <Avatar className="h-10 w-10">
-                <AvatarImage src={user.user_metadata?.avatar_url} />
-                <AvatarFallback className="bg-whatsapp-primary text-white">
-                  {user.user_metadata?.full_name?.[0] || user.email?.[0]?.toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <h2 className="font-medium text-whatsapp-text">
-                  {user.user_metadata?.full_name || 'User'}
-                </h2>
-                <p className="text-sm text-whatsapp-textSecondary">Online</p>
-              </div>
-            </div>
-            
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <MoreVertical className="h-5 w-5" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>
-                  <Settings className="h-4 w-4 mr-2" />
-                  Settings
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleSignOut}>
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Sign Out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-          
-          {/* Search */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-whatsapp-textSecondary h-4 w-4" />
-            <Input
-              placeholder="Search conversations..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-white border-whatsapp-border focus:ring-whatsapp-primary"
-            />
-          </div>
-        </div>
+    <TooltipProvider>
+      <div className="min-h-screen flex flex-col">
+        <Header />
         
-        {/* Conversations List */}
-        <div className="flex-1 overflow-y-auto">
-          {conversationsLoading ? (
-            <div className="p-4 text-center text-whatsapp-textSecondary">
-              Loading conversations...
-            </div>
-          ) : filteredConversations.length === 0 ? (
-            <div className="p-4 text-center text-whatsapp-textSecondary">
-              No conversations yet
-            </div>
-          ) : (
-            filteredConversations.map((conversation) => (
-              <ContactListItem
-                key={conversation.id}
-                contact={{
-                  id: conversation.id,
-                  name: getConversationName(conversation),
-                  status: 'online',
-                  avatar: getConversationAvatar(conversation),
-                  unread: conversation.unread_count,
-                  lastMessage: conversation.last_message?.content || 'No messages yet',
-                  lastMessageTime: conversation.last_message 
-                    ? new Date(conversation.last_message.created_at)
-                    : new Date(conversation.created_at),
-                  isGroup: conversation.is_group,
-                  groupMembers: conversation.participants.length
-                }}
-                isActive={selectedConversation === conversation.id}
-                onClick={() => setSelectedConversation(conversation.id)}
-              />
-            ))
-          )}
-        </div>
-      </div>
-
-      {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col">
-        {selectedConversation ? (
-          <>
-            {/* Chat Header */}
-            <div className="bg-whatsapp-panel p-4 border-b border-whatsapp-border">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src={getConversationAvatar(selectedConversationData)} />
-                    <AvatarFallback className="bg-whatsapp-primary text-white">
-                      {getConversationName(selectedConversationData)?.[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h3 className="font-medium text-whatsapp-text">
-                      {getConversationName(selectedConversationData)}
-                    </h3>
-                    <p className="text-sm text-whatsapp-textSecondary">
-                      {selectedConversationData?.is_group 
-                        ? `${selectedConversationData.participants.length} members`
-                        : 'Online'
-                      }
-                    </p>
+        <main className="flex-grow py-6 px-4 md:px-8 bg-gray-50">
+          <div className="max-w-7xl mx-auto">
+            <h1 className="text-3xl font-bold font-display mb-6">Chat</h1>
+            
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 min-h-[600px] flex flex-col md:flex-row">
+              {/* Sidebar */}
+              <div className={`${activeChat && isMobile ? 'hidden' : 'block'} w-full md:w-80 border-r border-gray-200`}>
+                <div className="p-4 border-b border-gray-200">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                    <Input placeholder="Search contacts..." className="pl-10 pr-4" />
                   </div>
                 </div>
                 
-                <Button variant="ghost" size="icon">
-                  <MoreVertical className="h-5 w-5" />
-                </Button>
+                <Tabs defaultValue="direct" className="w-full">
+                  <TabsList className="w-full grid grid-cols-2">
+                    <TabsTrigger value="direct" className="flex items-center justify-center">
+                      <User className="mr-2 h-4 w-4" />
+                      Direct
+                    </TabsTrigger>
+                    <TabsTrigger value="groups" className="flex items-center justify-center">
+                      <Users className="mr-2 h-4 w-4" />
+                      Groups
+                    </TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="direct" className="max-h-[500px] overflow-y-auto">
+                    <div className="divide-y divide-gray-100">
+                      {contacts.map((contact) => (
+                        <div 
+                          key={contact.id}
+                          className={`p-4 hover:bg-gray-50 cursor-pointer ${activeChat === contact.id ? 'bg-gray-50' : ''}`}
+                          onClick={() => setActiveChat(contact.id)}
+                        >
+                          <div className="flex items-start">
+                            <div className="relative mr-3">
+                              <div className="h-10 w-10 bg-nexus-primary/10 rounded-full flex items-center justify-center text-lg">
+                                {contact.avatar}
+                              </div>
+                              <div className={`absolute -bottom-1 -right-1 h-3 w-3 rounded-full ${
+                                contact.status === 'online' ? 'bg-green-500' : 
+                                contact.status === 'away' ? 'bg-amber-500' : 'bg-gray-400'
+                              } border-2 border-white`}></div>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex justify-between items-start">
+                                <h3 className="font-medium truncate">{contact.name}</h3>
+                                {contact.unread > 0 && (
+                                  <span className="bg-nexus-primary text-white text-xs font-semibold rounded-full h-5 min-w-5 flex items-center justify-center px-1">
+                                    {contact.unread}
+                                  </span>
+                                )}
+                              </div>
+                              {contact.typing ? (
+                                <p className="text-sm text-nexus-primary font-medium">typing...</p>
+                              ) : (
+                                <p className="text-sm text-gray-500 truncate">{contact.lastMessage}</p>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="groups" className="max-h-[500px] overflow-y-auto">
+                    <div className="divide-y divide-gray-100">
+                      {groups.map((group) => (
+                        <div 
+                          key={group.id}
+                          className={`p-4 hover:bg-gray-50 cursor-pointer ${activeChat === group.id ? 'bg-gray-50' : ''}`}
+                          onClick={() => setActiveChat(group.id)}
+                        >
+                          <div className="flex items-start">
+                            <div className="mr-3">
+                              <div className="h-10 w-10 bg-nexus-primary rounded-full flex items-center justify-center text-white">
+                                <Users size={20} />
+                              </div>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-medium">{group.name}</h3>
+                              <div className="flex text-sm text-gray-500">
+                                <span className="mr-2">{group.members} members</span>
+                                <span>Last active: {group.lastActivity}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              </div>
+              
+              {/* Chat Area */}
+              <div className={`flex-1 flex flex-col ${activeChat && isMobile ? 'block' : 'hidden md:flex'}`}>
+                {activeChat ? (
+                  <>
+                    {/* Chat Header */}
+                    <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+                      <div className="flex items-center">
+                        {isMobile && (
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            onClick={() => setActiveChat(null)} 
+                            className="mr-2"
+                          >
+                            <ChevronLeft className="h-5 w-5" />
+                          </Button>
+                        )}
+                        <div className="h-10 w-10 bg-nexus-primary/10 rounded-full flex items-center justify-center text-lg mr-3">
+                          {activeChat.startsWith('g') ? <Users size={20} /> : 
+                            contacts.find(c => c.id === activeChat)?.avatar || '👤'}
+                        </div>
+                        <div>
+                          <h3 className="font-medium">
+                            {activeChat.startsWith('g') ? 
+                              groups.find(g => g.id === activeChat)?.name : 
+                              contacts.find(c => c.id === activeChat)?.name}
+                          </h3>
+                          <p className="text-sm text-gray-500">
+                            {activeChat.startsWith('g') ? 
+                              `${groups.find(g => g.id === activeChat)?.members} members` : 
+                              contacts.find(c => c.id === activeChat)?.status === 'online' ? 'Online' :
+                              contacts.find(c => c.id === activeChat)?.status === 'away' ? 'Away' : 'Offline'}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-1">
+                        <Button variant="ghost" size="icon">
+                          <Phone className="h-5 w-5" />
+                        </Button>
+                        <Button variant="ghost" size="icon">
+                          <Video className="h-5 w-5" />
+                        </Button>
+                        <Button variant="ghost" size="icon">
+                          <Info className="h-5 w-5" />
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    {/* Messages */}
+                    <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
+                      <div className="text-center text-sm text-gray-500 mb-4">Today</div>
+                      
+                      {/* Display messages */}
+                      <div className="space-y-4">
+                        {messages[activeChat]?.map((msg) => (
+                          <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                            <div 
+                              className={`relative rounded-lg p-3 shadow-sm max-w-xs md:max-w-md ${
+                                msg.sender === 'user' 
+                                  ? 'bg-nexus-primary text-white' 
+                                  : 'bg-white text-gray-700'
+                              }`}
+                            >
+                              <p>{msg.text}</p>
+                              <div className={`flex items-center justify-end ${msg.sender === 'user' ? 'text-white/80' : 'text-gray-500'} text-xs mt-1 gap-1`}>
+                                <span>{formatMessageTime(msg.timestamp)}</span>
+                                {msg.sender === 'user' && getMessageStatusIcon(msg.status)}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                        
+                        {/* Typing indicator */}
+                        {contacts.find(c => c.id === activeChat)?.typing && (
+                          <div className="flex justify-start">
+                            <div className="bg-white rounded-lg p-3 shadow-sm max-w-xs md:max-w-md">
+                              <div className="flex space-x-1 items-center">
+                                <div className="h-2 w-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                                <div className="h-2 w-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                                <div className="h-2 w-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* Invisible element to scroll to */}
+                        <div ref={messageEndRef} />
+                      </div>
+                    </div>
+                    
+                    {/* Message Input */}
+                    <div className="p-4 border-t border-gray-200">
+                      <div className="flex">
+                        <Button variant="ghost" size="icon" className="mr-1">
+                          <Plus className="h-5 w-5" />
+                        </Button>
+                        <Input 
+                          placeholder="Type a message..." 
+                          value={message}
+                          onChange={(e) => setMessage(e.target.value)}
+                          onKeyDown={handleKeyPress}
+                          className="flex-1 mr-2"
+                        />
+                        <Button 
+                          onClick={handleSendMessage}
+                          className="bg-nexus-primary hover:bg-nexus-primary/90 text-white"
+                          disabled={!message.trim()}
+                        >
+                          <Send className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex-1 flex items-center justify-center bg-gray-50 p-6">
+                    <div className="text-center">
+                      <div className="mx-auto h-16 w-16 bg-nexus-primary/10 rounded-full flex items-center justify-center mb-4">
+                        <MessageSquare className="h-8 w-8 text-nexus-primary" />
+                      </div>
+                      <h3 className="text-xl font-medium mb-2">Start a conversation</h3>
+                      <p className="text-gray-600 max-w-md mx-auto mb-6">
+                        Connect with alumni mentors, fellow students, and industry professionals through direct messages or group chats.
+                      </p>
+                      <Button className="bg-nexus-primary hover:bg-nexus-primary/90 text-white">
+                        Select a contact
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
-
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 bg-whatsapp-bg">
-              {messagesLoading ? (
-                <div className="text-center text-whatsapp-textSecondary">
-                  Loading messages...
-                </div>
-              ) : messages.length === 0 ? (
-                <div className="text-center text-whatsapp-textSecondary">
-                  No messages yet. Start the conversation!
-                </div>
-              ) : (
-                messages.map((message) => (
-                  <MessageBubble
-                    key={message.id}
-                    message={{
-                      id: message.id,
-                      text: message.content || `[${message.message_type}]`,
-                      sender: message.sender_id === user.id ? 'user' : 'other',
-                      timestamp: new Date(message.created_at),
-                      status: message.status || 'sent',
-                      type: message.message_type as any,
-                      replyTo: message.reply_to ? {
-                        text: message.reply_to.content || '',
-                        sender: message.reply_to.sender.full_name || message.reply_to.sender.username || 'Unknown'
-                      } : undefined,
-                      isEdited: message.is_edited
-                    }}
-                    onReply={(messageId) => {
-                      setReplyingTo({
-                        id: messageId,
-                        text: message.content || '',
-                        sender: message.sender.full_name || message.sender.username || 'Unknown'
-                      });
-                    }}
-                  />
-                ))
-              )}
-            </div>
-
-            {/* Chat Input */}
-            <ChatInput
-              value={inputValue}
-              onChange={setInputValue}
-              onSend={handleSendMessage}
-              onVoiceMessage={handleVoiceMessage}
-              onFileAttach={handleFileAttach}
-              onImageAttach={handleFileAttach}
-              replyingTo={replyingTo}
-              onCancelReply={() => setReplyingTo(null)}
-            />
-          </>
-        ) : (
-          <div className="flex-1 flex items-center justify-center bg-whatsapp-bg">
-            <div className="text-center text-whatsapp-textSecondary">
-              <MessageCircle className="h-16 w-16 mx-auto mb-4 opacity-50" />
-              <h3 className="text-xl font-medium mb-2">Welcome to Chat</h3>
-              <p>Select a conversation to start messaging</p>
-            </div>
           </div>
-        )}
+        </main>
+        
+        <Footer />
       </div>
-    </div>
+    </TooltipProvider>
   );
 };
 
