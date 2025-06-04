@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Sheet,
@@ -8,6 +7,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { ModeToggle } from "@/components/ModeToggle";
+import { NavigationMenuDemo } from "@/components/NavigationMenu";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Menu } from "lucide-react";
@@ -24,6 +25,11 @@ const Header = () => {
           KIOT Alumni Association
         </Link>
 
+        <div className="hidden md:flex items-center space-x-6">
+          <NavigationMenuDemo />
+          <ModeToggle />
+        </div>
+
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="ghost" size="sm" className="md:hidden">
@@ -37,33 +43,35 @@ const Header = () => {
                 Explore the KIOT Alumni Association
               </SheetDescription>
             </SheetHeader>
+            <NavigationMenuDemo />
+            <ModeToggle />
           </SheetContent>
         </Sheet>
       
-        <div className="flex items-center space-x-4">
-          {user ? (
-            <div className="flex items-center space-x-2">
-              <span className="text-sm">Welcome, {user.user_metadata?.full_name || user.email}</span>
-              <AuthDialog 
-                triggerText="Dashboard" 
-                triggerClassName="bg-white text-nexus-primary hover:bg-gray-100"
-              />
-            </div>
-          ) : (
-            <>
-              <AuthDialog 
-                triggerText="Login" 
-                triggerClassName="bg-transparent border border-white hover:bg-white hover:text-nexus-primary"
-                defaultTab="login"
-              />
-              <AuthDialog 
-                triggerText="Register" 
-                triggerClassName="bg-white text-nexus-primary hover:bg-gray-100"
-                defaultTab="register"
-              />
-            </>
-          )}
-        </div>
+      <div className="flex items-center space-x-4">
+        {user ? (
+          <div className="flex items-center space-x-2">
+            <span className="text-sm">Welcome, {user.user_metadata?.full_name || user.email}</span>
+            <AuthDialog 
+              triggerText="Dashboard" 
+              triggerClassName="bg-white text-nexus-primary hover:bg-gray-100"
+            />
+          </div>
+        ) : (
+          <>
+            <AuthDialog 
+              triggerText="Login" 
+              triggerClassName="bg-transparent border border-white hover:bg-white hover:text-nexus-primary"
+              defaultTab="login"
+            />
+            <AuthDialog 
+              triggerText="Register" 
+              triggerClassName="bg-white text-nexus-primary hover:bg-gray-100"
+              defaultTab="register"
+            />
+          </>
+        )}
+      </div>
       </div>
     </header>
   );
