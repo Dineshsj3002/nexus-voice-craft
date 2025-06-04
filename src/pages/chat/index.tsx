@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Search, MoreVertical, Plus, LogOut, Settings } from 'lucide-react';
+import { Search, MoreVertical, Plus, LogOut, Settings, MessageCircle } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import ContactListItem from '@/components/chat/ContactListItem';
 import MessageBubble from '@/components/chat/MessageBubble';
