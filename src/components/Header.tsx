@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -64,28 +63,30 @@ const Header = () => {
       </div>
       
       {/* Main Header */}
-      <div className="max-w-7xl mx-auto flex items-center justify-between py-5 px-4 md:px-8 bg-white">
-        {/* Logo Section */}
-        <Link to="/" className="flex items-center group hover:scale-105 transition-transform duration-300">
-          <div className="flex items-center">
+      <div className="max-w-7xl mx-auto flex items-center justify-between py-6 px-4 md:px-8 bg-white">
+        {/* Enhanced Logo Section */}
+        <Link to="/" className="flex items-center group hover:scale-105 transition-all duration-300 ease-in-out">
+          <div className="flex items-center gap-4">
             <div className="relative">
               <img 
                 src="/lovable-uploads/2f632a9a-d04b-476f-ad3d-4ad3ca35b5e5.png" 
                 alt="Knowledge Institute of Technology" 
-                className="h-16 md:h-20 w-auto object-contain mr-4 drop-shadow-md"
+                className="h-16 md:h-20 w-auto object-contain drop-shadow-lg transition-all duration-300 group-hover:drop-shadow-xl"
               />
-              <div className="absolute inset-0 bg-gradient-to-br from-transparent to-nexus-primary/10 rounded-lg"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-transparent via-nexus-primary/5 to-blue-600/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
-            <div className="hidden md:flex flex-col">
-              <span className="text-2xl font-display font-bold text-nexus-primary bg-gradient-to-r from-nexus-primary to-blue-600 bg-clip-text text-transparent">
+            <div className="flex flex-col space-y-1">
+              <span className="text-2xl md:text-3xl font-display font-bold bg-gradient-to-r from-nexus-primary via-blue-700 to-blue-900 bg-clip-text text-transparent leading-tight tracking-tight">
                 Knowledge
               </span>
-              <span className="text-lg font-display font-semibold text-gray-700">
+              <span className="text-lg md:text-xl font-display font-semibold text-gray-700 tracking-wide">
                 Institute of Technology
               </span>
-              <span className="text-green-600 text-sm font-medium bg-green-50 px-2 py-1 rounded-full inline-block mt-1">
-                🎓 Alumni Association
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-green-600 text-sm font-semibold bg-gradient-to-r from-green-50 to-emerald-50 px-3 py-1.5 rounded-full border border-green-200 shadow-sm">
+                  🎓 Alumni Association
+                </span>
+              </div>
             </div>
           </div>
         </Link>
