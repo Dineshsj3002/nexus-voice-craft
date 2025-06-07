@@ -79,8 +79,9 @@ const Header = () => {
               <span className="text-2xl md:text-3xl font-display font-bold bg-gradient-to-r from-nexus-primary via-blue-700 to-blue-900 bg-clip-text text-transparent leading-tight tracking-tight">
                 Knowledge
               </span>
-              <span className="text-lg md:text-xl font-display font-semibold text-gray-700 tracking-wide">
+              <span className="text-lg md:text-xl font-display font-bold bg-gradient-to-r from-gray-700 via-gray-800 to-nexus-primary bg-clip-text text-transparent tracking-wide drop-shadow-sm relative">
                 Institute of Technology
+                <div className="absolute -bottom-0.5 left-0 w-full h-0.5 bg-gradient-to-r from-nexus-primary/60 via-blue-500/60 to-transparent rounded-full"></div>
               </span>
               <div className="flex items-center gap-2">
                 <span className="text-green-600 text-sm font-semibold bg-gradient-to-r from-green-50 to-emerald-50 px-3 py-1.5 rounded-full border border-green-200 shadow-sm">
