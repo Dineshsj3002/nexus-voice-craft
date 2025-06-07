@@ -51,7 +51,7 @@ interface AuthDialogProps {
 
 const AuthDialog = ({ 
   triggerText, 
-  triggerClassName, 
+  triggerClassName = "bg-white border-2 border-nexus-primary text-nexus-primary hover:bg-nexus-primary hover:text-white font-semibold px-6 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105", 
   defaultTab = 'login' 
 }: AuthDialogProps) => {
   const [open, setOpen] = useState(false);
