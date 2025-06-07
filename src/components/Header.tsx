@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -45,46 +46,66 @@ const Header = () => {
   }, [location.pathname]);
   
   return (
-    <header className="bg-white border-b border-gray-200">
-      <div className="bg-yellow-400 py-2 px-4 text-xs md:text-sm text-blue-900 font-medium">
+    <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
+      {/* Top Contact Bar */}
+      <div className="bg-gradient-to-r from-nexus-primary to-blue-700 py-2.5 px-4 text-xs md:text-sm text-white font-medium">
         <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center">
-          <div className="flex flex-wrap gap-x-4 gap-y-1">
-            <span className="flex items-center">ALUMNI ADMIN: +91 98947 01234</span>
+          <div className="flex flex-wrap gap-x-6 gap-y-1">
+            <span className="flex items-center hover:text-yellow-300 transition-colors cursor-pointer">
+              📞 ALUMNI ADMIN: +91 98947 01234
+            </span>
           </div>
-          <div>
-            <span>Email: info@kiot.ac.in</span>
+          <div className="flex items-center gap-4">
+            <span className="hover:text-yellow-300 transition-colors cursor-pointer">
+              ✉️ info@kiot.ac.in
+            </span>
           </div>
         </div>
       </div>
       
-      <div className="max-w-7xl mx-auto flex items-center justify-between py-4 px-4 md:px-8">
-        <Link to="/" className="flex items-center">
+      {/* Main Header */}
+      <div className="max-w-7xl mx-auto flex items-center justify-between py-5 px-4 md:px-8 bg-white">
+        {/* Logo Section */}
+        <Link to="/" className="flex items-center group hover:scale-105 transition-transform duration-300">
           <div className="flex items-center">
-            <img 
-              src="/lovable-uploads/2f632a9a-d04b-476f-ad3d-4ad3ca35b5e5.png" 
-              alt="Knowledge Institute of Technology" 
-              className="h-16 md:h-20 w-auto object-contain mr-3"
-            />
+            <div className="relative">
+              <img 
+                src="/lovable-uploads/2f632a9a-d04b-476f-ad3d-4ad3ca35b5e5.png" 
+                alt="Knowledge Institute of Technology" 
+                className="h-16 md:h-20 w-auto object-contain mr-4 drop-shadow-md"
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-transparent to-nexus-primary/10 rounded-lg"></div>
+            </div>
             <div className="hidden md:flex flex-col">
-              <span className="text-xl font-display font-semibold text-nexus-primary">Knowledge</span>
-              <span className="text-lg font-display">Institute of Technology</span>
-              <span className="text-green-600 text-sm font-medium">Alumni Association</span>
+              <span className="text-2xl font-display font-bold text-nexus-primary bg-gradient-to-r from-nexus-primary to-blue-600 bg-clip-text text-transparent">
+                Knowledge
+              </span>
+              <span className="text-lg font-display font-semibold text-gray-700">
+                Institute of Technology
+              </span>
+              <span className="text-green-600 text-sm font-medium bg-green-50 px-2 py-1 rounded-full inline-block mt-1">
+                🎓 Alumni Association
+              </span>
             </div>
           </div>
         </Link>
         
-        <div className="hidden md:flex items-center space-x-3">
+        {/* Desktop Actions */}
+        <div className="hidden md:flex items-center space-x-4">
           {isAuthenticated && user ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
+              {/* Notifications */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="relative">
-                    <Bell className="h-5 w-5" />
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                  <Button variant="ghost" size="icon" className="relative hover:bg-nexus-primary/10 transition-all duration-200">
+                    <Bell className="h-5 w-5 text-gray-600" />
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+                      3
+                    </span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-80">
-                  <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                <DropdownMenuContent align="end" className="w-80 shadow-lg border-0 bg-white">
+                  <DropdownMenuLabel className="text-nexus-primary font-semibold">Notifications</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   {[
                     { 
@@ -109,7 +130,7 @@ const Header = () => {
                       iconClass: "text-purple-500"
                     }
                   ].map((notification, index) => (
-                    <DropdownMenuItem key={index} className="flex items-start py-3 px-4 cursor-pointer">
+                    <DropdownMenuItem key={index} className="flex items-start py-3 px-4 cursor-pointer hover:bg-nexus-primary/5">
                       <div className={`rounded-full p-2 ${notification.iconClass} bg-gray-100 mr-3`}>
                         <notification.icon className="h-4 w-4" />
                       </div>
@@ -121,28 +142,31 @@ const Header = () => {
                     </DropdownMenuItem>
                   ))}
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="justify-center text-nexus-primary font-medium">
+                  <DropdownMenuItem className="justify-center text-nexus-primary font-medium hover:bg-nexus-primary/10">
                     View all notifications
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               
+              {/* User Profile */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-10 rounded-full flex items-center gap-2 pl-2 pr-3">
-                    <Avatar className="h-8 w-8">
+                  <Button variant="ghost" className="relative h-11 rounded-full flex items-center gap-3 pl-2 pr-4 hover:bg-nexus-primary/10 transition-all duration-200 border border-transparent hover:border-nexus-primary/20">
+                    <Avatar className="h-9 w-9 ring-2 ring-nexus-primary/20">
                       {user.avatar ? (
                         <AvatarImage src={user.avatar} alt={user.name} />
                       ) : (
-                        <AvatarFallback className="bg-nexus-primary text-white">
+                        <AvatarFallback className="bg-gradient-to-br from-nexus-primary to-blue-600 text-white font-semibold">
                           {user.name.substring(0, 2).toUpperCase()}
                         </AvatarFallback>
                       )}
                     </Avatar>
-                    <span className="font-medium text-sm hidden md:inline">{user.name.split(' ')[0]}</span>
+                    <span className="font-medium text-sm text-gray-700 hidden lg:inline">
+                      {user.name.split(' ')[0]}
+                    </span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuContent className="w-56 shadow-lg border-0" align="end" forceMount>
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
                       <p className="text-sm font-medium leading-none">{user.name}</p>
@@ -152,16 +176,16 @@ const Header = () => {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => navigate('/dashboard')}>
+                  <DropdownMenuItem onClick={() => navigate('/dashboard')} className="hover:bg-nexus-primary/10">
                     <User className="mr-2 h-4 w-4" />
                     <span>Dashboard</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate('/alumni')}>
+                  <DropdownMenuItem onClick={() => navigate('/alumni')} className="hover:bg-nexus-primary/10">
                     <User className="mr-2 h-4 w-4" />
                     <span>My Profile</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout}>
+                  <DropdownMenuItem onClick={handleLogout} className="hover:bg-red-50 text-red-600">
                     <User className="mr-2 h-4 w-4" />
                     <span>Log out</span>
                   </DropdownMenuItem>
@@ -169,35 +193,37 @@ const Header = () => {
               </DropdownMenu>
             </div>
           ) : (
-            <>
+            <div className="flex items-center gap-3">
               <AuthDialog 
                 triggerText="JOIN AS STUDENT" 
-                triggerClassName="bg-nexus-primary hover:bg-nexus-primary/90 text-white transition-colors"
+                triggerClassName="bg-gradient-to-r from-nexus-primary to-blue-600 hover:from-nexus-primary/90 hover:to-blue-600/90 text-white font-medium px-4 py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105"
                 defaultTab="register"
               />
               <AuthDialog 
                 triggerText="JOIN AS ALUMNI" 
-                triggerClassName="bg-yellow-400 hover:bg-yellow-500 text-blue-900 transition-colors"
+                triggerClassName="bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-blue-900 font-medium px-4 py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105"
                 defaultTab="register"
               />
               <AuthDialog 
                 triggerText="LOGIN" 
-                triggerClassName="border border-nexus-primary text-nexus-primary hover:bg-nexus-primary hover:text-white transition-colors"
+                triggerClassName="border-2 border-nexus-primary text-nexus-primary hover:bg-nexus-primary hover:text-white font-medium px-4 py-2.5 rounded-lg transition-all duration-200 hover:scale-105"
                 defaultTab="login"
               />
-            </>
+            </div>
           )}
         </div>
         
+        {/* Mobile Menu Button */}
         <button 
-          className="md:hidden text-gray-500 hover:text-nexus-primary"
+          className="md:hidden text-gray-600 hover:text-nexus-primary p-2 rounded-lg hover:bg-nexus-primary/10 transition-all duration-200"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           <Menu className="h-6 w-6" />
         </button>
       </div>
       
-      <div className="bg-nexus-primary text-white">
+      {/* Navigation */}
+      <div className="bg-gradient-to-r from-nexus-primary via-blue-700 to-nexus-primary text-white shadow-lg">
         <div className="max-w-7xl mx-auto">
           <DesktopNav isActive={isActive} />
           <MobileNav 
