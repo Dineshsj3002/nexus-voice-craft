@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -51,7 +50,7 @@ interface AuthDialogProps {
 
 const AuthDialog = ({ 
   triggerText, 
-  triggerClassName = "bg-white border-2 border-nexus-primary text-nexus-primary hover:bg-nexus-primary hover:text-white font-semibold px-6 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105", 
+  triggerClassName = "bg-white border-2 border-nexus-primary text-nexus-primary font-semibold px-6 py-3 rounded-lg shadow-md", 
   defaultTab = 'login' 
 }: AuthDialogProps) => {
   const [open, setOpen] = useState(false);
