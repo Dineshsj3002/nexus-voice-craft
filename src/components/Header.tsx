@@ -45,7 +45,7 @@ const Header = () => {
   }, [location.pathname]);
   
   return (
-    <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
+    <header className="bg-white border-b border-gray-200 shadow-sm">
       {/* Top Contact Bar */}
       <div className="bg-gradient-to-r from-nexus-primary to-blue-700 py-2.5 px-4 text-xs md:text-sm text-white font-medium">
         <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center">
