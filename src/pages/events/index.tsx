@@ -1,14 +1,14 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ChatBot from '@/components/ChatBot';
+import EventRegistrationDialog from '@/components/EventRegistrationDialog';
 import { Calendar, MapPin, Users, Clock, ArrowRight, Star, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { showSuccessToast } from '@/components/SuccessToast';
 
 type Event = {
   id: number;
@@ -110,12 +110,17 @@ const events: Event[] = [
 
 const EventsPage = () => {
   const navigate = useNavigate();
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
 
-  const handleRegister = (eventId: number, eventTitle: string) => {
-    showSuccessToast({
-      message: `You've registered for ${eventTitle}!`,
-      emoji: "🎉"
-    });
+  const handleRegister = (event: Event) => {
+    setSelectedEvent(event);
+    setIsRegistrationOpen(true);
+  };
+
+  const handleCloseRegistration = () => {
+    setIsRegistrationOpen(false);
+    setSelectedEvent(null);
   };
 
   // Filter featured events
@@ -211,7 +216,7 @@ const EventsPage = () => {
                     <div className="flex justify-between items-center mt-2">
                       <Button 
                         className="bg-nexus-primary hover:bg-nexus-primary/90"
-                        onClick={() => handleRegister(event.id, event.title)}
+                        onClick={() => handleRegister(event)}
                       >
                         Register Now
                       </Button>
@@ -280,9 +285,9 @@ const EventsPage = () => {
                       <Button 
                         variant="outline" 
                         className="border-nexus-primary text-nexus-primary hover:bg-nexus-primary/10"
-                        onClick={() => handleRegister(event.id, event.title)}
+                        onClick={() => handleRegister(event)}
                       >
-                        Learn More
+                        Register Now
                       </Button>
                       <div className="flex items-center text-sm text-gray-500">
                         <Users className="h-4 w-4 mr-1" />
@@ -315,6 +320,13 @@ const EventsPage = () => {
       
       <Footer />
       <ChatBot />
+      
+      {/* Registration Dialog */}
+      <EventRegistrationDialog
+        event={selectedEvent}
+        isOpen={isRegistrationOpen}
+        onClose={handleCloseRegistration}
+      />
     </div>
   );
 };
