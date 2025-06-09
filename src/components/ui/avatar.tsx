@@ -70,7 +70,7 @@ const AvatarFallback = React.forwardRef<
     ) : (
       children
     )}
-  </AvatarFallback>
+  </AvatarPrimitive.Fallback>
 ))
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName
 
