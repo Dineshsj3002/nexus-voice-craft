@@ -34,9 +34,10 @@ const AvatarImage = React.forwardRef<
     <AvatarPrimitive.Image
       ref={ref}
       className={cn(
-        "aspect-square h-full w-full transition-all duration-300",
-        loadingStatus === 'loaded' && "animate-avatar-load",
-        loadingStatus === 'loading' && "opacity-0",
+        "aspect-square h-full w-full transition-all duration-500 ease-out",
+        loadingStatus === 'loaded' && "animate-avatar-drop-in opacity-100",
+        loadingStatus === 'loading' && "opacity-0 scale-95",
+        loadingStatus === 'idle' && "opacity-0 scale-90",
         className
       )}
       onLoadingStatusChange={(status) => {
@@ -57,9 +58,9 @@ const AvatarFallback = React.forwardRef<
   <AvatarPrimitive.Fallback
     ref={ref}
     className={cn(
-      "flex h-full w-full items-center justify-center rounded-full bg-muted transition-all duration-300",
-      isLoading && "animate-pulse",
-      !isLoading && "animate-avatar-load",
+      "flex h-full w-full items-center justify-center rounded-full bg-muted transition-all duration-400 ease-out",
+      isLoading && "animate-pulse opacity-70 scale-95",
+      !isLoading && "animate-avatar-drop-in opacity-100 scale-100",
       className
     )}
     {...props}
@@ -69,7 +70,7 @@ const AvatarFallback = React.forwardRef<
     ) : (
       children
     )}
-  </AvatarPrimitive.Fallback>
+  </AvatarFallback>
 ))
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName
 

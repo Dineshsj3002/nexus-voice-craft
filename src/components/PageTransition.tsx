@@ -10,25 +10,26 @@ interface PageTransitionProps {
 const pageVariants = {
   initial: {
     opacity: 0,
-    x: 20,
-    scale: 0.98
+    y: 15,
+    scale: 0.99
   },
   in: {
     opacity: 1,
-    x: 0,
+    y: 0,
     scale: 1
   },
   out: {
     opacity: 0,
-    x: -20,
-    scale: 0.98
+    y: -10,
+    scale: 1.01
   }
 };
 
 const pageTransition = {
-  type: 'tween',
-  ease: 'anticipate',
-  duration: 0.4
+  type: 'spring',
+  damping: 25,
+  stiffness: 300,
+  duration: 0.3
 };
 
 const PageTransition: React.FC<PageTransitionProps> = ({ children }) => {

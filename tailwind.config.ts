@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -182,6 +183,23 @@ export default {
 						transform: 'scale(1)'
 					}
 				},
+				'avatar-drop-in': {
+					'0%': {
+						opacity: '0',
+						transform: 'scale(0.7) translateY(-8px)'
+					},
+					'50%': {
+						opacity: '0.8',
+						transform: 'scale(1.02) translateY(2px)'
+					},
+					'80%': {
+						transform: 'scale(0.98) translateY(0)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'scale(1) translateY(0)'
+					}
+				},
 				'typing-wave': {
 					'0%, 60%, 100%': {
 						transform: 'translateY(0)',
@@ -227,6 +245,7 @@ export default {
 				'tab-slide-in': 'tab-slide-in 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
 				'tab-slide-out': 'tab-slide-out 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
 				'avatar-load': 'avatar-load 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
+				'avatar-drop-in': 'avatar-drop-in 0.7s cubic-bezier(0.23, 1, 0.32, 1)',
 				'typing-wave': 'typing-wave 1.4s ease-in-out infinite',
 				'message-appear': 'message-appear 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
 				'smooth-bounce': 'smooth-bounce 1s ease-in-out infinite'
