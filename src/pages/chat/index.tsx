@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -9,6 +8,8 @@ import { Send, Search, User, Users, MessageSquare, Clock, ChevronLeft, Plus, Pho
 import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import TypingIndicator from '@/components/TypingIndicator';
 
 // Message type interface
 interface Message {
@@ -255,15 +256,15 @@ const ChatPage = () => {
         
         <main className="flex-grow py-6 px-4 md:px-8 bg-gray-50">
           <div className="max-w-7xl mx-auto">
-            <h1 className="text-3xl font-bold font-display mb-6">Chat</h1>
+            <h1 className="text-3xl font-bold font-display mb-6 animate-fade-in">Chat</h1>
             
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 min-h-[600px] flex flex-col md:flex-row">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 min-h-[600px] flex flex-col md:flex-row animate-scale-in">
               {/* Sidebar */}
               <div className={`${activeChat && isMobile ? 'hidden' : 'block'} w-full md:w-80 border-r border-gray-200`}>
                 <div className="p-4 border-b border-gray-200">
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-                    <Input placeholder="Search contacts..." className="pl-10 pr-4" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 transition-all duration-200" size={18} />
+                    <Input placeholder="Search contacts..." className="pl-10 pr-4 transition-all duration-200 focus:ring-2 focus:ring-nexus-primary/20" />
                   </div>
                 </div>
                 
@@ -281,27 +282,30 @@ const ChatPage = () => {
                   
                   <TabsContent value="direct" className="max-h-[500px] overflow-y-auto">
                     <div className="divide-y divide-gray-100">
-                      {contacts.map((contact) => (
+                      {contacts.map((contact, index) => (
                         <div 
                           key={contact.id}
-                          className={`p-4 hover:bg-gray-50 cursor-pointer ${activeChat === contact.id ? 'bg-gray-50' : ''}`}
+                          className={`p-4 hover:bg-gray-50 cursor-pointer transition-all duration-200 hover:scale-[1.02] ${activeChat === contact.id ? 'bg-gray-50' : ''}`}
                           onClick={() => setActiveChat(contact.id)}
+                          style={{ animationDelay: `${index * 100}ms` }}
                         >
-                          <div className="flex items-start">
+                          <div className="flex items-start animate-fade-in">
                             <div className="relative mr-3">
-                              <div className="h-10 w-10 bg-nexus-primary/10 rounded-full flex items-center justify-center text-lg">
-                                {contact.avatar}
-                              </div>
+                              <Avatar className="h-10 w-10">
+                                <AvatarFallback className="bg-nexus-primary/10 text-nexus-primary">
+                                  {contact.avatar}
+                                </AvatarFallback>
+                              </Avatar>
                               <div className={`absolute -bottom-1 -right-1 h-3 w-3 rounded-full ${
                                 contact.status === 'online' ? 'bg-green-500' : 
                                 contact.status === 'away' ? 'bg-amber-500' : 'bg-gray-400'
-                              } border-2 border-white`}></div>
+                              } border-2 border-white transition-all duration-300`}></div>
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex justify-between items-start">
                                 <h3 className="font-medium truncate">{contact.name}</h3>
                                 {contact.unread > 0 && (
-                                  <span className="bg-nexus-primary text-white text-xs font-semibold rounded-full h-5 min-w-5 flex items-center justify-center px-1">
+                                  <span className="bg-nexus-primary text-white text-xs font-semibold rounded-full h-5 min-w-5 flex items-center justify-center px-1 animate-smooth-bounce">
                                     {contact.unread}
                                   </span>
                                 )}
@@ -352,7 +356,7 @@ const ChatPage = () => {
                 {activeChat ? (
                   <>
                     {/* Chat Header */}
-                    <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+                    <div className="p-4 border-b border-gray-200 flex items-center justify-between animate-fade-in">
                       <div className="flex items-center">
                         {isMobile && (
                           <Button 
@@ -402,10 +406,14 @@ const ChatPage = () => {
                       
                       {/* Display messages */}
                       <div className="space-y-4">
-                        {messages[activeChat]?.map((msg) => (
-                          <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                        {messages[activeChat]?.map((msg, index) => (
+                          <div 
+                            key={msg.id} 
+                            className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} animate-message-appear`}
+                            style={{ animationDelay: `${index * 100}ms` }}
+                          >
                             <div 
-                              className={`relative rounded-lg p-3 shadow-sm max-w-xs md:max-w-md ${
+                              className={`relative rounded-lg p-3 shadow-sm max-w-xs md:max-w-md transition-all duration-300 hover:shadow-md ${
                                 msg.sender === 'user' 
                                   ? 'bg-nexus-primary text-white' 
                                   : 'bg-white text-gray-700'
@@ -420,16 +428,10 @@ const ChatPage = () => {
                           </div>
                         ))}
                         
-                        {/* Typing indicator */}
+                        {/* Enhanced Typing indicator */}
                         {contacts.find(c => c.id === activeChat)?.typing && (
-                          <div className="flex justify-start">
-                            <div className="bg-white rounded-lg p-3 shadow-sm max-w-xs md:max-w-md">
-                              <div className="flex space-x-1 items-center">
-                                <div className="h-2 w-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                                <div className="h-2 w-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                                <div className="h-2 w-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                              </div>
-                            </div>
+                          <div className="flex justify-start animate-fade-in">
+                            <TypingIndicator className="max-w-xs md:max-w-md" />
                           </div>
                         )}
                         
@@ -439,9 +441,9 @@ const ChatPage = () => {
                     </div>
                     
                     {/* Message Input */}
-                    <div className="p-4 border-t border-gray-200">
+                    <div className="p-4 border-t border-gray-200 animate-fade-in">
                       <div className="flex">
-                        <Button variant="ghost" size="icon" className="mr-1">
+                        <Button variant="ghost" size="icon" className="mr-1 hover:scale-110 transition-transform duration-200">
                           <Plus className="h-5 w-5" />
                         </Button>
                         <Input 
@@ -449,11 +451,11 @@ const ChatPage = () => {
                           value={message}
                           onChange={(e) => setMessage(e.target.value)}
                           onKeyDown={handleKeyPress}
-                          className="flex-1 mr-2"
+                          className="flex-1 mr-2 transition-all duration-200 focus:ring-2 focus:ring-nexus-primary/20"
                         />
                         <Button 
                           onClick={handleSendMessage}
-                          className="bg-nexus-primary hover:bg-nexus-primary/90 text-white"
+                          className="bg-nexus-primary hover:bg-nexus-primary/90 text-white transition-all duration-200 hover:scale-105"
                           disabled={!message.trim()}
                         >
                           <Send className="h-4 w-4" />
@@ -463,15 +465,15 @@ const ChatPage = () => {
                   </>
                 ) : (
                   <div className="flex-1 flex items-center justify-center bg-gray-50 p-6">
-                    <div className="text-center">
-                      <div className="mx-auto h-16 w-16 bg-nexus-primary/10 rounded-full flex items-center justify-center mb-4">
+                    <div className="text-center animate-scale-in">
+                      <div className="mx-auto h-16 w-16 bg-nexus-primary/10 rounded-full flex items-center justify-center mb-4 animate-smooth-bounce">
                         <MessageSquare className="h-8 w-8 text-nexus-primary" />
                       </div>
                       <h3 className="text-xl font-medium mb-2">Start a conversation</h3>
                       <p className="text-gray-600 max-w-md mx-auto mb-6">
                         Connect with alumni mentors, fellow students, and industry professionals through direct messages or group chats.
                       </p>
-                      <Button className="bg-nexus-primary hover:bg-nexus-primary/90 text-white">
+                      <Button className="bg-nexus-primary hover:bg-nexus-primary/90 text-white transition-all duration-200 hover:scale-105">
                         Select a contact
                       </Button>
                     </div>
