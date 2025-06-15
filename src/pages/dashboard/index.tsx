@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +10,12 @@ import Footer from '@/components/Footer';
 import { PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { MessageSquare, Calendar, BookOpen, Award, Bell, User, Settings, LogOut, CheckCircle2, Clock, Users, GraduationCap } from 'lucide-react';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { useUserAchievements } from "@/hooks/useUserAchievements";
+import { useUserPoints } from "@/hooks/useUserPoints";
+import { useNotificationPreferences } from "@/hooks/useNotificationPreferences";
+import AchievementSummary from "@/components/dashboard/AchievementSummary";
+import { PointsSummary } from "@/components/dashboard/PointsSummary";
+import { NotificationPreferencesCard } from "@/components/dashboard/NotificationPreferencesCard";
 
 // Mock data for charts
 const mentorshipData = [
@@ -56,8 +61,27 @@ const achievements = [
   { id: 2, title: 'Network Builder', description: 'Connected with 5 alumni', date: 'March 25, 2025' },
 ];
 
+// TODO: Replace this with real authentication.
+const userId = "placeholder-user-id"; // Replace with logic to get current user's id.
+
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
+
+  // Use live hooks for achievements, points, notification preferences.
+  const {
+    data: earnedAchievements,
+    isLoading: achievementsLoading,
+  } = useUserAchievements(userId);
+  const {
+    data: userPoints,
+    isLoading: pointsLoading,
+  } = useUserPoints(userId);
+  const {
+    data: notifPrefs,
+    updatePreferences,
+    updating: notifUpdating,
+    isLoading: notifLoading,
+  } = useNotificationPreferences(userId);
 
   return (
     <TooltipProvider>
@@ -66,6 +90,42 @@ const Dashboard = () => {
         
         <main className="flex-grow py-8 px-4 bg-gray-50">
           <div className="container mx-auto">
+            {/* Extra: Show points summary on dashboard */}
+            <div className="mb-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <PointsSummary points={userPoints?.points ?? 0} />
+              <div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Recent Achievements</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {achievementsLoading ? (
+                      <div>Loading…</div>
+                    ) : (
+                      <AchievementSummary achievements={earnedAchievements ?? []} />
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+
+            {/* Notification Preferences */}
+            <div className="mb-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Notification Preferences</CardTitle>
+                  <CardDescription>Manage what and how you get notified</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <NotificationPreferencesCard
+                    preferences={notifPrefs || {}}
+                    onUpdate={updatePreferences}
+                    updating={notifUpdating}
+                  />
+                </CardContent>
+              </Card>
+            </div>
+
             <div className="mb-8 flex flex-col md:flex-row justify-between items-start gap-4">
               <div>
                 <h1 className="text-3xl font-bold">Dashboard</h1>
