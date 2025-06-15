@@ -11,34 +11,6 @@ import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 import { Message, Contact, Group } from "./chatTypes";
 
-// Message type interface
-interface Message {
-  id: string;
-  text: string;
-  sender: 'user' | 'other';
-  timestamp: Date;
-  status: 'sending' | 'sent' | 'delivered' | 'read';
-}
-
-// Contact interface
-interface Contact {
-  id: string;
-  name: string;
-  status: 'online' | 'offline' | 'away';
-  avatar: string;
-  unread: number;
-  lastMessage: string;
-  typing?: boolean;
-}
-
-// Group interface
-interface Group {
-  id: string;
-  name: string;
-  members: number;
-  lastActivity: string;
-}
-
 const ChatPage = () => {
   const [message, setMessage] = useState("");
   const [activeChat, setActiveChat] = useState<string | null>(null);
