@@ -9,6 +9,155 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          badge_icon: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          badge_icon?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          badge_icon?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      analytics_events: {
+        Row: {
+          created_at: string
+          event_data: Json | null
+          event_type: string
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      content_flags: {
+        Row: {
+          content_id: string | null
+          content_type: string | null
+          created_at: string | null
+          flagged_by: string | null
+          id: string
+          reason: string | null
+          status: string | null
+        }
+        Insert: {
+          content_id?: string | null
+          content_type?: string | null
+          created_at?: string | null
+          flagged_by?: string | null
+          id?: string
+          reason?: string | null
+          status?: string | null
+        }
+        Update: {
+          content_id?: string | null
+          content_type?: string | null
+          created_at?: string | null
+          flagged_by?: string | null
+          id?: string
+          reason?: string | null
+          status?: string | null
+        }
+        Relationships: []
+      }
+      content_language: {
+        Row: {
+          content_id: string | null
+          content_type: string | null
+          created_at: string | null
+          id: string
+          language_code: string | null
+        }
+        Insert: {
+          content_id?: string | null
+          content_type?: string | null
+          created_at?: string | null
+          id?: string
+          language_code?: string | null
+        }
+        Update: {
+          content_id?: string | null
+          content_type?: string | null
+          created_at?: string | null
+          id?: string
+          language_code?: string | null
+        }
+        Relationships: []
+      }
+      content_tag_mappings: {
+        Row: {
+          content_id: string | null
+          content_type: string | null
+          id: string
+          tag_id: string | null
+        }
+        Insert: {
+          content_id?: string | null
+          content_type?: string | null
+          id?: string
+          tag_id?: string | null
+        }
+        Update: {
+          content_id?: string | null
+          content_type?: string | null
+          id?: string
+          tag_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_tag_mappings_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "content_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_tags: {
+        Row: {
+          created_at: string | null
+          id: string
+          tag: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          tag: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          tag?: string
+        }
+        Relationships: []
+      }
       conversation_participants: {
         Row: {
           conversation_id: string | null
@@ -68,6 +217,36 @@ export type Database = {
           is_group?: boolean | null
           name?: string | null
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      matching_results: {
+        Row: {
+          compatibility: string | null
+          created_at: string
+          id: string
+          match_score: number | null
+          matched_user_id: string
+          recommended_reason: string | null
+          user_id: string
+        }
+        Insert: {
+          compatibility?: string | null
+          created_at?: string
+          id?: string
+          match_score?: number | null
+          matched_user_id: string
+          recommended_reason?: string | null
+          user_id: string
+        }
+        Update: {
+          compatibility?: string | null
+          created_at?: string
+          id?: string
+          match_score?: number | null
+          matched_user_id?: string
+          recommended_reason?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -166,6 +345,36 @@ export type Database = {
           },
         ]
       }
+      notification_preferences: {
+        Row: {
+          created_at: string | null
+          enable_email: boolean | null
+          enable_push: boolean | null
+          enable_sms: boolean | null
+          id: string
+          user_id: string
+          weekly_digest: boolean | null
+        }
+        Insert: {
+          created_at?: string | null
+          enable_email?: boolean | null
+          enable_push?: boolean | null
+          enable_sms?: boolean | null
+          id?: string
+          user_id: string
+          weekly_digest?: boolean | null
+        }
+        Update: {
+          created_at?: string | null
+          enable_email?: boolean | null
+          enable_push?: boolean | null
+          enable_sms?: boolean | null
+          id?: string
+          user_id?: string
+          weekly_digest?: boolean | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -205,6 +414,83 @@ export type Database = {
           status?: string | null
           updated_at?: string | null
           username?: string | null
+        }
+        Relationships: []
+      }
+      user_achievements: {
+        Row: {
+          achievement_id: string
+          id: string
+          obtained_at: string | null
+          user_id: string
+        }
+        Insert: {
+          achievement_id: string
+          id?: string
+          obtained_at?: string | null
+          user_id: string
+        }
+        Update: {
+          achievement_id?: string
+          id?: string
+          obtained_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_points: {
+        Row: {
+          id: string
+          points: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          points?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          id?: string
+          points?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      video_sessions: {
+        Row: {
+          ended_at: string | null
+          id: string
+          mentorship_session_id: string | null
+          recording_url: string | null
+          screen_share_used: boolean | null
+          started_at: string | null
+        }
+        Insert: {
+          ended_at?: string | null
+          id?: string
+          mentorship_session_id?: string | null
+          recording_url?: string | null
+          screen_share_used?: boolean | null
+          started_at?: string | null
+        }
+        Update: {
+          ended_at?: string | null
+          id?: string
+          mentorship_session_id?: string | null
+          recording_url?: string | null
+          screen_share_used?: boolean | null
+          started_at?: string | null
         }
         Relationships: []
       }
