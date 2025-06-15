@@ -26,9 +26,10 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({
       boxShadow: '0 0 20px rgba(40, 167, 69, 0.3)'
     },
     tilt: {
+      rotateY: -10,
       rotateX: 5,
-      rotateY: 5,
-      scale: 1.02
+      scale: 1.05,
+      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
     },
     scale: {
       scale: 1.05
@@ -47,9 +48,10 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({
         stiffness: 300
       }}
       whileHover={hoverEffects[hoverEffect]}
-      className={cn("cursor-pointer", className)}
+      className={cn("cursor-pointer h-full", className)}
+      style={{ perspective: '1000px' }}
     >
-      <Card className="transition-all duration-300 border-2 border-transparent hover:border-nexus-primary/20 overflow-hidden">
+      <Card className="transition-all duration-300 border-2 border-transparent hover:border-nexus-primary/20 overflow-hidden h-full">
         {children}
       </Card>
     </motion.div>

@@ -98,9 +98,9 @@ const Hero = () => {
         
         <div className="flex justify-center mt-8">
           <AnimatedButton
-            effect="gradient"
+            effect="pulse"
             size="lg"
-            className="text-white text-lg px-6 py-6 rounded-md flex items-center"
+            className="bg-nexus-primary text-white text-lg px-8 py-6 rounded-md flex items-center"
             onClick={handleJoinCommunity}
           >
             Join our community today

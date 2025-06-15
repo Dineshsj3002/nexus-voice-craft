@@ -32,7 +32,7 @@ const MentorshipCard = ({
   };
   
   return (
-    <AnimatedCard hoverEffect="lift" className="h-full">
+    <AnimatedCard hoverEffect="tilt" className="h-full">
       <div className="p-6 h-full flex flex-col">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center">
