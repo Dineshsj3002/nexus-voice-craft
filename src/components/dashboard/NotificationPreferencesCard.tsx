@@ -1,8 +1,8 @@
-
 import React from "react";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import Loader from "@/components/ui/loader";
 
 type NotificationPreferences = {
   enable_email?: boolean | null;
@@ -21,15 +21,31 @@ export function NotificationPreferencesCard({
   updating?: boolean;
 }) {
   const { toast } = useToast();
+  const [localState, setLocalState] = React.useState(preferences);
 
-  const handleChange = (field: keyof NotificationPreferences, value: boolean) => {
-    onUpdate({ [field]: value })
-      .then(() =>
-        toast({ title: "Preferences updated!", description: `Saved ${field.replace("_", " ")} notification.` })
-      )
-      .catch(() =>
-        toast({ title: "Update failed", description: "Unable to save your preferences.", variant: "destructive" })
-      );
+  React.useEffect(() => {
+    setLocalState(preferences);
+  }, [preferences]);
+
+  const handleChange = async (
+    field: keyof NotificationPreferences,
+    value: boolean,
+  ) => {
+    setLocalState((prev) => ({ ...prev, [field]: value }));
+    try {
+      await onUpdate({ [field]: value });
+      toast({
+        title: "Preferences updated!",
+        description: `Saved ${field.replace("_", " ")} notification.`,
+      });
+    } catch {
+      setLocalState(preferences); // revert UI
+      toast({
+        title: "Update failed",
+        description: "Unable to save your preferences.",
+        variant: "destructive",
+      });
+    }
   };
 
   if (!preferences) {
@@ -40,35 +56,51 @@ export function NotificationPreferencesCard({
     <div className="p-6 border rounded-lg space-y-4 bg-white">
       <div className="flex items-center justify-between">
         <span>Email Notifications</span>
-        <Switch
-          checked={!!preferences.enable_email}
-          onCheckedChange={(v) => handleChange("enable_email", v)}
-          disabled={updating}
-        />
+        {updating ? (
+          <Loader size={18} />
+        ) : (
+          <Switch
+            checked={!!localState.enable_email}
+            onCheckedChange={(v) => handleChange("enable_email", v)}
+            disabled={updating}
+          />
+        )}
       </div>
       <div className="flex items-center justify-between">
         <span>SMS Notifications</span>
-        <Switch
-          checked={!!preferences.enable_sms}
-          onCheckedChange={(v) => handleChange("enable_sms", v)}
-          disabled={updating}
-        />
+        {updating ? (
+          <Loader size={18} />
+        ) : (
+          <Switch
+            checked={!!localState.enable_sms}
+            onCheckedChange={(v) => handleChange("enable_sms", v)}
+            disabled={updating}
+          />
+        )}
       </div>
       <div className="flex items-center justify-between">
         <span>Push Notifications</span>
-        <Switch
-          checked={!!preferences.enable_push}
-          onCheckedChange={(v) => handleChange("enable_push", v)}
-          disabled={updating}
-        />
+        {updating ? (
+          <Loader size={18} />
+        ) : (
+          <Switch
+            checked={!!localState.enable_push}
+            onCheckedChange={(v) => handleChange("enable_push", v)}
+            disabled={updating}
+          />
+        )}
       </div>
       <div className="flex items-center justify-between">
         <span>Weekly Digest</span>
-        <Switch
-          checked={!!preferences.weekly_digest}
-          onCheckedChange={(v) => handleChange("weekly_digest", v)}
-          disabled={updating}
-        />
+        {updating ? (
+          <Loader size={18} />
+        ) : (
+          <Switch
+            checked={!!localState.weekly_digest}
+            onCheckedChange={(v) => handleChange("weekly_digest", v)}
+            disabled={updating}
+          />
+        )}
       </div>
     </div>
   );
