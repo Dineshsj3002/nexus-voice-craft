@@ -1,126 +1,101 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import { navLinks } from './NavLinks';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { 
-  UserCircle, 
-  Settings, 
-  LogOut
-} from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import AuthDialog from '@/components/auth/AuthDialog';
-
-export const MobileNavLink = ({ to, children, isActive = false }: { to: string; children: React.ReactNode; isActive?: boolean }) => (
-  <Link 
-    to={to}
-    className={cn(
-      "text-white font-medium py-2 block",
-      isActive && "text-yellow-300"
-    )}
-  >
-    {children}
-  </Link>
-);
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { UserProfile } from '@/hooks/useAuth';
 
 interface MobileNavProps {
   isOpen: boolean;
-  user: any;
+  user: UserProfile | null;
   isAuthenticated: boolean;
   handleLogout: () => void;
-  navigate: (path: string) => void;
+  navigate: ReturnType<typeof useNavigate>;
   isActive: (path: string) => boolean;
 }
 
-export const MobileNav = ({ 
-  isOpen, 
-  user, 
-  isAuthenticated, 
-  handleLogout, 
-  navigate, 
-  isActive 
-}: MobileNavProps) => {
-  if (!isOpen) return null;
-
+export const MobileNav: React.FC<MobileNavProps> = ({ isOpen, user, isAuthenticated, handleLogout, navigate, isActive }) => {
   return (
-    <div className="md:hidden py-4 px-4 animate-fade-in">
-      <nav className="flex flex-col space-y-2">
-        {isAuthenticated && user && (
-          <div className="flex items-center space-x-3 mb-4 pb-3 border-b border-blue-800">
-            <Avatar className="h-10 w-10">
-              {user.avatar ? (
-                <AvatarImage src={user.avatar} alt={user.name} />
-              ) : (
-                <AvatarFallback className="bg-white text-nexus-primary text-sm">
-                  {user.name.substring(0, 2).toUpperCase()}
-                </AvatarFallback>
-              )}
-            </Avatar>
-            <div>
-              <p className="text-white font-medium">{user.name}</p>
-              <p className="text-white/70 text-xs">{user.email}</p>
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
+          className="md:hidden overflow-hidden"
+        >
+          <div className="px-4 pt-2 pb-4 space-y-1 sm:px-3 bg-white text-gray-700">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                to={link.href}
+                className={`block px-3 py-2 rounded-md text-base font-medium ${
+                  isActive(link.href)
+                    ? 'bg-nexus-primary/10 text-nexus-primary'
+                    : 'hover:bg-gray-100'
+                }`}
+              >
+                {link.name}
+              </Link>
+            ))}
+            
+            <div className="pt-4 mt-4 border-t border-gray-200">
+              {isAuthenticated && user ? (
+                <div className="flex items-center px-3 py-2">
+                  <Avatar className="h-10 w-10">
+                    {user.avatarUrl ? (
+                      <AvatarImage src={user.avatarUrl} alt={user.fullName || ''} />
+                    ) : (
+                       <AvatarFallback className="bg-gradient-to-br from-nexus-primary to-blue-600 text-white font-semibold">
+                          {user.fullName ? user.fullName.substring(0, 2).toUpperCase() : (user.email || 'U').substring(0,2).toUpperCase()}
+                        </AvatarFallback>
+                    )}
+                  </Avatar>
+                  <div className="ml-3">
+                    <p className="text-base font-medium text-gray-800">{user.fullName}</p>
+                    <p className="text-sm font-medium text-gray-500">{user.email}</p>
+                  </div>
+                </div>
+              ) : null}
+              <div className="mt-3 space-y-2 px-2">
+                {isAuthenticated ? (
+                  <>
+                    <Button
+                      onClick={() => navigate('/dashboard')}
+                      className="w-full justify-start"
+                      variant="ghost"
+                    >
+                      Dashboard
+                    </Button>
+                     <Button
+                      onClick={() => navigate('/alumni')}
+                      className="w-full justify-start"
+                      variant="ghost"
+                    >
+                      My Profile
+                    </Button>
+                    <Button onClick={handleLogout} className="w-full justify-start" variant="ghost">
+                      Log out
+                    </Button>
+                  </>
+                ) : (
+                  <div className="space-y-2">
+                     <AuthDialog 
+                      triggerText="JOIN / LOGIN" 
+                      triggerClassName="w-full bg-gradient-to-r from-nexus-primary to-blue-600 hover:from-nexus-primary/90 hover:to-blue-600/90 text-white font-medium px-4 py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+                      defaultTab="login"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        )}
-        
-        <MobileNavLink to="/" isActive={isActive('/')}>HOME</MobileNavLink>
-        {isAuthenticated && <MobileNavLink to="/dashboard" isActive={isActive('/dashboard')}>DASHBOARD</MobileNavLink>}
-        <MobileNavLink to="/about" isActive={isActive('/about')}>ABOUT US</MobileNavLink>
-        <MobileNavLink to="/events" isActive={isActive('/events')}>EVENTS</MobileNavLink>
-        <MobileNavLink to="/mentorship" isActive={isActive('/mentorship')}>MENTORSHIP</MobileNavLink>
-        <MobileNavLink to="/forum" isActive={isActive('/forum')}>DISCUSSION FORUM</MobileNavLink>
-        <MobileNavLink to="/chat" isActive={isActive('/chat')}>CHAT</MobileNavLink>
-        <MobileNavLink to="/blog" isActive={isActive('/blog')}>BLOGS</MobileNavLink>
-        
-        <div className="pt-4 flex flex-col space-y-3">
-          {isAuthenticated && user ? (
-            <>
-              <Button
-                onClick={() => navigate('/alumni')}
-                variant="outline"
-                className="border-white text-white w-full justify-start"
-              >
-                <UserCircle className="mr-2 h-4 w-4" />
-                My Profile
-              </Button>
-              <Button
-                onClick={() => navigate('/alumni/privacy-settings')}
-                variant="outline"
-                className="border-white text-white w-full justify-start"
-              >
-                <Settings className="mr-2 h-4 w-4" />
-                Settings
-              </Button>
-              <Button
-                onClick={handleLogout}
-                variant="outline"
-                className="border-white text-white w-full justify-start"
-              >
-                <LogOut className="mr-2 h-4 w-4" />
-                Log out
-              </Button>
-            </>
-          ) : (
-            <>
-              <AuthDialog 
-                triggerText="JOIN AS STUDENT" 
-                triggerClassName="bg-nexus-primary text-white w-full hover:bg-nexus-primary/90"
-                defaultTab="register"
-              />
-              <AuthDialog 
-                triggerText="JOIN AS ALUMNI" 
-                triggerClassName="bg-yellow-400 text-blue-900 w-full hover:bg-yellow-500"
-                defaultTab="register"
-              />
-              <AuthDialog 
-                triggerText="LOGIN" 
-                triggerClassName="border-white text-white w-full hover:bg-white hover:text-nexus-primary"
-                defaultTab="login"
-              />
-            </>
-          )}
-        </div>
-      </nav>
-    </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };

@@ -33,6 +33,7 @@ import ChatPage from "./pages/chat";
 import AlumniPage from "./pages/alumni";
 import AlumniPrivacySettingsPage from "./pages/alumni/privacy-settings";
 import CallPage from "./pages/mock-interviews/call";
+import { AuthProvider } from "./hooks/useAuth";
 
 const AnimatedRoutes = () => {
   return (
@@ -87,11 +88,13 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AnimatedRoutes />
-      </BrowserRouter>
+      <AuthProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AnimatedRoutes />
+        </BrowserRouter>
+      </AuthProvider>
     </QueryClientProvider>
   );
 };

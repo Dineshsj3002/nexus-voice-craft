@@ -6,8 +6,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Check, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -24,6 +25,7 @@ interface LoginFormProps {
 const LoginForm = ({ onSuccess, onCancel }: LoginFormProps) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const { toast } = useToast();
+  const { login } = useAuth();
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -36,9 +38,20 @@ const LoginForm = ({ onSuccess, onCancel }: LoginFormProps) => {
   const onSubmit = async (data: FormValues) => {
     setIsLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
+    const { error } = await login({
+      email: data.email,
+      password: data.password,
+    });
+    
+    setIsLoading(false);
+
+    if (error) {
+      toast({
+        title: "Login Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
       toast({
         title: "Login Successful",
         description: "Welcome back to KIOT Alumni Association",
@@ -47,7 +60,7 @@ const LoginForm = ({ onSuccess, onCancel }: LoginFormProps) => {
       if (onSuccess) {
         onSuccess();
       }
-    }, 1500);
+    }
   };
   
   return (

@@ -10,38 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 
-// Create a mock authentication context that we can use throughout the app
-export const useAuth = () => {
-  const [user, setUser] = React.useState<null | { name: string; email: string; avatar?: string }>(null);
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
-
-  const login = (email: string, password: string) => {
-    // Mock login function - in a real app, this would make an API call
-    setUser({ name: 'Test User', email: email });
-    setIsAuthenticated(true);
-    return Promise.resolve();
-  };
-
-  const register = (name: string, email: string, password: string) => {
-    // Mock register function - in a real app, this would make an API call
-    setUser({ name: name, email: email });
-    setIsAuthenticated(true);
-    return Promise.resolve();
-  };
-
-  const logout = () => {
-    setUser(null);
-    setIsAuthenticated(false);
-  };
-
-  return {
-    user,
-    isAuthenticated,
-    login,
-    register,
-    logout
-  };
-};
+// The mock useAuth hook has been moved to a global AuthProvider.
 
 interface AuthDialogProps {
   triggerText: string;
@@ -57,7 +26,6 @@ const AuthDialog = ({
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'login' | 'register'>(defaultTab);
   const { toast } = useToast();
-  const { login, register } = useAuth();
 
   const handleClose = () => {
     setOpen(false);
