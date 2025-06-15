@@ -15,6 +15,7 @@ import AlumniSpotlight from '@/components/AlumniSpotlight';
 import EnhancedPageTransition from '@/components/animations/EnhancedPageTransition';
 import StatisticsCounter from '@/components/StatisticsCounter';
 import LoadingCard from '@/components/animations/LoadingCard';
+import TextReveal from '@/components/animations/TextReveal';
 
 // Import these to make sure they're available
 import { showSuccessToast, toastTypes } from '@/components/SuccessToast';
