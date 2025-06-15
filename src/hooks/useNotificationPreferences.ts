@@ -25,7 +25,7 @@ export function useNotificationPreferences(userId: string | undefined) {
       if (!userId) throw new Error("No user");
       const { data, error } = await supabase
         .from("notification_preferences")
-        .upsert({ user_id: userId, ...updates }, { onConflict: ['user_id'] })
+        .upsert({ user_id: userId, ...updates }, { onConflict: 'user_id' })
         .select()
         .single();
       if (error) throw error;
@@ -36,5 +36,10 @@ export function useNotificationPreferences(userId: string | undefined) {
     },
   });
 
-  return { ...query, updatePreferences: mutation.mutateAsync, updating: mutation.isPending };
+  // Ensure updatePreferences returns Promise<void>
+  const updatePreferences = async (updates: Partial<any>): Promise<void> => {
+    await mutation.mutateAsync(updates);
+  };
+
+  return { ...query, updatePreferences, updating: mutation.isPending };
 }
