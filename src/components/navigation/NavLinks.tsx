@@ -49,3 +49,18 @@ export const DropdownLink = ({ to, children }: { to: string; children: React.Rea
   </Link>
 );
 
+// Export a simple list of navigation links for use in MobileNav
+export type NavLinkItem = { name: string; href: string };
+
+export const navLinks: NavLinkItem[] = [
+  { name: 'Home', href: '/' },
+  { name: 'About', href: '/about' },
+  { name: 'Resources', href: '/resources' },
+  { name: 'Events', href: '/events' },
+  { name: 'Mentorship', href: '/mentorship' },
+  { name: 'Mock Interviews', href: '/mock-interviews' },
+  { name: 'Forum', href: '/forum' },
+  { name: 'Alumni', href: '/alumni' },
+  { name: 'Hubs', href: '/hubs' },
+  { name: 'Contact', href: '/contact' },
+];
