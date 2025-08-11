@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: 'Full name is required' }),
@@ -31,6 +32,7 @@ interface RegisterFormProps {
 const RegisterForm = ({ onSuccess, onCancel }: RegisterFormProps) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const { toast } = useToast();
+  const { register } = useAuth();
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -46,19 +48,41 @@ const RegisterForm = ({ onSuccess, onCancel }: RegisterFormProps) => {
   
   const onSubmit = async (data: FormValues) => {
     setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
+
+    const redirectTo = `${window.location.origin}/`;
+    const { error } = await register({
+      email: data.email,
+      password: data.password,
+      options: {
+        emailRedirectTo: redirectTo,
+        data: {
+          full_name: data.fullName,
+          // You can extend metadata here in the future as needed
+          department: data.department,
+          graduation_year: data.graduationYear,
+        } as Record<string, unknown>,
+      },
+    });
+
+    setIsLoading(false);
+
+    if (error) {
       toast({
-        title: "Registration Successful",
-        description: "Welcome to KIOT Alumni Association",
+        title: "Registration Failed",
+        description: error.message,
+        variant: "destructive",
       });
-      
-      if (onSuccess) {
-        onSuccess();
-      }
-    }, 1500);
+      return;
+    }
+
+    toast({
+      title: "Registration Successful",
+      description: "Please check your email to confirm your account.",
+    });
+    
+    if (onSuccess) {
+      onSuccess();
+    }
   };
   
   return (

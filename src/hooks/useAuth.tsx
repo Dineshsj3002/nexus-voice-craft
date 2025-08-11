@@ -27,34 +27,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const getSessionAndProfile = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setSession(session);
-      if (session) {
-        const profile = await getProfile(session.user);
-        setUser(profile);
-      }
-      setLoading(false);
-    };
-
-    getSessionAndProfile();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setSession(session);
-      if (session) {
-        const profile = await getProfile(session.user);
-        setUser(profile);
-      } else {
-        setUser(null);
-      }
-    });
-
-    return () => {
-      subscription?.unsubscribe();
-    };
-  }, []);
-
+  // Fetch profile for given Supabase user
   const getProfile = async (supabaseUser: SupabaseUser): Promise<UserProfile | null> => {
     try {
       const { data, error, status } = await supabase
@@ -71,16 +44,52 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (data) {
         return {
           id: supabaseUser.id,
-          email: supabaseUser.email,
-          fullName: data.full_name,
-          avatarUrl: data.avatar_url,
+          email: supabaseUser.email ?? undefined,
+          fullName: (data as any).full_name,
+          avatarUrl: (data as any).avatar_url,
         };
       }
     } catch (error) {
       console.error('Exception in getProfile:', error);
     }
-    return { id: supabaseUser.id, email: supabaseUser.email };
+    return { id: supabaseUser.id, email: supabaseUser.email ?? undefined };
   };
+
+  useEffect(() => {
+    // 1) Set up auth state listener first
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, newSession) => {
+      setSession(newSession ?? null);
+
+      const supaUser = newSession?.user ?? null;
+      if (supaUser) {
+        // Defer profile fetch to avoid heavy work inside callback
+        setTimeout(async () => {
+          const profile = await getProfile(supaUser);
+          setUser(profile);
+        }, 0);
+      } else {
+        setUser(null);
+        // Redirect to home when signed out
+        if (event === 'SIGNED_OUT') {
+          window.location.assign('/');
+        }
+      }
+    });
+
+    // 2) Then check for existing session
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      setSession(session ?? null);
+      if (session?.user) {
+        const profile = await getProfile(session.user);
+        setUser(profile);
+      }
+      setLoading(false);
+    });
+
+    return () => {
+      subscription?.unsubscribe();
+    };
+  }, []);
 
   const value = {
     user,

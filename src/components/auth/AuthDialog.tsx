@@ -9,6 +9,7 @@ import { Mail, Linkedin, Globe } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
+import { supabase } from '@/integrations/supabase/client';
 
 // The mock useAuth hook has been moved to a global AuthProvider.
 
@@ -31,10 +32,30 @@ const AuthDialog = ({
     setOpen(false);
   };
 
-  const handleSocialLogin = (provider: string) => {
+  // Enable Google + LinkedIn (OIDC) OAuth via Supabase
+  const handleSocialLogin = async (provider: 'Google' | 'LinkedIn') => {
+    const supaProvider = provider === 'Google' ? 'google' : 'linkedin_oidc';
+    const redirectTo = `${window.location.origin}/`;
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: supaProvider as 'google' | 'linkedin_oidc',
+      options: {
+        redirectTo,
+      },
+    });
+
+    if (error) {
+      toast({
+        title: `${provider} Login Failed`,
+        description: error.message,
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    // Supabase will redirect automatically. We can show a quick heads-up.
     toast({
-      title: `${provider} Login`,
-      description: `${provider} login will be integrated soon!`,
+      title: `Redirecting to ${provider}`,
+      description: 'Please complete the sign-in flow in the popup/redirect.',
     });
   };
 
