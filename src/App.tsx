@@ -20,6 +20,7 @@ import ForumPage from "./pages/forum";
 import ForumPostPage from "./pages/forum/post/[id]";
 import ForumCategoryPage from "./pages/forum/category/[id]";
 import Dashboard from "./pages/dashboard";
+import ProfilePage from "./pages/profile";
 
 // Import the campus and integrating pages
 import CampusTourPage from "./pages/campus/tour";
@@ -41,6 +42,7 @@ const AnimatedRoutes = () => {
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/mentorship" element={<MentorshipPage />} />
         <Route path="/mock-interviews" element={<MockInterviewsPage />} />
         <Route path="/mock-interviews/call" element={<CallPage />} />

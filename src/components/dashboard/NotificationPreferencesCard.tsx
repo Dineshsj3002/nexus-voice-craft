@@ -53,7 +53,7 @@ export function NotificationPreferencesCard({
   }
 
   return (
-    <div className="p-6 border rounded-lg space-y-4 bg-white">
+    <div className="p-6 border rounded-lg space-y-4 bg-card">
       <div className="flex items-center justify-between">
         <span>Email Notifications</span>
         {updating ? (

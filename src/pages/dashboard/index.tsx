@@ -9,6 +9,8 @@ import Loader from "@/components/ui/loader";
 import SEO from "@/components/SEO";
 import { useAuth } from "@/hooks/useAuth";
 import AuthDialog from "@/components/auth/AuthDialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import AnimatedCard from "@/components/animations/AnimatedCard";
 
 const Dashboard = () => {
   const { user, isAuthenticated } = useAuth();
@@ -31,74 +33,84 @@ const Dashboard = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <SEO
-        title="Dashboard | alumNexus"
-        description="AlumNexus user dashboard: view points, achievements, and manage notification preferences."
+        title="Dashboard — alumNexus"
+        description="Your alumni hub: points, achievements, and notifications."
       />
-      <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
+      <header className="mb-6">
+        <h1 className="text-3xl font-bold">
+          {`Welcome back${user?.fullName ? `, ${user.fullName}` : ""}`}
+        </h1>
+        <p className="text-muted-foreground">Your alumni hub at a glance</p>
+      </header>
 
       {!isAuthenticated ? (
-        <div className="bg-white p-6 rounded-lg border">
-          <p className="mb-4 text-gray-600">Please log in to view your dashboard.</p>
-          <AuthDialog triggerText="Login" />
-        </div>
+        <Card>
+          <CardContent className="p-6">
+            <p className="mb-4 text-muted-foreground">Please log in to view your dashboard.</p>
+            <AuthDialog triggerText="Login" />
+          </CardContent>
+        </Card>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="md:col-span-2">
-              <section className="mb-8">
-                <h2 className="text-xl font-bold mb-4">Recent Activity</h2>
-                <div className="bg-white p-6 rounded-lg border">
-                  <p className="text-gray-500">No recent activity to display.</p>
-                </div>
-              </section>
-              
-              <section className="mb-8">
-                <h2 className="text-xl font-bold mb-4">Upcoming Events</h2>
-                <div className="bg-white p-6 rounded-lg border">
-                  <p className="text-gray-500">No upcoming events.</p>
-                </div>
-              </section>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Recent Activity</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">No recent activity to display.</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Upcoming Events</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">No upcoming events.</p>
+                </CardContent>
+              </Card>
             </div>
-            
-            <div>
-              <section className="mb-8">
-                <h2 className="text-xl font-bold mb-4">Points</h2>
-                {pointsLoading ? (
-                  <div className="bg-white p-6 rounded-lg border flex justify-center">
-                    <Loader size={28} />
-                  </div>
-                ) : (
-                  <PointsSummary points={pointsData?.points} />
-                )}
-              </section>
-              
-              <section className="mb-8">
-                <h2 className="text-xl font-bold mb-4">Achievements</h2>
-                <div className="bg-white p-6 rounded-lg border">
+
+            <div className="space-y-6">
+              <PointsSummary points={pointsData?.points} />
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Achievements</CardTitle>
+                </CardHeader>
+                <CardContent>
                   {achievementsLoading ? (
-                    <Loader size={28} />
+                    <div className="flex justify-center py-2">
+                      <Loader size={28} />
+                    </div>
                   ) : (
                     <AchievementSummary achievements={achievements || []} />
                   )}
-                </div>
-              </section>
+                </CardContent>
+              </Card>
             </div>
           </div>
-          
-          <section className="my-8">
-            <h2 className="text-xl font-bold mb-4">Notification Preferences</h2>
-            {preferencesLoading ? (
-              <div className="bg-white p-6 rounded-lg border flex justify-center">
-                <Loader size={28} />
-              </div>
-            ) : (
-              <NotificationPreferencesCard
-                preferences={preferences || { enable_email: true, enable_sms: false, enable_push: true, weekly_digest: true }}
-                onUpdate={updatePreferences}
-                updating={preferencesUpdating}
-              />
-            )}
-          </section>
+
+          <Card className="mt-6">
+            <CardHeader>
+              <CardTitle>Notification Preferences</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {preferencesLoading ? (
+                <div className="flex justify-center py-2">
+                  <Loader size={28} />
+                </div>
+              ) : (
+                <NotificationPreferencesCard
+                  preferences={preferences || { enable_email: true, enable_sms: false, enable_push: true, weekly_digest: true }}
+                  onUpdate={updatePreferences}
+                  updating={preferencesUpdating}
+                />
+              )}
+            </CardContent>
+          </Card>
         </>
       )}
     </div>
