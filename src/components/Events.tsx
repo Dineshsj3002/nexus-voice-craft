@@ -1,11 +1,9 @@
-
 import React from 'react';
 import { Calendar, MapPin, Users, Clock, ArrowRight, Star, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { showSuccessToast } from '@/components/SuccessToast';
 import { Badge } from '@/components/ui/badge';
-
 type Event = {
   id: number;
   title: string;
@@ -19,77 +17,67 @@ type Event = {
   image?: string;
   tags?: string[];
 };
-
-const events: Event[] = [
-  {
-    id: 1,
-    title: "Alumni Mentorship Program Kickoff",
-    date: "April 20, 2025",
-    time: "3:00 PM - 5:00 PM",
-    location: "Main Campus, Johnson Hall",
-    type: "Mentoring",
-    featured: true,
-    alumni: true,
-    spotsLeft: 15,
-    image: "/lovable-uploads/55f04ec5-8a46-435f-bfc6-06b4f7389672.png",
-    tags: ["mentorship", "networking", "career development"]
-  },
-  {
-    id: 2,
-    title: "Tech Industry Alumni Panel",
-    date: "May 4, 2025",
-    time: "6:00 PM - 8:00 PM",
-    location: "Virtual Event",
-    type: "Panel",
-    alumni: true,
-    spotsLeft: 50,
-    image: "/lovable-uploads/87030a39-6fa7-425b-99f4-05b0abb9ded1.png",
-    tags: ["tech", "career insights", "q&a"]
-  },
-  {
-    id: 3,
-    title: "Annual Alumni Reunion",
-    date: "May 15, 2025",
-    time: "12:00 PM - 5:00 PM",
-    location: "Campus Green",
-    type: "Networking",
-    featured: true,
-    alumni: true,
-    spotsLeft: 200,
-    image: "/lovable-uploads/24f2d64b-472c-43e4-b881-f772a1d0e057.png",
-    tags: ["reunion", "celebration", "networking"]
-  },
-  {
-    id: 4,
-    title: "Alumni-Led Resume Workshop",
-    date: "June 1, 2025",
-    time: "2:00 PM - 4:00 PM",
-    location: "Business School, Room 305",
-    type: "Workshop",
-    alumni: true,
-    spotsLeft: 25,
-    image: "/lovable-uploads/1cf21656-76ea-4e9e-8f14-fb51ef8a84f7.png",
-    tags: ["resume", "job search", "career prep"]
-  },
-  {
-    id: 5,
-    title: "Summer Career Fair",
-    date: "June 15, 2025",
-    time: "10:00 AM - 3:00 PM",
-    location: "Student Center",
-    type: "Career Fair",
-    spotsLeft: 500,
-    tags: ["job opportunities", "networking", "internships"]
-  }
-];
-
+const events: Event[] = [{
+  id: 1,
+  title: "Alumni Mentorship Program Kickoff",
+  date: "April 20, 2025",
+  time: "3:00 PM - 5:00 PM",
+  location: "Main Campus, Johnson Hall",
+  type: "Mentoring",
+  featured: true,
+  alumni: true,
+  spotsLeft: 15,
+  image: "/lovable-uploads/55f04ec5-8a46-435f-bfc6-06b4f7389672.png",
+  tags: ["mentorship", "networking", "career development"]
+}, {
+  id: 2,
+  title: "Tech Industry Alumni Panel",
+  date: "May 4, 2025",
+  time: "6:00 PM - 8:00 PM",
+  location: "Virtual Event",
+  type: "Panel",
+  alumni: true,
+  spotsLeft: 50,
+  image: "/lovable-uploads/87030a39-6fa7-425b-99f4-05b0abb9ded1.png",
+  tags: ["tech", "career insights", "q&a"]
+}, {
+  id: 3,
+  title: "Annual Alumni Reunion",
+  date: "May 15, 2025",
+  time: "12:00 PM - 5:00 PM",
+  location: "Campus Green",
+  type: "Networking",
+  featured: true,
+  alumni: true,
+  spotsLeft: 200,
+  image: "/lovable-uploads/24f2d64b-472c-43e4-b881-f772a1d0e057.png",
+  tags: ["reunion", "celebration", "networking"]
+}, {
+  id: 4,
+  title: "Alumni-Led Resume Workshop",
+  date: "June 1, 2025",
+  time: "2:00 PM - 4:00 PM",
+  location: "Business School, Room 305",
+  type: "Workshop",
+  alumni: true,
+  spotsLeft: 25,
+  image: "/lovable-uploads/1cf21656-76ea-4e9e-8f14-fb51ef8a84f7.png",
+  tags: ["resume", "job search", "career prep"]
+}, {
+  id: 5,
+  title: "Summer Career Fair",
+  date: "June 15, 2025",
+  time: "10:00 AM - 3:00 PM",
+  location: "Student Center",
+  type: "Career Fair",
+  spotsLeft: 500,
+  tags: ["job opportunities", "networking", "internships"]
+}];
 const Events = () => {
   const navigate = useNavigate();
-
   const handleLearnMore = (eventId: number) => {
     navigate(`/events/${eventId}`);
   };
-
   const handleRegister = (eventId: number, eventTitle: string) => {
     showSuccessToast({
       message: `You've registered for ${eventTitle}!`,
@@ -99,12 +87,10 @@ const Events = () => {
 
   // Filter alumni events
   const alumniEvents = events.filter(event => event.alumni);
-  
+
   // Get featured events
   const featuredEvents = events.filter(event => event.featured);
-
-  return (
-    <section className="py-16 px-4 md:px-8 bg-gray-50">
+  return <section className="py-16 px-4 md:px-8 bg-zinc-100">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold font-display mb-4">Events and Programs</h2>
@@ -115,36 +101,21 @@ const Events = () => {
         </div>
         
         {/* Featured Events */}
-        {featuredEvents.length > 0 && (
-          <div className="mb-12">
+        {featuredEvents.length > 0 && <div className="mb-12">
             <h3 className="text-2xl font-bold mb-6 flex items-center">
               <Star className="h-5 w-5 text-yellow-500 mr-2" />
               Featured Events
             </h3>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {featuredEvents.map((event) => (
-                <div 
-                  key={event.id}
-                  className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow relative flex flex-col md:flex-row"
-                >
-                  {event.image && (
-                    <div className="md:w-2/5">
-                      <img 
-                        src={event.image} 
-                        alt={event.title} 
-                        className="h-48 md:h-full w-full object-cover"
-                      />
-                    </div>
-                  )}
+              {featuredEvents.map(event => <div key={event.id} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow relative flex flex-col md:flex-row">
+                  {event.image && <div className="md:w-2/5">
+                      <img src={event.image} alt={event.title} className="h-48 md:h-full w-full object-cover" />
+                    </div>}
                   <div className={`p-6 flex flex-col justify-between ${event.image ? 'md:w-3/5' : 'w-full'}`}>
                     <div>
                       <div className={`
                         absolute top-0 right-0 px-3 py-1 text-xs font-medium text-white rounded-bl-md
-                        ${event.type === 'Workshop' ? 'bg-blue-500' : 
-                          event.type === 'Networking' ? 'bg-purple-500' : 
-                          event.type === 'Panel' ? 'bg-amber-500' : 
-                          event.type === 'Mentoring' ? 'bg-green-500' : 
-                          event.type === 'Career Fair' ? 'bg-pink-500' : 'bg-nexus-primary'}
+                        ${event.type === 'Workshop' ? 'bg-blue-500' : event.type === 'Networking' ? 'bg-purple-500' : event.type === 'Panel' ? 'bg-amber-500' : event.type === 'Mentoring' ? 'bg-green-500' : event.type === 'Career Fair' ? 'bg-pink-500' : 'bg-nexus-primary'}
                       `}>
                         {event.type}
                       </div>
@@ -166,23 +137,15 @@ const Events = () => {
                         </div>
                       </div>
                       
-                      {event.tags && (
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          {event.tags.map(tag => (
-                            <Badge key={tag} variant="outline" className="text-xs bg-gray-50">
+                      {event.tags && <div className="flex flex-wrap gap-2 mb-4">
+                          {event.tags.map(tag => <Badge key={tag} variant="outline" className="text-xs bg-gray-50">
                               #{tag}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
+                            </Badge>)}
+                        </div>}
                     </div>
                     
                     <div className="flex justify-between items-center mt-2">
-                      <Button 
-                        variant="default"
-                        className="bg-nexus-primary hover:bg-nexus-primary/90"
-                        onClick={() => handleRegister(event.id, event.title)}
-                      >
+                      <Button variant="default" className="bg-nexus-primary hover:bg-nexus-primary/90" onClick={() => handleRegister(event.id, event.title)}>
                         Register Now
                       </Button>
                       <div className="flex items-center text-sm text-gray-500">
@@ -191,11 +154,9 @@ const Events = () => {
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                </div>)}
             </div>
-          </div>
-        )}
+          </div>}
         
         {/* Alumni-Led Events */}
         <div className="mb-12">
@@ -204,18 +165,10 @@ const Events = () => {
             Alumni-Led Events
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {alumniEvents.map((event) => (
-              <div 
-                key={event.id}
-                className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow p-6 relative hover:translate-y-[-5px] duration-300"
-              >
+            {alumniEvents.map(event => <div key={event.id} className="rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow p-6 relative hover:translate-y-[-5px] duration-300 bg-cyan-50">
                 <div className={`
                   absolute top-0 right-6 px-3 py-1 text-xs font-medium text-white rounded-b-md
-                  ${event.type === 'Workshop' ? 'bg-blue-500' : 
-                    event.type === 'Networking' ? 'bg-purple-500' : 
-                    event.type === 'Panel' ? 'bg-amber-500' : 
-                    event.type === 'Mentoring' ? 'bg-green-500' : 
-                    event.type === 'Career Fair' ? 'bg-pink-500' : 'bg-nexus-primary'}
+                  ${event.type === 'Workshop' ? 'bg-blue-500' : event.type === 'Networking' ? 'bg-purple-500' : event.type === 'Panel' ? 'bg-amber-500' : event.type === 'Mentoring' ? 'bg-green-500' : event.type === 'Career Fair' ? 'bg-pink-500' : 'bg-nexus-primary'}
                 `}>
                   {event.type}
                 </div>
@@ -238,11 +191,7 @@ const Events = () => {
                   </div>
                   
                   <div className="mt-4 flex justify-between items-center">
-                    <Button 
-                      variant="outline" 
-                      className="border-nexus-primary text-nexus-primary hover:bg-nexus-primary/10"
-                      onClick={() => handleLearnMore(event.id)}
-                    >
+                    <Button variant="outline" className="border-nexus-primary text-nexus-primary hover:bg-nexus-primary/10" onClick={() => handleLearnMore(event.id)}>
                       Learn more
                     </Button>
                     <div className="flex items-center text-sm text-gray-500">
@@ -251,8 +200,7 @@ const Events = () => {
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
         
@@ -262,17 +210,12 @@ const Events = () => {
           <p className="text-gray-600 mb-4">
             Browse all upcoming events, filter by event type, and add them to your personal calendar.
           </p>
-          <Button 
-            onClick={() => navigate('/events')}
-            className="bg-nexus-primary hover:bg-nexus-primary/90"
-          >
+          <Button onClick={() => navigate('/events')} className="bg-nexus-primary hover:bg-nexus-primary/90">
             View All Events
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default Events;

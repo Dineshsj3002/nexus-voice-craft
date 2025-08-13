@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -20,10 +19,10 @@ import TextReveal from '@/components/animations/TextReveal';
 // Import these to make sure they're available
 import { showSuccessToast, toastTypes } from '@/components/SuccessToast';
 import { TooltipProvider } from '@/components/ui/tooltip';
-
 const Index = () => {
-  const { toast } = useToast();
-  
+  const {
+    toast
+  } = useToast();
   useEffect(() => {
     // Show a welcome toast when the page loads
     toast({
@@ -31,16 +30,14 @@ const Index = () => {
       description: "Connect with alumni mentors to boost your career journey."
     });
   }, [toast]);
-
-  return (
-    <EnhancedPageTransition>
+  return <EnhancedPageTransition>
       <div className="min-h-screen flex flex-col">
         <Header />
         
         <main className="flex-grow">
           <Hero />
           <StatisticsCounter />
-          <div className="container mx-auto px-4 py-12">
+          <div className="container mx-auto px-4 py-12 bg-orange-50">
             {/* Wrap components that use Tooltip with TooltipProvider */}
             <TooltipProvider>
               <AlumniSpotlight />
@@ -52,7 +49,7 @@ const Index = () => {
           <RecentPosts />
           <Events />
            {/* Skeleton Loader Demonstration */}
-           <section className="container mx-auto px-4 py-12">
+           <section className="container mx-auto px-4 py-12 bg-slate-200">
             <TextReveal variant="fadeIn" delay={0.2} className="text-3xl font-bold text-center mb-8 block">
               Enhancing User Experience with Loading States
             </TextReveal>
@@ -68,8 +65,6 @@ const Index = () => {
         <Footer />
         <ChatBot />
       </div>
-    </EnhancedPageTransition>
-  );
+    </EnhancedPageTransition>;
 };
-
 export default Index;
