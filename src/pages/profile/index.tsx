@@ -3,15 +3,13 @@ import SEO from "@/components/SEO";
 import { useAuth } from "@/hooks/useAuth";
 import AuthDialog from "@/components/auth/AuthDialog";
 import { supabase } from "@/integrations/supabase/client";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PointsSummary } from "@/components/dashboard/PointsSummary";
-import AchievementSummary from "@/components/dashboard/AchievementSummary";
-import Loader from "@/components/ui/loader";
+import { Card, CardContent } from "@/components/ui/card";
+import { ProfileHeader } from "@/components/profile/ProfileHeader";
+import { ProfileTabs } from "@/components/profile/ProfileTabs";
 import { useUserPoints } from "@/hooks/useUserPoints";
 import { useUserAchievements } from "@/hooks/useUserAchievements";
 import { useNotificationPreferences } from "@/hooks/useNotificationPreferences";
-import { NotificationPreferencesCard } from "@/components/dashboard/NotificationPreferencesCard";
+import { Users } from "lucide-react";
 
  type Profile = {
   id: string;
@@ -49,69 +47,40 @@ const ProfilePage: React.FC = () => {
   }, [userId]);
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 space-y-8">
       <SEO title="Profile — alumNexus" description="Your alumNexus profile, achievements and preferences." />
-      <h1 className="text-3xl font-bold mb-6">Profile</h1>
 
       {!isAuthenticated ? (
-        <Card>
-          <CardContent className="p-6">
-            <p className="mb-4 text-muted-foreground">Please log in to view your profile.</p>
-            <AuthDialog triggerText="Login" />
+        <Card className="max-w-md mx-auto">
+          <CardContent className="p-8 text-center">
+            <div className="p-4 bg-muted/50 rounded-full w-fit mx-auto mb-4">
+              <Users className="h-8 w-8 text-muted-foreground" />
+            </div>
+            <h2 className="text-xl font-semibold mb-2">Access Your Profile</h2>
+            <p className="mb-6 text-muted-foreground">
+              Please log in to view and manage your alumni profile.
+            </p>
+            <AuthDialog triggerText="Login to Continue" />
           </CardContent>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="lg:col-span-1">
-            <CardContent className="p-6 flex items-start gap-4">
-              <Avatar className="h-16 w-16">
-                <AvatarImage src={profile?.avatar_url || ""} alt={`${profile?.full_name || "User"} avatar`} />
-                <AvatarFallback>{profile?.full_name?.[0] || "U"}</AvatarFallback>
-              </Avatar>
-              <div>
-                <div className="text-xl font-semibold">{profile?.full_name || user?.email}</div>
-                {profile?.username && (
-                  <div className="text-muted-foreground">@{profile.username}</div>
-                )}
-                {profile?.bio && <p className="mt-2 text-sm text-muted-foreground">{profile.bio}</p>}
-                {profile?.status && <p className="mt-1 text-sm">{profile.status}</p>}
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="lg:col-span-2 space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Overview</CardTitle>
-              </CardHeader>
-              <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <PointsSummary points={pointsData?.points} />
-                <div className="p-4 border rounded-lg bg-card">
-                  {achievementsLoading ? <Loader size={24} /> : <AchievementSummary achievements={achievements || []} />}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Notification Preferences</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {prefsLoading ? (
-                  <div className="flex justify-center py-2">
-                    <Loader size={28} />
-                  </div>
-                ) : (
-                  <NotificationPreferencesCard
-                    preferences={preferences || { enable_email: true, enable_sms: false, enable_push: true, weekly_digest: true }}
-                    onUpdate={updatePreferences}
-                    updating={updating}
-                  />
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+        <>
+          <ProfileHeader 
+            profile={profile} 
+            userEmail={user?.email}
+            isOwnProfile={true}
+          />
+          
+          <ProfileTabs
+            points={pointsData?.points}
+            achievements={achievements}
+            achievementsLoading={achievementsLoading}
+            preferences={preferences}
+            preferencesLoading={prefsLoading}
+            updatePreferences={updatePreferences}
+            preferencesUpdating={updating}
+          />
+        </>
       )}
     </div>
   );
