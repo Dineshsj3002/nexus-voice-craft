@@ -4,8 +4,9 @@ import { useAuth } from "@/hooks/useAuth";
 import AuthDialog from "@/components/auth/AuthDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
-import { ProfileHeader } from "@/components/profile/ProfileHeader";
+import { ProfileCover } from "@/components/profile/ProfileCover";
 import { ProfileTabs } from "@/components/profile/ProfileTabs";
+import { GlassCard } from "@/components/ui/glass-card";
 import { useUserPoints } from "@/hooks/useUserPoints";
 import { useUserAchievements } from "@/hooks/useUserAchievements";
 import { useNotificationPreferences } from "@/hooks/useNotificationPreferences";
@@ -64,23 +65,31 @@ const ProfilePage: React.FC = () => {
           </CardContent>
         </Card>
       ) : (
-        <>
-          <ProfileHeader 
-            profile={profile} 
-            userEmail={user?.email}
-            isOwnProfile={true}
-          />
-          
-          <ProfileTabs
-            points={pointsData?.points}
-            achievements={achievements}
-            achievementsLoading={achievementsLoading}
-            preferences={preferences}
-            preferencesLoading={prefsLoading}
-            updatePreferences={updatePreferences}
-            preferencesUpdating={updating}
-          />
-        </>
+        <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+          <div className="container mx-auto px-4 py-8 space-y-8">
+            {/* Profile Cover Section */}
+            <GlassCard className="overflow-hidden">
+              <ProfileCover 
+                profile={profile}
+                userEmail={user.email}
+                isOwnProfile={true}
+                connectionCount={156}
+                mutualConnections={0}
+              />
+            </GlassCard>
+            
+            {/* Profile Tabs */}
+            <ProfileTabs
+              points={pointsData?.points}
+              achievements={achievements}
+              achievementsLoading={achievementsLoading}
+              preferences={preferences}
+              preferencesLoading={prefsLoading}
+              updatePreferences={updatePreferences}
+              preferencesUpdating={updating}
+            />
+          </div>
+        </div>
       )}
     </div>
   );
