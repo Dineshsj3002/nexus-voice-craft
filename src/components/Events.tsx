@@ -101,7 +101,7 @@ const Events = () => {
         </div>
         
         {/* Featured Events */}
-        {featuredEvents.length > 0 && <div className="mb-12">
+        {featuredEvents.length > 0 && <div className="mb-12 bg-lime-50">
             <h3 className="text-2xl font-bold mb-6 flex items-center">
               <Star className="h-5 w-5 text-yellow-500 mr-2" />
               Featured Events
@@ -164,8 +164,8 @@ const Events = () => {
             <Tag className="h-5 w-5 text-nexus-primary mr-2" />
             Alumni-Led Events
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {alumniEvents.map(event => <div key={event.id} className="rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow p-6 relative hover:translate-y-[-5px] duration-300 bg-cyan-50">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mx-[43px] my-0 px-[196px] bg-zinc-100">
+            {alumniEvents.map(event => <div key={event.id} className="rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow p-6 relative hover:translate-y-[-5px] duration-300 bg-slate-50 px-[47px] my-[19px] py-[20px] mx-[61px]">
                 <div className={`
                   absolute top-0 right-6 px-3 py-1 text-xs font-medium text-white rounded-b-md
                   ${event.type === 'Workshop' ? 'bg-blue-500' : event.type === 'Networking' ? 'bg-purple-500' : event.type === 'Panel' ? 'bg-amber-500' : event.type === 'Mentoring' ? 'bg-green-500' : event.type === 'Career Fair' ? 'bg-pink-500' : 'bg-nexus-primary'}
@@ -173,7 +173,7 @@ const Events = () => {
                   {event.type}
                 </div>
                 
-                <div className="pt-6">
+                <div className="pt-6 px-[43px] my-[6px] py-[26px] mx-[134px]">
                   <h3 className="font-semibold text-xl mb-3">{event.title}</h3>
                   <div className="space-y-2 mb-4">
                     <div className="flex items-center text-gray-600 text-sm">
@@ -205,7 +205,7 @@ const Events = () => {
         </div>
         
         {/* Calendar View CTA */}
-        <div className="bg-nexus-primary/10 p-8 rounded-lg text-center">
+        <div className="p-8 rounded-lg text-center bg-zinc-100">
           <h3 className="text-xl font-bold mb-3">View Full Event Calendar</h3>
           <p className="text-gray-600 mb-4">
             Browse all upcoming events, filter by event type, and add them to your personal calendar.

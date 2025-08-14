@@ -31,7 +31,7 @@ const Hero = () => {
   const handleExploreMentorship = () => {
     navigate('/mentorship');
   };
-  return <section className="bg-white">
+  return <section className="bg-emerald-50">
       {/* Hero carousel */}
       <div className="w-full border-t border-b border-gray-200">
         <Carousel className="w-full relative">

@@ -37,7 +37,7 @@ const Index = () => {
         <main className="flex-grow">
           <Hero />
           <StatisticsCounter />
-          <div className="container mx-auto px-4 py-12 bg-orange-50">
+          <div className="container my-[18px] mx-[7px] px-[66px] py-[18px] bg-white">
             {/* Wrap components that use Tooltip with TooltipProvider */}
             <TooltipProvider>
               <AlumniSpotlight />
