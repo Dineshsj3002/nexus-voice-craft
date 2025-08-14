@@ -87,7 +87,7 @@ const MentorshipCard = ({
         
         <div className="mt-auto">
           <AnimatedButton
-            effect="bounce"
+            animation="bounce"
             onClick={handleBookSession}
             className="bg-nexus-primary hover:bg-nexus-primary/90 w-full"
           >

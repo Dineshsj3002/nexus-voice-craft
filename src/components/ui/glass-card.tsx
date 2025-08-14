@@ -7,13 +7,15 @@ interface GlassCardProps {
   className?: string;
   hoverEffect?: boolean;
   intensity?: 'light' | 'medium' | 'heavy';
+  gradient?: boolean;
 }
 
 export function GlassCard({ 
   children, 
   className, 
   hoverEffect = true,
-  intensity = 'medium'
+  intensity = 'medium',
+  gradient = false
 }: GlassCardProps) {
   const intensityClasses = {
     light: 'bg-white/5 backdrop-blur-sm border-white/10',

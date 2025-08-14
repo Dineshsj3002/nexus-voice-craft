@@ -65,7 +65,7 @@ const Hero = () => {
         </TextReveal>
         
         <div className="flex justify-center mt-8">
-          <AnimatedButton effect="pulse" size="lg" className="bg-nexus-primary text-white text-lg px-8 py-6 rounded-md flex items-center" onClick={handleJoinCommunity}>
+          <AnimatedButton animation="pulse" size="lg" className="bg-nexus-primary text-white text-lg px-8 py-6 rounded-md flex items-center" onClick={handleJoinCommunity}>
             Join our community today
             <ArrowRight className="ml-2 h-5 w-5" />
           </AnimatedButton>

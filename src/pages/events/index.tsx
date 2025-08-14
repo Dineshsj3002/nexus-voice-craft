@@ -1,14 +1,16 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ChatBot from '@/components/ChatBot';
 import EventRegistrationDialog from '@/components/EventRegistrationDialog';
-import { Calendar, MapPin, Users, Clock, ArrowRight, Star, Tag } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
+import { EventHero } from '@/components/events/EventHero';
+import { EventFilters, EventType } from '@/components/events/EventFilters';
+import { EnhancedEventCard } from '@/components/events/EnhancedEventCard';
 
 type Event = {
   id: number;
@@ -112,6 +114,8 @@ const EventsPage = () => {
   const navigate = useNavigate();
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedTypes, setSelectedTypes] = useState<EventType[]>([]);
 
   const handleRegister = (event: Event) => {
     setSelectedEvent(event);
@@ -123,198 +127,184 @@ const EventsPage = () => {
     setSelectedEvent(null);
   };
 
+  const handleTypeToggle = (type: EventType) => {
+    setSelectedTypes(prev => 
+      prev.includes(type) 
+        ? prev.filter(t => t !== type)
+        : [...prev, type]
+    );
+  };
+
+  const handleClearFilters = () => {
+    setSearchQuery('');
+    setSelectedTypes([]);
+  };
+
+  // Filter events based on search and type filters
+  const filteredEvents = useMemo(() => {
+    return events.filter(event => {
+      const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           event.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           event.location.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      const matchesType = selectedTypes.length === 0 || selectedTypes.includes(event.type);
+      
+      return matchesSearch && matchesType;
+    });
+  }, [searchQuery, selectedTypes]);
+
   // Filter featured events
-  const featuredEvents = events.filter(event => event.featured);
+  const featuredEvents = filteredEvents.filter(event => event.featured);
   // Filter upcoming events (non-featured)
-  const upcomingEvents = events.filter(event => !event.featured);
+  const upcomingEvents = filteredEvents.filter(event => !event.featured);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
       <Header />
       
-      <main className="flex-grow py-12 px-4 md:px-8 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold font-display mb-4">Events & Programs</h1>
-            <p className="text-lg text-gray-600 md:max-w-3xl mx-auto">
-              Stay connected with Knowledge Institute of Technology through our upcoming events and programs.
-              From hackathons to workshops, networking events to career fairs - there's always something happening!
-            </p>
-          </div>
+      <main className="flex-grow">
+        {/* Hero Section */}
+        <EventHero />
+        
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
+          {/* Filters */}
+          <EventFilters
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            selectedTypes={selectedTypes}
+            onTypeToggle={handleTypeToggle}
+            onClearFilters={handleClearFilters}
+          />
           
           {/* Featured Events Section */}
-          <section className="mb-16">
-            <h2 className="text-2xl font-bold mb-6 flex items-center">
-              <Star className="h-6 w-6 text-yellow-500 mr-2" />
-              Featured Events
-            </h2>
-            
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {featuredEvents.map(event => (
-                <Card key={event.id} className="overflow-hidden flex flex-col md:flex-row h-full shadow-md hover:shadow-lg transition-shadow">
-                  {event.image && (
-                    <div className="md:w-2/5 h-48 md:h-auto">
-                      <img 
-                        src={event.image} 
-                        alt={event.title} 
-                        className="w-full h-full object-cover"
+          {featuredEvents.length > 0 && (
+            <motion.section 
+              className="mb-16"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <motion.h2 
+                className="text-3xl font-display font-bold mb-8 text-center"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+              >
+                🌟 Featured Events
+              </motion.h2>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <AnimatePresence>
+                  {featuredEvents.map((event, index) => (
+                    <motion.div
+                      key={event.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <EnhancedEventCard 
+                        event={event} 
+                        onRegister={handleRegister}
+                        variant="featured"
                       />
-                    </div>
-                  )}
-                  <div className={`p-6 flex flex-col justify-between ${event.image ? 'md:w-3/5' : 'w-full'}`}>
-                    <div>
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="text-xl font-bold">{event.title}</h3>
-                        <Badge className={`${
-                          event.type === 'Hackathon' ? 'bg-purple-500' :
-                          event.type === 'Workshop' ? 'bg-blue-500' : 
-                          event.type === 'Networking' ? 'bg-indigo-500' : 
-                          event.type === 'Panel' ? 'bg-amber-500' : 
-                          event.type === 'Competition' ? 'bg-red-500' :
-                          event.type === 'Career Fair' ? 'bg-pink-500' : 'bg-nexus-primary'
-                        }`}>
-                          {event.type}
-                        </Badge>
-                      </div>
-                      
-                      {event.description && (
-                        <p className="text-gray-600 mb-4 line-clamp-2">{event.description}</p>
-                      )}
-                      
-                      <div className="space-y-2 mb-4">
-                        <div className="flex items-center text-gray-600 text-sm">
-                          <Calendar className="h-4 w-4 mr-2 text-nexus-primary" />
-                          {event.date}
-                        </div>
-                        <div className="flex items-center text-gray-600 text-sm">
-                          <Clock className="h-4 w-4 mr-2 text-nexus-primary" />
-                          {event.time}
-                        </div>
-                        <div className="flex items-center text-gray-600 text-sm">
-                          <MapPin className="h-4 w-4 mr-2 text-nexus-primary" />
-                          {event.location}
-                        </div>
-                      </div>
-                      
-                      {event.sponsoredBy && (
-                        <div className="text-sm text-gray-500 italic mb-3">
-                          Sponsored by: {event.sponsoredBy}
-                        </div>
-                      )}
-                      
-                      {event.tags && (
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          {event.tags.map(tag => (
-                            <Badge key={tag} variant="outline" className="text-xs">
-                              #{tag}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className="flex justify-between items-center mt-2">
-                      <Button 
-                        className="bg-nexus-primary hover:bg-nexus-primary/90"
-                        onClick={() => handleRegister(event)}
-                      >
-                        Register Now
-                      </Button>
-                      <div className="flex items-center text-sm text-gray-500">
-                        <Users className="h-4 w-4 mr-1" />
-                        <span>{event.spotsLeft} spots left</span>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </section>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
+            </motion.section>
+          )}
           
           {/* All Upcoming Events Section */}
-          <section>
-            <h2 className="text-2xl font-bold mb-6 flex items-center">
-              <Calendar className="h-6 w-6 text-nexus-primary mr-2" />
-              Upcoming Events
-            </h2>
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <motion.h2 
+              className="text-3xl font-display font-bold mb-8 text-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              📅 All Upcoming Events
+            </motion.h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {upcomingEvents.map(event => (
-                <Card key={event.id} className="overflow-hidden h-full shadow hover:shadow-md transition-shadow">
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-lg font-bold">{event.title}</h3>
-                      <Badge className={`${
-                        event.type === 'Hackathon' ? 'bg-purple-500' :
-                        event.type === 'Workshop' ? 'bg-blue-500' : 
-                        event.type === 'Networking' ? 'bg-indigo-500' : 
-                        event.type === 'Panel' ? 'bg-amber-500' : 
-                        event.type === 'Competition' ? 'bg-red-500' :
-                        event.type === 'Career Fair' ? 'bg-pink-500' : 'bg-nexus-primary'
-                      }`}>
-                        {event.type}
-                      </Badge>
-                    </div>
-                    
-                    {event.description && (
-                      <p className="text-gray-600 mb-4 text-sm line-clamp-3">{event.description}</p>
-                    )}
-                    
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center text-gray-600 text-sm">
-                        <Calendar className="h-4 w-4 mr-2 text-nexus-primary" />
-                        {event.date}
-                      </div>
-                      <div className="flex items-center text-gray-600 text-sm">
-                        <Clock className="h-4 w-4 mr-2 text-nexus-primary" />
-                        {event.time}
-                      </div>
-                      <div className="flex items-center text-gray-600 text-sm">
-                        <MapPin className="h-4 w-4 mr-2 text-nexus-primary" />
-                        {event.location}
-                      </div>
-                    </div>
-                    
-                    {event.sponsoredBy && (
-                      <div className="text-sm text-gray-500 italic mb-3">
-                        Sponsored by: {event.sponsoredBy}
-                      </div>
-                    )}
-                    
-                    <div className="flex justify-between items-center mt-4">
-                      <Button 
-                        variant="outline" 
-                        className="border-nexus-primary text-nexus-primary hover:bg-nexus-primary/10"
-                        onClick={() => handleRegister(event)}
-                      >
-                        Register Now
-                      </Button>
-                      <div className="flex items-center text-sm text-gray-500">
-                        <Users className="h-4 w-4 mr-1" />
-                        <span>{event.spotsLeft} spots</span>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
+            {upcomingEvents.length === 0 ? (
+              <motion.div 
+                className="text-center py-12"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+              >
+                <div className="text-6xl mb-4">🔍</div>
+                <h3 className="text-xl font-semibold mb-2">No events found</h3>
+                <p className="text-muted-foreground mb-4">
+                  Try adjusting your search or filter criteria
+                </p>
+                <Button onClick={handleClearFilters} variant="outline">
+                  Clear Filters
+                </Button>
+              </motion.div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <AnimatePresence>
+                  {upcomingEvents.map((event, index) => (
+                    <motion.div
+                      key={event.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      layout
+                    >
+                      <EnhancedEventCard 
+                        event={event} 
+                        onRegister={handleRegister}
+                        variant="standard"
+                      />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
+            )}
             
             {/* Calendar CTA */}
-            <div className="mt-12 bg-nexus-primary/10 p-8 rounded-lg text-center">
-              <h3 className="text-xl font-bold mb-3">Want to propose an event?</h3>
-              <p className="text-gray-600 mb-4 max-w-2xl mx-auto">
-                Are you an alumnus interested in organizing an event, workshop, or mentorship program? 
-                We welcome your ideas and initiatives to strengthen our community.
-              </p>
-              <Button 
-                className="bg-nexus-primary hover:bg-nexus-primary/90"
-                onClick={() => navigate('/contact')}
-              >
-                Contact Us
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-          </section>
+            <motion.div 
+              className="mt-12"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+            >
+              <div className="bg-gradient-to-br from-primary/10 via-background to-accent/10 p-8 rounded-2xl text-center border border-border/50">
+                <motion.div
+                  className="text-4xl mb-4"
+                  animate={{ 
+                    rotate: [0, 10, -10, 0],
+                    scale: [1, 1.1, 1]
+                  }}
+                  transition={{ 
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatDelay: 3
+                  }}
+                >
+                  💡
+                </motion.div>
+                <h3 className="text-2xl font-bold mb-3">Want to propose an event?</h3>
+                <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+                  Are you an alumnus interested in organizing an event, workshop, or mentorship program? 
+                  We welcome your ideas and initiatives to strengthen our community.
+                </p>
+                <Button 
+                  onClick={() => navigate('/contact')}
+                  className="gap-2"
+                  size="lg"
+                >
+                  Contact Us
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </motion.div>
+          </motion.section>
         </div>
       </main>
       
