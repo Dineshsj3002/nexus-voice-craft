@@ -82,7 +82,7 @@ const AuthDialog = ({
   return <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className={triggerClassName} type="button">
-          <span className="font-semibold text-cyan-200">{triggerText}</span>
+          <span className="font-semibold text-cyan-200 mx-[4px] my-0">{triggerText}</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

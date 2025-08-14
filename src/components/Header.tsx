@@ -39,7 +39,7 @@ const Header = () => {
   React.useEffect(() => {
     setIsMenuOpen(false);
   }, [location.pathname]);
-  return <header className="border-b border-gray-200 shadow-sm bg-emerald-50">
+  return <header className="border-b border-gray-200 shadow-sm mx-0 bg-green-50">
       {/* Top Contact Bar */}
       <div className="bg-gradient-to-r from-nexus-primary to-blue-700 py-2.5 px-4 text-xs md:text-sm text-white font-medium">
         <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center">
@@ -57,7 +57,7 @@ const Header = () => {
       </div>
       
       {/* Main Header */}
-      <div className="max-w-7xl mx-auto flex items-center justify-between py-6 px-4 md:px-8 rounded bg-emerald-50">
+      <div className="max-w-7xl flex items-center justify-between py-6 px-4 md:px-8 rounded bg-emerald-50 mx-0">
         {/* Enhanced Logo Section */}
         <Link to="/" className="flex items-center group hover:scale-105 transition-all duration-300 ease-in-out">
           <div className="flex items-center gap-4">
