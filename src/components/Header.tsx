@@ -39,7 +39,7 @@ const Header = () => {
   React.useEffect(() => {
     setIsMenuOpen(false);
   }, [location.pathname]);
-  return <header className="border-b border-gray-200 shadow-sm bg-emerald-50">
+  return <header className="border-b border-gray-200 shadow-sm bg-transparent">
       {/* Top Contact Bar */}
       <div className="bg-gradient-to-r from-nexus-primary to-blue-700 py-2.5 px-4 text-xs md:text-sm text-white font-medium">
         <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center">

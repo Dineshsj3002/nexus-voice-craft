@@ -1,15 +1,20 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, MessageCircle, Phone, MapPin } from 'lucide-react';
+
 const Footer = () => {
-  return <footer className="bg-nexus-primary text-white pt-12 pb-6">
+  return (
+    <footer className="bg-nexus-primary text-white pt-12 pb-6">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
           {/* Column 1 - Logo & About */}
           <div className="col-span-1">
             <Link to="/" className="flex items-center space-x-2 mb-4">
-              <div className="h-10 w-10 rounded-full bg-white text-nexus-primary flex items-center justify-center font-display text-xl mx-[7px] my-0 px-[13px] py-0">Kiot</div>
-              <span className="text-xl font-display font-semibold text-white">AluminiKiot</span>
+              <div className="h-10 w-10 rounded-full bg-white text-nexus-primary flex items-center justify-center font-display text-xl">
+                a
+              </div>
+              <span className="text-xl font-display font-semibold text-white">alumNexus</span>
             </Link>
             <p className="text-sm text-white/80 mb-4">
               Connecting alumni-building futures, and fostering lifelong relationships.
@@ -72,17 +77,19 @@ const Footer = () => {
           <p>© {new Date().getFullYear()} alumNexus. All rights reserved.</p>
         </div>
       </div>
-    </footer>;
+    </footer>
+  );
 };
-const FooterLink = ({
-  to,
-  children
-}: {
-  to: string;
-  children: React.ReactNode;
-}) => <li>
-    <Link to={to} className="text-sm text-white hover:text-white/80 transition-colors">
+
+const FooterLink = ({ to, children }: { to: string; children: React.ReactNode }) => (
+  <li>
+    <Link 
+      to={to}
+      className="text-sm text-white hover:text-white/80 transition-colors"
+    >
       {children}
     </Link>
-  </li>;
+  </li>
+);
+
 export default Footer;

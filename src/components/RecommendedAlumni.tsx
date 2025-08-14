@@ -25,7 +25,7 @@ const RecommendedAlumni = () => {
   if (recommendedAlumni.length === 0) {
     return null;
   }
-  return <div className="mt-10 mb-16 mx-[36px] my-[35px] px-[58px] py-[12px] bg-zinc-100">
+  return <div className="mt-10 mb-16 bg-red-50">
       <div className="flex justify-between items-center mb-6">
         <div>
           <h2 className="text-2xl font-semibold text-gray-800">Personalized Connections</h2>
@@ -38,7 +38,7 @@ const RecommendedAlumni = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {recommendedAlumni.map(alumni => <Card key={alumni.id} className="overflow-hidden hover:shadow-md transition-all mx-0 my-[6px] px-[6px] py-0">
+        {recommendedAlumni.map(alumni => <Card key={alumni.id} className="overflow-hidden hover:shadow-md transition-all">
             <CardContent className="p-6">
               <div className="flex items-start gap-4">
                 <img src={alumni.avatar} alt={alumni.name} className="w-14 h-14 rounded-full object-cover" />
@@ -70,7 +70,7 @@ const RecommendedAlumni = () => {
             </CardContent>
             
             <CardFooter className="bg-gray-50 p-4">
-              <Button onClick={() => handleContactClick(alumni)} className="w-full bg-nexus-primary hover:bg-nexus-primary/90 mx-[9px] px-[22px] py-[11px] my-0">
+              <Button className="w-full bg-nexus-primary hover:bg-nexus-primary/90" onClick={() => handleContactClick(alumni)}>
                 Connect Now
               </Button>
             </CardFooter>
