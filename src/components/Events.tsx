@@ -164,7 +164,7 @@ const Events = () => {
             <Tag className="h-5 w-5 text-nexus-primary mr-2" />
             Alumni-Led Events
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-zinc-100 mx-[230px] px-[200px] my-0 py-0">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-zinc-100 my-0 py-0 mx-0 px-0">
             {alumniEvents.map(event => <div key={event.id} className="overflow-hidden shadow-sm hover:shadow-md transition-shadow p-6 relative hover:translate-y-[-5px] duration-300 bg-slate-50 rounded-sm mx-0 px-0 my-0 py-0">
                 <div className={`
                   absolute top-0 right-6 px-3 py-1 text-xs font-medium text-white rounded-b-md
