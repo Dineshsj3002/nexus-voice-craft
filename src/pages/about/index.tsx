@@ -11,10 +11,7 @@ const AboutPage = () => {
       <main className="flex-grow py-16 px-4 md:px-8 bg-green-50">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-4xl font-bold font-display mb-4">About Us</h1>
-          <p className="text-lg text-gray-600 mb-8">
-            Knowledge Institute of Technology (KIT) is a premier educational institution committed to excellence in teaching, 
-            research, and fostering strong connections between students and alumni.
-          </p>
+          <p className="text-lg text-gray-600 mb-8">Knowledge Institute of Technology (KIOT) is a premier educational institution committed to excellence in teaching, research, and fostering strong connections between students and alumni.</p>
           
           <div className="mb-12">
             <img src="/lovable-uploads/ec8f2a48-2d56-4532-82f0-ec1ecb10ea9d.png" alt="Aerial view of Knowledge Institute of Technology campus" className="w-full h-80 md:h-96 object-cover rounded-lg shadow-md mb-4" />
@@ -34,10 +31,7 @@ const AboutPage = () => {
                 <History className="h-8 w-8 text-nexus-primary flex-shrink-0 mt-1" />
                 <div>
                   <h2 className="text-2xl font-bold mb-4">Our History</h2>
-                  <p className="mb-4">
-                    Founded in 1965, Knowledge Institute of Technology began as a small technical college with just 120 students and 15 faculty members. 
-                    Our founder, Dr. Richard Thompson, envisioned an institution that would bridge the gap between academic learning and industry needs.
-                  </p>
+                  <p className="mb-4">Founded in 2009, Knowledge Institute of Technology began as a small technical college with just 120 students and 15 faculty members. Our founder, Dr. Richard Thompson, envisioned an institution that would bridge the gap between academic learning and industry needs.</p>
                   <p className="mb-4">
                     Through the decades, KIT has grown into a comprehensive university with over 15,000 students across five schools: Engineering, Business, 
                     Liberal Arts, Sciences, and Graduate Studies. Our campus has expanded from a single building to a 250-acre campus with state-of-the-art 
@@ -168,7 +162,7 @@ const AboutPage = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div className="text-center">
                 <CalendarDays className="h-10 w-10 mx-auto text-nexus-primary mb-2" />
-                <p className="text-3xl font-bold">1965</p>
+                <p className="text-3xl font-bold">2009</p>
                 <p className="text-sm text-gray-600">Year Founded</p>
               </div>
               <div className="text-center">
@@ -183,8 +177,8 @@ const AboutPage = () => {
               </div>
               <div className="text-center">
                 <Award className="h-10 w-10 mx-auto text-nexus-primary mb-2" />
-                <p className="text-3xl font-bold">Top 50</p>
-                <p className="text-sm text-gray-600">Global Ranking</p>
+                <p className="text-3xl font-bold">Top 10</p>
+                <p className="text-sm text-gray-600">TNEA Ranking</p>
               </div>
             </div>
           </div>
