@@ -93,9 +93,9 @@ const AuthDialog = ({
         </DialogHeader>
         
         <Tabs defaultValue={defaultTab} value={activeTab} onValueChange={value => setActiveTab(value as 'login' | 'register')} className="mt-4">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="login">Login</TabsTrigger>
-            <TabsTrigger value="register">Register</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 bg-green-50">
+            <TabsTrigger value="login" className="text-blue-950 bg-emerald-300 hover:bg-emerald-200 mx-[23px]">Login</TabsTrigger>
+            <TabsTrigger value="register" className="text-zinc-900 bg-emerald-300 hover:bg-emerald-200 mx-[30px] my-0">Register</TabsTrigger>
           </TabsList>
           
           <AnimatePresence mode="wait">
@@ -103,7 +103,7 @@ const AuthDialog = ({
               <TabsContent value="login" className="mt-4 space-y-4">
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
-                    <Button variant="outline" onClick={() => handleSocialLogin('Google')} className="w-full flex items-center justify-center gap-2 transition-all hover:bg-gray-50">
+                    <Button variant="outline" onClick={() => handleSocialLogin('Google')} className="w-full flex items-center justify-center gap-2 transition-all hover:bg-gray-50 text-zinc-950 my-0 py-0 px-0 mx-[3px]">
                       <Globe className="h-4 w-4" />
                       Google
                     </Button>
@@ -118,7 +118,7 @@ const AuthDialog = ({
                       <Separator className="w-full" />
                     </div>
                     <div className="relative flex justify-center text-xs uppercase">
-                      <span className="bg-background px-2 text-muted-foreground">
+                      <span className="bg-background px-2 text-neutral-900">
                         Or continue with
                       </span>
                     </div>
