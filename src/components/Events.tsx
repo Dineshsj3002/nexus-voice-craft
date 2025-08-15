@@ -159,13 +159,13 @@ const Events = () => {
           </div>}
         
         {/* Alumni-Led Events */}
-        <div className="mb-12">
+        <div className="mb-12 my-0 mx-[17px] px-[5px] py-[3px]">
           <h3 className="text-2xl font-bold mb-6 flex items-center">
             <Tag className="h-5 w-5 text-nexus-primary mr-2" />
             Alumni-Led Events
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mx-[43px] my-0 px-[196px] bg-zinc-100">
-            {alumniEvents.map(event => <div key={event.id} className="rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow p-6 relative hover:translate-y-[-5px] duration-300 bg-slate-50 px-[47px] my-[19px] py-[20px] mx-[61px]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-zinc-100 mx-[230px] px-[200px] my-0 py-0">
+            {alumniEvents.map(event => <div key={event.id} className="overflow-hidden shadow-sm hover:shadow-md transition-shadow p-6 relative hover:translate-y-[-5px] duration-300 bg-slate-50 rounded-sm mx-0 px-0 my-0 py-0">
                 <div className={`
                   absolute top-0 right-6 px-3 py-1 text-xs font-medium text-white rounded-b-md
                   ${event.type === 'Workshop' ? 'bg-blue-500' : event.type === 'Networking' ? 'bg-purple-500' : event.type === 'Panel' ? 'bg-amber-500' : event.type === 'Mentoring' ? 'bg-green-500' : event.type === 'Career Fair' ? 'bg-pink-500' : 'bg-nexus-primary'}
@@ -173,7 +173,7 @@ const Events = () => {
                   {event.type}
                 </div>
                 
-                <div className="pt-6 px-[43px] my-[6px] py-[26px] mx-[134px]">
+                <div className="pt-6 py-[5px] mx-[5px] px-[5px] my-[5px]">
                   <h3 className="font-semibold text-xl mb-3">{event.title}</h3>
                   <div className="space-y-2 mb-4">
                     <div className="flex items-center text-gray-600 text-sm">
