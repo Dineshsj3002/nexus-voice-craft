@@ -1,17 +1,14 @@
-
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ChatBot from '@/components/ChatBot';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CalendarDays, Award, Users, BookOpen, GraduationCap, Landmark, Building, History } from 'lucide-react';
-
 const AboutPage = () => {
-  return (
-    <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col">
       <Header />
       
-      <main className="flex-grow py-16 px-4 md:px-8">
+      <main className="flex-grow py-16 px-4 md:px-8 bg-green-50">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-4xl font-bold font-display mb-4">About Us</h1>
           <p className="text-lg text-gray-600 mb-8">
@@ -20,11 +17,7 @@ const AboutPage = () => {
           </p>
           
           <div className="mb-12">
-            <img 
-              src="/lovable-uploads/ec8f2a48-2d56-4532-82f0-ec1ecb10ea9d.png" 
-              alt="Aerial view of Knowledge Institute of Technology campus" 
-              className="w-full h-80 md:h-96 object-cover rounded-lg shadow-md mb-4"
-            />
+            <img src="/lovable-uploads/ec8f2a48-2d56-4532-82f0-ec1ecb10ea9d.png" alt="Aerial view of Knowledge Institute of Technology campus" className="w-full h-80 md:h-96 object-cover rounded-lg shadow-md mb-4" />
             <p className="text-sm text-center text-gray-500">Aerial view of our main campus</p>
           </div>
           
@@ -200,8 +193,6 @@ const AboutPage = () => {
       
       <Footer />
       <ChatBot />
-    </div>
-  );
+    </div>;
 };
-
 export default AboutPage;
