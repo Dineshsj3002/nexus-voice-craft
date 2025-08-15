@@ -173,7 +173,7 @@ const Events = () => {
                   {event.type}
                 </div>
                 
-                <div className="pt-6 py-[5px] mx-[5px] px-[5px] my-[5px]">
+                <div className="pt-6 mx-0 px-0 py-0 my-0">
                   <h3 className="font-semibold text-xl mb-3">{event.title}</h3>
                   <div className="space-y-2 mb-4">
                     <div className="flex items-center text-gray-600 text-sm">
