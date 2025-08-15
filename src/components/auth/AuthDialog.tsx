@@ -85,7 +85,7 @@ const AuthDialog = ({
           <span className="font-semibold text-cyan-200 mx-[4px] my-0">{triggerText}</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] bg-green-50">
         <DialogHeader>
           <DialogTitle className="text-center text-2xl font-bold">
             {activeTab === 'login' ? 'Welcome Back' : 'Join Our Community'}
