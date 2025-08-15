@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -8,15 +7,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { GlassCard } from '@/components/ui/glass-card';
 import AnimatedButton from '@/components/animations/AnimatedButton';
 import { ArrowRight, FileText, Users, MessageSquare, Calendar, Clock, MapPin, Target, Lightbulb, TrendingUp } from 'lucide-react';
-
 const OfficeBarriersPage = () => {
-  return (
-    <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col">
       <Header />
       
       <main className="flex-grow py-16 px-4 md:px-8 bg-gradient-to-br from-primary/5 via-background to-secondary/5 relative overflow-hidden">
         {/* Background decoration */}
-        <div className="absolute inset-0 bg-grid-white/10 bg-grid-16 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]" />
+        <div className="absolute inset-0 bg-grid-white/10 bg-grid-16 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] bg-green-50" />
         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl opacity-20" />
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-secondary/10 rounded-full blur-3xl opacity-20" />
         
@@ -46,8 +43,8 @@ const OfficeBarriersPage = () => {
           </div>
           
           <Tabs defaultValue="resources" className="w-full">
-            <TabsList className="mb-6">
-              <TabsTrigger value="resources">Resources</TabsTrigger>
+            <TabsList className="mb-6 bg-emerald-200">
+              <TabsTrigger value="resources" className="text-gray-600">Resources</TabsTrigger>
               <TabsTrigger value="mentoring">Mentoring</TabsTrigger>
               <TabsTrigger value="stories">Success Stories</TabsTrigger>
               <TabsTrigger value="discussions">Discussions</TabsTrigger>
@@ -55,30 +52,25 @@ const OfficeBarriersPage = () => {
             
             <TabsContent value="resources">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {[
-                  { 
-                    title: "Navigating Office Politics", 
-                    description: "Learn strategies for effectively navigating workplace dynamics and building positive relationships.", 
-                    icon: <Users className="h-10 w-10 text-primary" />,
-                    action: "Read Guide",
-                    gradient: "from-blue-500/20 to-indigo-600/20"
-                  },
-                  { 
-                    title: "Communication Skills", 
-                    description: "Develop essential communication skills for overcoming barriers and advancing your career.", 
-                    icon: <MessageSquare className="h-10 w-10 text-primary" />,
-                    action: "View Resources",
-                    gradient: "from-green-500/20 to-emerald-600/20"
-                  },
-                  { 
-                    title: "Overcoming Imposter Syndrome", 
-                    description: "Practical advice for recognizing and addressing feelings of inadequacy in the workplace.", 
-                    icon: <FileText className="h-10 w-10 text-primary" />,
-                    action: "Access Toolkit",
-                    gradient: "from-purple-500/20 to-violet-600/20"
-                  }
-                ].map((resource, index) => (
-                  <GlassCard key={index} hoverEffect={true} intensity="medium" className="group relative overflow-hidden">
+                {[{
+                title: "Navigating Office Politics",
+                description: "Learn strategies for effectively navigating workplace dynamics and building positive relationships.",
+                icon: <Users className="h-10 w-10 text-primary" />,
+                action: "Read Guide",
+                gradient: "from-blue-500/20 to-indigo-600/20"
+              }, {
+                title: "Communication Skills",
+                description: "Develop essential communication skills for overcoming barriers and advancing your career.",
+                icon: <MessageSquare className="h-10 w-10 text-primary" />,
+                action: "View Resources",
+                gradient: "from-green-500/20 to-emerald-600/20"
+              }, {
+                title: "Overcoming Imposter Syndrome",
+                description: "Practical advice for recognizing and addressing feelings of inadequacy in the workplace.",
+                icon: <FileText className="h-10 w-10 text-primary" />,
+                action: "Access Toolkit",
+                gradient: "from-purple-500/20 to-violet-600/20"
+              }].map((resource, index) => <GlassCard key={index} hoverEffect={true} intensity="medium" className="group relative overflow-hidden">
                     <div className={`absolute inset-0 bg-gradient-to-br ${resource.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
                     <div className="relative p-8">
                       <div className="mb-6 transform group-hover:scale-110 transition-transform duration-300">
@@ -91,8 +83,7 @@ const OfficeBarriersPage = () => {
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </AnimatedButton>
                     </div>
-                  </GlassCard>
-                ))}
+                  </GlassCard>)}
               </div>
               
               <GlassCard className="mt-16" intensity="heavy">
@@ -183,33 +174,28 @@ const OfficeBarriersPage = () => {
             
             <TabsContent value="stories">
               <div className="space-y-8">
-                {[
-                  {
-                    name: "Sarah Johnson",
-                    title: "Overcoming Gender Bias in Tech",
-                    content: "As one of the few women in my engineering team, I faced numerous challenges...",
-                    industry: "Technology",
-                    year: "Class of 2015",
-                    gradient: "from-pink-500/20 to-rose-600/20"
-                  },
-                  {
-                    name: "Michael Chen",
-                    title: "Navigating Cultural Differences in a Global Company",
-                    content: "Working for an international corporation presented unique challenges in communication...",
-                    industry: "Finance",
-                    year: "Class of 2012",
-                    gradient: "from-blue-500/20 to-cyan-600/20"
-                  },
-                  {
-                    name: "Priya Patel",
-                    title: "From Entry-Level to Leadership",
-                    content: "My journey from an entry-level position to a leadership role taught me valuable lessons...",
-                    industry: "Healthcare",
-                    year: "Class of 2010",
-                    gradient: "from-green-500/20 to-emerald-600/20"
-                  }
-                ].map((story, index) => (
-                  <GlassCard key={index} hoverEffect={true} intensity="light" className="group relative overflow-hidden">
+                {[{
+                name: "Sarah Johnson",
+                title: "Overcoming Gender Bias in Tech",
+                content: "As one of the few women in my engineering team, I faced numerous challenges...",
+                industry: "Technology",
+                year: "Class of 2015",
+                gradient: "from-pink-500/20 to-rose-600/20"
+              }, {
+                name: "Michael Chen",
+                title: "Navigating Cultural Differences in a Global Company",
+                content: "Working for an international corporation presented unique challenges in communication...",
+                industry: "Finance",
+                year: "Class of 2012",
+                gradient: "from-blue-500/20 to-cyan-600/20"
+              }, {
+                name: "Priya Patel",
+                title: "From Entry-Level to Leadership",
+                content: "My journey from an entry-level position to a leadership role taught me valuable lessons...",
+                industry: "Healthcare",
+                year: "Class of 2010",
+                gradient: "from-green-500/20 to-emerald-600/20"
+              }].map((story, index) => <GlassCard key={index} hoverEffect={true} intensity="light" className="group relative overflow-hidden">
                     <div className={`absolute inset-0 bg-gradient-to-br ${story.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
                     <div className="relative p-6">
                       <h3 className="text-xl font-semibold mb-4">{story.title}</h3>
@@ -228,8 +214,7 @@ const OfficeBarriersPage = () => {
                         <ArrowRight className="ml-1 h-4 w-4" />
                       </AnimatedButton>
                     </div>
-                  </GlassCard>
-                ))}
+                  </GlassCard>)}
               </div>
               <div className="text-center mt-12">
                 <AnimatedButton variant="outline" animation="glow" className="border-primary text-primary hover:bg-primary/10">
@@ -240,7 +225,7 @@ const OfficeBarriersPage = () => {
             
             <TabsContent value="discussions">
               <GlassCard intensity="medium">
-                <div className="p-8">
+                <div className="p-8 bg-emerald-50">
                   <div className="text-center mb-8">
                     <h3 className="text-2xl font-bold mb-4">Join the Conversation</h3>
                     <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -249,24 +234,19 @@ const OfficeBarriersPage = () => {
                   </div>
                   
                   <div className="space-y-4 mb-8">
-                    {[
-                      { 
-                        topic: "Dealing with Difficult Colleagues", 
-                        replies: 24, 
-                        lastActive: "2 hours ago" 
-                      },
-                      { 
-                        topic: "Work-Life Balance Strategies", 
-                        replies: 36, 
-                        lastActive: "Yesterday" 
-                      },
-                      { 
-                        topic: "Negotiating Promotions and Raises", 
-                        replies: 18, 
-                        lastActive: "3 days ago" 
-                      }
-                    ].map((discussion, index) => (
-                      <GlassCard key={index} hoverEffect={true} intensity="light" className="group">
+                    {[{
+                    topic: "Dealing with Difficult Colleagues",
+                    replies: 24,
+                    lastActive: "2 hours ago"
+                  }, {
+                    topic: "Work-Life Balance Strategies",
+                    replies: 36,
+                    lastActive: "Yesterday"
+                  }, {
+                    topic: "Negotiating Promotions and Raises",
+                    replies: 18,
+                    lastActive: "3 days ago"
+                  }].map((discussion, index) => <GlassCard key={index} hoverEffect={true} intensity="light" className="group">
                         <div className="p-4 flex justify-between items-center">
                           <div>
                             <h4 className="font-medium text-foreground">{discussion.topic}</h4>
@@ -276,8 +256,7 @@ const OfficeBarriersPage = () => {
                             View Thread
                           </AnimatedButton>
                         </div>
-                      </GlassCard>
-                    ))}
+                      </GlassCard>)}
                   </div>
                   
                   <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -298,8 +277,6 @@ const OfficeBarriersPage = () => {
       
       <Footer />
       <ChatBot />
-    </div>
-  );
+    </div>;
 };
-
 export default OfficeBarriersPage;
